@@ -2,6 +2,7 @@ import * as cheerio from 'cheerio';
 
 /**
  * 解析 Cyberbiz 訂單郵件，提取訂單資訊
+ * 回傳的結構對應 ERP「03_銷貨紀錄」的欄位
  * @param {Object} email - 從 Gmail 取得的郵件物件
  * @returns {Object|null} 訂單資訊，解析失敗回傳 null
  */
@@ -25,23 +26,25 @@ export function parseCyberbizOrderEmail(email) {
       emailId: email.id,
       orderNumber,
       orderDate: extractOrderDate(textContent, date),
-      customerName: extractField(textContent, /收件人[：:]\s*(.+)/),
-      customerEmail: extractEmail(textContent),
-      customerPhone: extractField(textContent, /電話[：:]\s*([\d\-+()]+)/),
-      shippingAddress: extractField(textContent, /地址[：:]\s*(.+)/),
-      paymentMethod: extractField(textContent, /付款方式[：:]\s*(.+)/),
-      shippingMethod: extractField(textContent, /配送方式[：:]\s*(.+)/),
+      channelSource: 'Cyberbiz',
+      customerName: extractField(textContent, /收件人[：:]\s*(.+)/) ||
+                     extractField(textContent, /姓名[：:]\s*(.+)/) ||
+                     extractField(textContent, /買家[：:]\s*(.+)/),
       orderStatus: extractOrderStatus(subject, textContent),
+      shippingDate: extractField(textContent, /出貨日期[：:]\s*(\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2})/),
+      trackingNumber: extractField(textContent, /物流單號[：:]\s*([A-Za-z0-9]+)/) ||
+                      extractField(textContent, /追蹤編號[：:]\s*([A-Za-z0-9]+)/),
+      paymentStatus: extractPaymentStatus(subject, textContent),
+      paymentDate: extractField(textContent, /付款日期[：:]\s*(\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2})/) ||
+                   extractField(textContent, /收款日期[：:]\s*(\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2})/),
+      discount: extractAmount(textContent, /折扣[：:]\s*-?(?:NT\$|＄|\$)?\s*([\d,]+)/) ||
+                extractAmount(textContent, /優惠[：:]\s*-?(?:NT\$|＄|\$)?\s*([\d,]+)/),
       items: extractOrderItems($, textContent),
-      subtotal: extractAmount(textContent, /小計[：:]\s*(?:NT\$|＄|\$)?\s*([\d,]+)/),
-      shippingFee: extractAmount(textContent, /運費[：:]\s*(?:NT\$|＄|\$)?\s*([\d,]+)/),
-      discount: extractAmount(textContent, /折扣[：:]\s*-?(?:NT\$|＄|\$)?\s*([\d,]+)/),
-      totalAmount: extractTotalAmount(textContent),
       rawSubject: subject,
       emailDate: date,
     };
 
-    console.log(`[Parser] 成功解析訂單: ${orderNumber}`);
+    console.log(`[Parser] 成功解析訂單: ${orderNumber} (${order.items.length} 個品項)`);
     return order;
   } catch (err) {
     console.error(`[Parser] 解析失敗:`, err.message);
@@ -53,7 +56,6 @@ export function parseCyberbizOrderEmail(email) {
  * 從主旨提取訂單編號
  */
 function extractOrderNumber(subject) {
-  // Cyberbiz 訂單編號常見格式: #C12345, 訂單編號 C12345, Order #12345 等
   const patterns = [
     /(?:訂單編號|訂單號碼|Order\s*#?)[：:\s]*([A-Za-z0-9\-]+)/i,
     /#([A-Za-z]?\d{4,})/,
@@ -83,7 +85,6 @@ function extractOrderDate(text, fallbackDate) {
     if (match) return match[1];
   }
 
-  // fallback: 使用郵件日期
   if (fallbackDate) {
     try {
       return new Date(fallbackDate).toISOString().split('T')[0];
@@ -101,14 +102,6 @@ function extractOrderDate(text, fallbackDate) {
 function extractField(text, pattern) {
   const match = text.match(pattern);
   return match ? match[1].trim() : '';
-}
-
-/**
- * 提取 email
- */
-function extractEmail(text) {
-  const match = text.match(/[\w.\-+]+@[\w.\-]+\.\w+/);
-  return match ? match[0] : '';
 }
 
 /**
@@ -137,6 +130,25 @@ function extractOrderStatus(subject, text) {
 }
 
 /**
+ * 提取收款狀態
+ */
+function extractPaymentStatus(subject, text) {
+  const combined = subject + ' ' + text;
+
+  if (combined.includes('已付款') || combined.includes('付款完成') || combined.includes('付款成功')) {
+    return '已收款';
+  }
+  if (combined.includes('未付款') || combined.includes('待付款')) {
+    return '未收款';
+  }
+  if (combined.includes('退款')) {
+    return '已退款';
+  }
+
+  return '';
+}
+
+/**
  * 提取金額
  */
 function extractAmount(text, pattern) {
@@ -148,46 +160,36 @@ function extractAmount(text, pattern) {
 }
 
 /**
- * 提取訂單總金額
- */
-function extractTotalAmount(text) {
-  const patterns = [
-    /總計[：:]\s*(?:NT\$|＄|\$)?\s*([\d,]+)/,
-    /合計[：:]\s*(?:NT\$|＄|\$)?\s*([\d,]+)/,
-    /Total[：:]\s*(?:NT\$|＄|\$)?\s*([\d,]+)/i,
-    /應付金額[：:]\s*(?:NT\$|＄|\$)?\s*([\d,]+)/,
-    /訂單金額[：:]\s*(?:NT\$|＄|\$)?\s*([\d,]+)/,
-  ];
-
-  for (const pattern of patterns) {
-    const match = text.match(pattern);
-    if (match) {
-      return parseInt(match[1].replace(/,/g, ''), 10) || 0;
-    }
-  }
-
-  return 0;
-}
-
-/**
  * 從 HTML 表格或文字中提取訂單品項
+ * 每個品項包含: name, sku, quantity, unitPrice, subtotal
  */
 function extractOrderItems($, textContent) {
   const items = [];
 
-  // 嘗試從 HTML 表格提取
+  // 嘗試從 HTML 表格提取（Cyberbiz 常見格式）
   $('table tr').each((i, row) => {
     if (i === 0) return; // 跳過表頭
 
     const cells = $(row).find('td');
     if (cells.length >= 3) {
-      const name = $(cells[0]).text().trim();
+      const nameCell = $(cells[0]).text().trim();
       const quantity = parseInt($(cells[1]).text().trim(), 10) || 0;
       const priceText = $(cells[2]).text().trim();
-      const price = parseInt(priceText.replace(/[^\d]/g, ''), 10) || 0;
+      const unitPrice = parseInt(priceText.replace(/[^\d]/g, ''), 10) || 0;
 
-      if (name && quantity > 0) {
-        items.push({ name, quantity, price });
+      if (nameCell && quantity > 0) {
+        // 嘗試從品名中提取 SKU（常見格式: "SKU: ABC123 品名" 或 "(ABC123) 品名"）
+        const skuMatch = nameCell.match(/(?:SKU[：:\s]*|[（(])([A-Za-z0-9\-]+)[）)]?/i);
+        const sku = skuMatch ? skuMatch[1] : '';
+        const name = skuMatch ? nameCell.replace(skuMatch[0], '').trim() : nameCell;
+
+        items.push({
+          name,
+          sku,
+          quantity,
+          unitPrice,
+          subtotal: quantity * unitPrice,
+        });
       }
     }
   });
@@ -197,10 +199,20 @@ function extractOrderItems($, textContent) {
     const itemPattern = /(.+?)\s*[xX×]\s*(\d+)\s*(?:NT\$|＄|\$)?\s*([\d,]+)/g;
     let match;
     while ((match = itemPattern.exec(textContent)) !== null) {
+      const rawName = match[1].trim();
+      const quantity = parseInt(match[2], 10);
+      const unitPrice = parseInt(match[3].replace(/,/g, ''), 10);
+
+      const skuMatch = rawName.match(/(?:SKU[：:\s]*|[（(])([A-Za-z0-9\-]+)[）)]?/i);
+      const sku = skuMatch ? skuMatch[1] : '';
+      const name = skuMatch ? rawName.replace(skuMatch[0], '').trim() : rawName;
+
       items.push({
-        name: match[1].trim(),
-        quantity: parseInt(match[2], 10),
-        price: parseInt(match[3].replace(/,/g, ''), 10),
+        name,
+        sku,
+        quantity,
+        unitPrice,
+        subtotal: quantity * unitPrice,
       });
     }
   }

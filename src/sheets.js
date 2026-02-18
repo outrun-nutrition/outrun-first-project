@@ -1,25 +1,48 @@
 import { google } from 'googleapis';
 import { config } from './config.js';
 
+/**
+ * ERP「03_銷貨紀錄」欄位對應 (A ~ W, 共 23 欄)
+ *
+ * A: 訂單日期       B: 訂單編號      C: 通路來源
+ * D: SKU           E: 外部品名       F: 銷貨數量
+ * G: 售價           H: 銷貨金額      I: 訂單狀態
+ * J: 客戶代碼       K: 客戶名稱      L: 出貨日期
+ * M: 物流單號       N: 收款狀態      O: 收款日期
+ * P: 成本           Q: 毛利          R: 毛利率
+ * S: 賣場優惠券     T: 成交手續費    U: 其他服務費
+ * V: 金流與系統處理費 W: 備註
+ */
+
 const HEADER_ROW = [
-  '訂單編號',
-  '訂單日期',
-  '訂單狀態',
-  '客戶姓名',
-  '客戶Email',
-  '客戶電話',
-  '收件地址',
-  '付款方式',
-  '配送方式',
-  '商品明細',
-  '小計',
-  '運費',
-  '折扣',
-  '訂單總額',
-  '郵件主旨',
-  '郵件日期',
-  '最後更新',
+  '訂單日期',       // A
+  '訂單編號',       // B
+  '通路來源',       // C
+  'SKU',            // D
+  '外部品名',       // E
+  '銷貨數量',       // F
+  '售價',           // G
+  '銷貨金額',       // H
+  '訂單狀態',       // I
+  '客戶代碼',       // J
+  '客戶名稱',       // K
+  '出貨日期',       // L
+  '物流單號',       // M
+  '收款狀態',       // N
+  '收款日期',       // O
+  '成本',           // P
+  '毛利',           // Q
+  '毛利率',         // R
+  '賣場優惠券',     // S
+  '成交手續費',     // T
+  '其他服務費',     // U
+  '金流與系統處理費', // V
+  '備註',           // W
 ];
+
+// 欄位範圍: A ~ W
+const COL_RANGE = 'A:W';
+const COL_END = 'W';
 
 /**
  * 取得 Google Sheets API 實例
@@ -30,29 +53,22 @@ function getSheetsApi(auth) {
 
 /**
  * 確保工作表存在且有表頭
- * @param {import('googleapis').Auth.OAuth2Client} auth
  */
 export async function ensureSheetSetup(auth) {
   const sheets = getSheetsApi(auth);
   const { spreadsheetId, sheetName } = config.sheets;
 
-  // 檢查工作表是否存在
   const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId });
   const sheetExists = spreadsheet.data.sheets.some(
     (s) => s.properties.title === sheetName
   );
 
   if (!sheetExists) {
-    // 建立工作表
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId,
       requestBody: {
         requests: [
-          {
-            addSheet: {
-              properties: { title: sheetName },
-            },
-          },
+          { addSheet: { properties: { title: sheetName } } },
         ],
       },
     });
@@ -60,25 +76,21 @@ export async function ensureSheetSetup(auth) {
   }
 
   // 檢查是否有表頭
-  const headerRange = `${sheetName}!A1:Q1`;
+  const headerRange = `'${sheetName}'!A1:${COL_END}1`;
   const headerRes = await sheets.spreadsheets.values.get({
     spreadsheetId,
     range: headerRange,
   });
 
   if (!headerRes.data.values || headerRes.data.values.length === 0) {
-    // 寫入表頭
     await sheets.spreadsheets.values.update({
       spreadsheetId,
       range: headerRange,
       valueInputOption: 'USER_ENTERED',
-      requestBody: {
-        values: [HEADER_ROW],
-      },
+      requestBody: { values: [HEADER_ROW] },
     });
     console.log('[Sheets] 已寫入表頭');
 
-    // 格式化表頭（粗體 + 凍結）
     const sheetId = await getSheetId(sheets, spreadsheetId, sheetName);
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId,
@@ -86,11 +98,7 @@ export async function ensureSheetSetup(auth) {
         requests: [
           {
             repeatCell: {
-              range: {
-                sheetId,
-                startRowIndex: 0,
-                endRowIndex: 1,
-              },
+              range: { sheetId, startRowIndex: 0, endRowIndex: 1 },
               cell: {
                 userEnteredFormat: {
                   textFormat: { bold: true },
@@ -128,102 +136,189 @@ async function getSheetId(sheets, spreadsheetId, sheetName) {
 }
 
 /**
- * 取得所有已存在的訂單編號
- * @param {import('googleapis').Auth.OAuth2Client} auth
- * @returns {Promise<Map<string, number>>} 訂單編號 -> 行號 (0-indexed)
+ * 取得已存在的訂單編號集合（用於去重）
+ * 讀取 B 欄（訂單編號）和 E 欄（外部品名）來建立已存在的 key
+ * @returns {Promise<Set<string>>} "訂單編號|品名" 的集合
  */
-export async function getExistingOrders(auth) {
+export async function getExistingOrderKeys(auth) {
+  const sheets = getSheetsApi(auth);
+  const { spreadsheetId, sheetName } = config.sheets;
+
+  // 讀取 B 欄（訂單編號）和 E 欄（外部品名）
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `'${sheetName}'!B:E`,
+  });
+
+  const existingKeys = new Set();
+  if (res.data.values) {
+    res.data.values.forEach((row, index) => {
+      if (index === 0) return; // 跳過表頭
+      const orderNumber = row[0] || '';   // B 欄 = index 0
+      const itemName = row[3] || '';      // E 欄 = index 3 (B,C,D,E)
+      if (orderNumber) {
+        existingKeys.add(`${orderNumber}|${itemName}`);
+      }
+    });
+  }
+
+  return existingKeys;
+}
+
+/**
+ * 取得已存在的訂單編號與其對應行號（用於狀態更新）
+ * @returns {Promise<Map<string, number[]>>} 訂單編號 -> 行號陣列 (1-indexed, 含表頭)
+ */
+export async function getExistingOrderRows(auth) {
   const sheets = getSheetsApi(auth);
   const { spreadsheetId, sheetName } = config.sheets;
 
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: `${sheetName}!A:A`,
+    range: `'${sheetName}'!B:B`,
   });
 
-  const existingOrders = new Map();
+  const orderRows = new Map();
   if (res.data.values) {
     res.data.values.forEach((row, index) => {
-      if (index === 0) return; // 跳過表頭
-      if (row[0]) {
-        existingOrders.set(row[0], index);
+      if (index === 0) return;
+      const orderNumber = row[0];
+      if (orderNumber) {
+        const rows = orderRows.get(orderNumber) || [];
+        rows.push(index + 1); // 1-indexed for Sheets API
+        orderRows.set(orderNumber, rows);
       }
     });
   }
 
-  return existingOrders;
+  return orderRows;
 }
 
 /**
- * 將訂單轉為 Sheets row 資料
+ * 將一筆訂單展開為多列（每個品項一列）
+ * @param {Object} order - 解析後的訂單物件
+ * @returns {Array<Array>} Sheets rows (每列 23 個值, A ~ W)
  */
-function orderToRow(order) {
-  const itemsSummary = order.items
-    .map((item) => `${item.name} x${item.quantity} ($${item.price})`)
-    .join('; ');
+function orderToRows(order) {
+  // 如果沒有品項，仍建立一列（品項欄位留空）
+  if (order.items.length === 0) {
+    return [buildRow(order, null)];
+  }
 
+  return order.items.map((item) => buildRow(order, item));
+}
+
+/**
+ * 建立單一列資料 (A ~ W)
+ */
+function buildRow(order, item) {
   return [
-    order.orderNumber,
-    order.orderDate,
-    order.orderStatus,
-    order.customerName,
-    order.customerEmail,
-    order.customerPhone,
-    order.shippingAddress,
-    order.paymentMethod,
-    order.shippingMethod,
-    itemsSummary,
-    order.subtotal || '',
-    order.shippingFee || '',
-    order.discount || '',
-    order.totalAmount || '',
-    order.rawSubject,
-    order.emailDate,
-    new Date().toISOString(),
+    order.orderDate,                          // A: 訂單日期
+    order.orderNumber,                        // B: 訂單編號
+    order.channelSource,                      // C: 通路來源
+    item?.sku || '',                          // D: SKU
+    item?.name || '',                         // E: 外部品名
+    item?.quantity || '',                     // F: 銷貨數量
+    item?.unitPrice || '',                    // G: 售價
+    item?.subtotal || '',                     // H: 銷貨金額
+    order.orderStatus,                        // I: 訂單狀態
+    '',                                       // J: 客戶代碼（手動填寫）
+    order.customerName,                       // K: 客戶名稱
+    order.shippingDate,                       // L: 出貨日期
+    order.trackingNumber,                     // M: 物流單號
+    order.paymentStatus,                      // N: 收款狀態
+    order.paymentDate,                        // O: 收款日期
+    '',                                       // P: 成本（手動填寫）
+    '',                                       // Q: 毛利（手動填寫或公式）
+    '',                                       // R: 毛利率（手動填寫或公式）
+    order.discount || '',                     // S: 賣場優惠券
+    '',                                       // T: 成交手續費（手動填寫）
+    '',                                       // U: 其他服務費（手動填寫）
+    '',                                       // V: 金流與系統處理費（手動填寫）
+    `Gmail 自動匯入`,                         // W: 備註
   ];
 }
 
 /**
- * 將訂單資料寫入/更新至 Google Sheets
+ * 將訂單資料同步至 Google Sheets ERP
+ * - 新訂單品項：新增列
+ * - 已存在訂單：更新狀態欄位（訂單狀態、出貨日期、物流單號、收款狀態、收款日期）
+ *
  * @param {import('googleapis').Auth.OAuth2Client} auth
  * @param {Array} orders - 訂單陣列
- * @returns {Promise<{added: number, updated: number}>}
+ * @returns {Promise<{added: number, updated: number, skipped: number}>}
  */
 export async function syncOrdersToSheet(auth, orders) {
   const sheets = getSheetsApi(auth);
   const { spreadsheetId, sheetName } = config.sheets;
 
-  // 確保工作表已建立
   await ensureSheetSetup(auth);
 
-  // 取得已存在的訂單
-  const existingOrders = await getExistingOrders(auth);
+  // 取得已存在的 key 和行號
+  const [existingKeys, existingOrderRows] = await Promise.all([
+    getExistingOrderKeys(auth),
+    getExistingOrderRows(auth),
+  ]);
 
   let added = 0;
   let updated = 0;
+  let skipped = 0;
 
   const newRows = [];
   const updateRequests = [];
 
   for (const order of orders) {
-    const row = orderToRow(order);
-    const existingRowIndex = existingOrders.get(order.orderNumber);
+    const existingRows = existingOrderRows.get(order.orderNumber);
 
-    if (existingRowIndex !== undefined) {
-      // 更新已存在的訂單（覆蓋整行）
-      updateRequests.push({
-        range: `${sheetName}!A${existingRowIndex + 1}:Q${existingRowIndex + 1}`,
-        values: [row],
-      });
-      updated++;
+    if (existingRows && existingRows.length > 0) {
+      // 訂單已存在 → 更新狀態相關欄位（I, L, M, N, O）
+      // 只更新有值的欄位，不覆蓋手動填寫的資料
+      const statusUpdates = [];
+
+      if (order.orderStatus) {
+        statusUpdates.push({
+          range: `'${sheetName}'!I${existingRows[0]}`,
+          values: [[order.orderStatus]],
+        });
+      }
+      if (order.shippingDate) {
+        for (const row of existingRows) {
+          statusUpdates.push({
+            range: `'${sheetName}'!L${row}:M${row}`,
+            values: [[order.shippingDate, order.trackingNumber]],
+          });
+        }
+      }
+      if (order.paymentStatus) {
+        for (const row of existingRows) {
+          statusUpdates.push({
+            range: `'${sheetName}'!N${row}:O${row}`,
+            values: [[order.paymentStatus, order.paymentDate]],
+          });
+        }
+      }
+
+      if (statusUpdates.length > 0) {
+        updateRequests.push(...statusUpdates);
+        updated++;
+      } else {
+        skipped++;
+      }
     } else {
-      // 新增訂單
-      newRows.push(row);
+      // 新訂單 → 展開品項為多列新增
+      const rows = orderToRows(order);
+      for (const row of rows) {
+        const key = `${order.orderNumber}|${row[4]}`; // B|E
+        if (!existingKeys.has(key)) {
+          newRows.push(row);
+          existingKeys.add(key); // 避免同批次重複
+        }
+      }
       added++;
     }
   }
 
-  // 批次更新已存在的訂單
+  // 批次更新狀態
   if (updateRequests.length > 0) {
     await sheets.spreadsheets.values.batchUpdate({
       spreadsheetId,
@@ -234,19 +329,19 @@ export async function syncOrdersToSheet(auth, orders) {
     });
   }
 
-  // 批次新增訂單
+  // 批次新增品項列
   if (newRows.length > 0) {
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: `${sheetName}!A:Q`,
+      range: `'${sheetName}'!${COL_RANGE}`,
       valueInputOption: 'USER_ENTERED',
       insertDataOption: 'INSERT_ROWS',
-      requestBody: {
-        values: newRows,
-      },
+      requestBody: { values: newRows },
     });
   }
 
-  console.log(`[Sheets] 同步完成: 新增 ${added} 筆, 更新 ${updated} 筆`);
-  return { added, updated };
+  console.log(
+    `[Sheets] 同步完成: 新增 ${added} 筆訂單 (${newRows.length} 列), 更新 ${updated} 筆, 略過 ${skipped} 筆`
+  );
+  return { added, updated, skipped };
 }

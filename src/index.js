@@ -49,7 +49,7 @@ async function runSync(auth, afterDate) {
     const result = await syncOrdersToSheet(auth, orders);
 
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-    console.log(`[Sync] 完成 - 新增 ${result.added} 筆, 更新 ${result.updated} 筆 (耗時 ${elapsed}s)`);
+    console.log(`[Sync] 完成 - 新增 ${result.added} 筆, 更新 ${result.updated} 筆, 略過 ${result.skipped} 筆 (耗時 ${elapsed}s)`);
   } catch (err) {
     console.error(`[Sync] 同步失敗:`, err.message);
     if (err.code === 401 || err.code === 403) {

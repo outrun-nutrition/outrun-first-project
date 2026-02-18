@@ -8,7 +8,7 @@ export const config = {
   },
   sheets: {
     spreadsheetId: process.env.SPREADSHEET_ID,
-    sheetName: process.env.SHEET_NAME || '訂單',
+    sheetName: process.env.SHEET_NAME || '03_銷貨紀錄',
   },
   gmail: {
     cyberbizSender: process.env.CYBERBIZ_SENDER || 'noreply@cyberbiz.co',

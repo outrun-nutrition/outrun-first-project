@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { parseCyberbizOrderEmail } from '../parser.js';
 
 describe('parseCyberbizOrderEmail', () => {
-  it('should parse a basic Cyberbiz order email', () => {
+  it('should parse a Cyberbiz order email matching ERP structure', () => {
     const email = {
       id: 'msg-001',
       subject: '您有一筆新訂單 訂單編號: C20260101001',
@@ -19,7 +19,7 @@ describe('parseCyberbizOrderEmail', () => {
           <p>配送方式：宅配</p>
           <table>
             <tr><th>商品</th><th>數量</th><th>金額</th></tr>
-            <tr><td>能量膠 - 柑橘口味</td><td>3</td><td>NT$450</td></tr>
+            <tr><td>SKU: EN-GEL-01 能量膠 - 柑橘口味</td><td>3</td><td>NT$150</td></tr>
             <tr><td>電解質粉 - 檸檬口味</td><td>1</td><td>NT$350</td></tr>
           </table>
           <p>小計：NT$800</p>
@@ -35,19 +35,27 @@ describe('parseCyberbizOrderEmail', () => {
     assert.notEqual(order, null);
     assert.equal(order.orderNumber, 'C20260101001');
     assert.equal(order.orderDate, '2026/01/01 10:00');
+    assert.equal(order.channelSource, 'Cyberbiz');
     assert.equal(order.customerName, '王小明');
-    assert.equal(order.customerPhone, '0912-345-678');
-    assert.equal(order.shippingAddress, '台北市信義區信義路五段7號');
-    assert.equal(order.paymentMethod, '信用卡');
-    assert.equal(order.shippingMethod, '宅配');
+    assert.equal(order.orderStatus, '新訂單');
+    assert.equal(order.discount, 100);
+
+    // 品項結構驗證
     assert.equal(order.items.length, 2);
+
+    // 第一個品項有 SKU
+    assert.equal(order.items[0].sku, 'EN-GEL-01');
     assert.equal(order.items[0].name, '能量膠 - 柑橘口味');
     assert.equal(order.items[0].quantity, 3);
-    assert.equal(order.items[0].price, 450);
-    assert.equal(order.subtotal, 800);
-    assert.equal(order.shippingFee, 60);
-    assert.equal(order.discount, 100);
-    assert.equal(order.totalAmount, 760);
+    assert.equal(order.items[0].unitPrice, 150);
+    assert.equal(order.items[0].subtotal, 450);
+
+    // 第二個品項沒有 SKU
+    assert.equal(order.items[1].sku, '');
+    assert.equal(order.items[1].name, '電解質粉 - 檸檬口味');
+    assert.equal(order.items[1].quantity, 1);
+    assert.equal(order.items[1].unitPrice, 350);
+    assert.equal(order.items[1].subtotal, 350);
   });
 
   it('should extract order number from subject with # prefix', () => {
@@ -55,26 +63,33 @@ describe('parseCyberbizOrderEmail', () => {
       id: 'msg-002',
       subject: '新訂單通知 #C20260201002',
       date: 'Sun, 01 Feb 2026 12:00:00 +0800',
-      body: '<html><body><p>總計：NT$1,200</p></body></html>',
+      body: '<html><body><p>已付款</p></body></html>',
     };
 
     const order = parseCyberbizOrderEmail(email);
     assert.notEqual(order, null);
     assert.equal(order.orderNumber, 'C20260201002');
-    assert.equal(order.totalAmount, 1200);
+    assert.equal(order.channelSource, 'Cyberbiz');
+    assert.equal(order.paymentStatus, '已收款');
   });
 
-  it('should detect order status from subject', () => {
+  it('should detect order status and shipping info', () => {
     const email = {
       id: 'msg-003',
       subject: '訂單編號: C123456 已出貨',
       date: 'Mon, 02 Feb 2026 09:00:00 +0800',
-      body: '<html><body><p>出貨通知</p></body></html>',
+      body: `<html><body>
+        <p>出貨通知</p>
+        <p>出貨日期：2026/02/02</p>
+        <p>物流單號：TW123456789</p>
+      </body></html>`,
     };
 
     const order = parseCyberbizOrderEmail(email);
     assert.notEqual(order, null);
     assert.equal(order.orderStatus, '已出貨');
+    assert.equal(order.shippingDate, '2026/02/02');
+    assert.equal(order.trackingNumber, 'TW123456789');
   });
 
   it('should return null for email without order number', () => {
@@ -89,15 +104,15 @@ describe('parseCyberbizOrderEmail', () => {
     assert.equal(order, null);
   });
 
-  it('should parse items from text pattern (name x quantity $price)', () => {
+  it('should parse items from text pattern with SKU in parentheses', () => {
     const email = {
       id: 'msg-005',
       subject: '訂單編號: C999888',
       date: 'Tue, 03 Feb 2026 15:00:00 +0800',
       body: `
         <html><body>
-          <p>能量棒 x2 $300</p>
-          <p>運動飲料 x3 $450</p>
+          <p>(EB-001) 能量棒 x2 $300</p>
+          <p>運動飲料 x3 $150</p>
           <p>總計：$750</p>
         </body></html>
       `,
@@ -106,8 +121,30 @@ describe('parseCyberbizOrderEmail', () => {
     const order = parseCyberbizOrderEmail(email);
     assert.notEqual(order, null);
     assert.equal(order.items.length, 2);
+    assert.equal(order.items[0].sku, 'EB-001');
     assert.equal(order.items[0].name, '能量棒');
     assert.equal(order.items[0].quantity, 2);
+    assert.equal(order.items[0].unitPrice, 300);
+    assert.equal(order.items[0].subtotal, 600);
+    assert.equal(order.items[1].sku, '');
+    assert.equal(order.items[1].name, '運動飲料');
     assert.equal(order.items[1].quantity, 3);
+  });
+
+  it('should detect payment status from email', () => {
+    const email = {
+      id: 'msg-006',
+      subject: '訂單編號: C555666 付款完成通知',
+      date: 'Tue, 03 Feb 2026 16:00:00 +0800',
+      body: `<html><body>
+        <p>付款完成</p>
+        <p>收款日期：2026/02/03</p>
+      </body></html>`,
+    };
+
+    const order = parseCyberbizOrderEmail(email);
+    assert.notEqual(order, null);
+    assert.equal(order.paymentStatus, '已收款');
+    assert.equal(order.paymentDate, '2026/02/03');
   });
 });
