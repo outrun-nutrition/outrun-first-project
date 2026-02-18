@@ -1,0 +1,22 @@
+{
+  "name": "cyberbiz-gmail-to-sheets-erp",
+  "version": "1.0.0",
+  "description": "從 Gmail 抓取 Cyberbiz 訂單郵件，自動更新至 Google Sheets ERP 系統",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "auth": "node src/auth.js",
+    "fetch": "node src/index.js --once",
+    "test": "node --test src/__tests__/"
+  },
+  "keywords": ["cyberbiz", "gmail", "google-sheets", "erp"],
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "googleapis": "^144.0.0",
+    "cheerio": "^1.0.0",
+    "node-cron": "^3.0.3",
+    "dotenv": "^16.4.7"
+  }
+}
