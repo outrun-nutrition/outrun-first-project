@@ -410,16 +410,20 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
     <div class="nc-field">
       <label>你從事哪些運動？（可複選）</label>
       <div class="nc-toggle-group cols-3">
-        <input type="checkbox" id="sport_marathon" value="marathon"><label class="nc-toggle" for="sport_marathon"><span class="nc-icon">🏃‍♂️</span>馬拉松/路跑</label>
-        <input type="checkbox" id="sport_triathlon" value="triathlon"><label class="nc-toggle" for="sport_triathlon"><span class="nc-icon">🏊‍♂️</span>鐵人三項</label>
+        <input type="checkbox" id="sport_marathon" value="marathon"><label class="nc-toggle" for="sport_marathon"><span class="nc-icon">🏃‍♂️</span>路跑/馬拉松</label>
+        <input type="checkbox" id="sport_strength" value="strength"><label class="nc-toggle" for="sport_strength"><span class="nc-icon">🏋️</span>重量訓練</label>
+        <input type="checkbox" id="sport_ball" value="ball"><label class="nc-toggle" for="sport_ball"><span class="nc-icon">⚽</span>球類運動</label>
         <input type="checkbox" id="sport_cycling" value="cycling"><label class="nc-toggle" for="sport_cycling"><span class="nc-icon">🚴</span>自行車</label>
-        <input type="checkbox" id="sport_hyrox" value="hyrox"><label class="nc-toggle" for="sport_hyrox"><span class="nc-icon">⚡</span>HYROX/混合</label>
-        <input type="checkbox" id="sport_strength" value="strength"><label class="nc-toggle" for="sport_strength"><span class="nc-icon">🏋️</span>肌力訓練</label>
-        <input type="checkbox" id="sport_trail" value="trail"><label class="nc-toggle" for="sport_trail"><span class="nc-icon">⛰️</span>越野跑</label>
+        <input type="checkbox" id="sport_triathlon" value="triathlon"><label class="nc-toggle" for="sport_triathlon"><span class="nc-icon">🏊‍♂️</span>鐵人三項</label>
+        <input type="checkbox" id="sport_crossfit" value="crossfit"><label class="nc-toggle" for="sport_crossfit"><span class="nc-icon">🔥</span>CrossFit/功能性</label>
+        <input type="checkbox" id="sport_hyrox" value="hyrox"><label class="nc-toggle" for="sport_hyrox"><span class="nc-icon">⚡</span>HYROX</label>
+        <input type="checkbox" id="sport_combat" value="combat"><label class="nc-toggle" for="sport_combat"><span class="nc-icon">🥊</span>格鬥/武術</label>
         <input type="checkbox" id="sport_swim" value="swimming"><label class="nc-toggle" for="sport_swim"><span class="nc-icon">🏊</span>游泳</label>
+        <input type="checkbox" id="sport_trail" value="trail"><label class="nc-toggle" for="sport_trail"><span class="nc-icon">⛰️</span>越野/登山</label>
+        <input type="checkbox" id="sport_dance" value="dance"><label class="nc-toggle" for="sport_dance"><span class="nc-icon">💃</span>舞蹈/有氧</label>
         <input type="checkbox" id="sport_other" value="other"><label class="nc-toggle" for="sport_other"><span class="nc-icon">✏️</span>其他</label>
       </div>
-      <div class="nc-other-wrap" id="sportOtherWrap"><input type="text" class="nc-other-input" id="sportOtherText" placeholder="請輸入你的運動項目，例如：登山、瑜珈、球類..."></div>
+      <div class="nc-other-wrap" id="sportOtherWrap"><input type="text" class="nc-other-input" id="sportOtherText" placeholder="請輸入你的運動項目，例如：瑜珈、攀岩、划船..."></div>
     </div>
 
     <div class="nc-field">
@@ -444,13 +448,13 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
     <div class="nc-field">
       <label>目前的訓練週期階段</label>
       <div class="nc-toggle-group">
-        <input type="radio" name="phase" id="phase1" value="base" checked><label class="nc-toggle" for="phase1"><span class="nc-icon">🌱</span>基礎有氧期</label>
-        <input type="radio" name="phase" id="phase2" value="build"><label class="nc-toggle" for="phase2"><span class="nc-icon">📈</span>強化建設期</label>
-        <input type="radio" name="phase" id="phase3" value="peak"><label class="nc-toggle" for="phase3"><span class="nc-icon">🎯</span>賽前巔峰期</label>
+        <input type="radio" name="phase" id="phase1" value="base" checked><label class="nc-toggle" for="phase1"><span class="nc-icon">🌱</span>基礎打底期</label>
+        <input type="radio" name="phase" id="phase2" value="build"><label class="nc-toggle" for="phase2"><span class="nc-icon">📈</span>強化提升期</label>
+        <input type="radio" name="phase" id="phase3" value="peak"><label class="nc-toggle" for="phase3"><span class="nc-icon">🎯</span>目標衝刺期</label>
         <input type="radio" name="phase" id="phase4" value="recovery"><label class="nc-toggle" for="phase4"><span class="nc-icon">🧘</span>恢復過渡期</label>
         <input type="radio" name="phase" id="phase5" value="unsure"><label class="nc-toggle" for="phase5"><span class="nc-icon">🤔</span>不太確定</label>
       </div>
-      <div class="nc-hint">🌱 基礎期＝以輕鬆跑、打底為主，離賽事還很遠（>16週）｜📈 建設期＝開始加入間歇、節奏跑等強度訓練（8-16週前）｜🎯 巔峰期＝賽前最後衝刺、減量備賽（<8週）｜🧘 恢復期＝剛比完賽或安排休息的過渡階段｜🤔 不確定也沒關係，我們會根據其他資料幫你評估</div>
+      <div class="nc-hint">🌱 基礎期＝穩定訓練、打底累積體能（離比賽或目標還很遠）｜📈 強化期＝提高訓練強度與專項能力（距目標 8-16 週）｜🎯 衝刺期＝針對比賽或目標做最後準備與減量調整（< 8 週）｜🧘 恢復期＝休息、降低訓練量的過渡階段｜🤔 不確定也沒關係，我們會根據其他資料幫你評估</div>
     </div>
 
     <div class="nc-actions">
@@ -463,7 +467,7 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
   <div class="nc-card nc-hidden" id="step4">
     <img class="nc-card-logo" src="logo-white.png" alt="堅心">
     <div class="nc-step-title">身體狀態與恢復評估</div>
-    <div class="nc-step-desc">這個區塊評估你的整體恢復能力，包含睡眠、肌肉恢復、精神狀態與身體訊號。研究顯示超過 60% 的業餘耐力運動員曾出現過度訓練的早期徵兆。</div>
+    <div class="nc-step-desc">這個區塊評估你的整體恢復能力，包含睡眠、肌肉恢復、精神狀態與身體訊號。研究顯示超過 60% 的規律運動者曾出現過度訓練的早期徵兆。</div>
 
     <div class="nc-field">
       <label>訓練後的整體恢復感受（過去兩週平均）</label>
@@ -540,11 +544,11 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
   <!-- ====== STEP 5: 營養、體感與賽事目標（補充品擴充 + 其他選項） ====== -->
   <div class="nc-card nc-hidden" id="step5">
     <img class="nc-card-logo" src="logo-white.png" alt="堅心">
-    <div class="nc-step-title">營養習慣與賽事目標</div>
-    <div class="nc-step-desc">長距離賽事中約 30-50% 的跑者會遭遇腸胃不適。了解你的體感與營養現況，才能給出最合適的補給建議。</div>
+    <div class="nc-step-title">營養習慣與運動目標</div>
+    <div class="nc-step-desc">不同運動類型對腸胃的衝擊不同，高強度訓練中 30-50% 的運動者會遭遇腸胃不適。了解你的體感與營養現況，才能給出最合適的補給建議。</div>
 
     <div class="nc-field">
-      <label>長時間訓練或賽事中的腸胃狀態</label>
+      <label>高強度或長時間訓練中的腸胃狀態</label>
       <div class="nc-toggle-group cols-3">
         <input type="radio" name="giStatus" id="gi0" value="good" checked><label class="nc-toggle" for="gi0"><span class="nc-icon">👍</span>幾乎沒問題</label>
         <input type="radio" name="giStatus" id="gi1" value="mild"><label class="nc-toggle" for="gi1"><span class="nc-icon">😐</span>偶爾脹氣不適</label>
@@ -554,25 +558,30 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
 
     <div class="nc-field">
       <label>目前最主要的目標</label>
-      <div class="nc-toggle-group">
-        <input type="radio" name="goal" id="goal1" value="race_pr" checked><label class="nc-toggle" for="goal1"><span class="nc-icon">🏆</span>突破賽事 PB</label>
-        <input type="radio" name="goal" id="goal2" value="endurance_up"><label class="nc-toggle" for="goal2"><span class="nc-icon">🏃</span>提升耐力基礎</label>
-        <input type="radio" name="goal" id="goal3" value="faster_recovery"><label class="nc-toggle" for="goal3"><span class="nc-icon">🔄</span>加速訓練恢復</label>
-        <input type="radio" name="goal" id="goal4" value="body_comp"><label class="nc-toggle" for="goal4"><span class="nc-icon">⚖️</span>體態管理/減脂</label>
+      <div class="nc-toggle-group cols-3">
+        <input type="radio" name="goal" id="goal1" value="race_pr" checked><label class="nc-toggle" for="goal1"><span class="nc-icon">🏆</span>突破比賽成績</label>
+        <input type="radio" name="goal" id="goal2" value="endurance_up"><label class="nc-toggle" for="goal2"><span class="nc-icon">🏃</span>提升耐力體能</label>
+        <input type="radio" name="goal" id="goal3" value="muscle_gain"><label class="nc-toggle" for="goal3"><span class="nc-icon">💪</span>增肌/肌肥大</label>
+        <input type="radio" name="goal" id="goal4" value="faster_recovery"><label class="nc-toggle" for="goal4"><span class="nc-icon">🔄</span>加速訓練恢復</label>
+        <input type="radio" name="goal" id="goal5" value="body_comp"><label class="nc-toggle" for="goal5"><span class="nc-icon">⚖️</span>體態管理/減脂</label>
+        <input type="radio" name="goal" id="goal6" value="general_health"><label class="nc-toggle" for="goal6"><span class="nc-icon">🧘</span>整體健康維持</label>
         <input type="radio" name="goal" id="goal_other" value="other"><label class="nc-toggle" for="goal_other"><span class="nc-icon">✏️</span>其他</label>
       </div>
       <div class="nc-other-wrap" id="goalOtherWrap"><input type="text" class="nc-other-input" id="goalOtherText" placeholder="請輸入你的目標..."></div>
     </div>
 
     <div class="nc-field">
-      <label>近期有規劃的目標賽事嗎？</label>
+      <label>近期有規劃的目標比賽或挑戰嗎？</label>
       <div class="nc-toggle-group cols-3">
         <input type="radio" name="race" id="race0" value="none" checked><label class="nc-toggle" for="race0">目前沒有</label>
         <input type="radio" name="race" id="race1" value="half"><label class="nc-toggle" for="race1">半馬/標鐵</label>
         <input type="radio" name="race" id="race2" value="full"><label class="nc-toggle" for="race2">全馬/超鐵/超馬</label>
-        <input type="radio" name="race" id="race_other" value="other"><label class="nc-toggle" for="race_other"><span class="nc-icon">✏️</span>其他賽事</label>
+        <input type="radio" name="race" id="race3" value="strength_comp"><label class="nc-toggle" for="race3">健力/舉重賽</label>
+        <input type="radio" name="race" id="race4" value="ball_league"><label class="nc-toggle" for="race4">球類聯賽/盃賽</label>
+        <input type="radio" name="race" id="race5" value="functional_comp"><label class="nc-toggle" for="race5">HYROX/CrossFit</label>
+        <input type="radio" name="race" id="race_other" value="other"><label class="nc-toggle" for="race_other"><span class="nc-icon">✏️</span>其他</label>
       </div>
-      <div class="nc-other-wrap" id="raceOtherWrap"><input type="text" class="nc-other-input" id="raceOtherText" placeholder="例如：HYROX、Spartan Race、登山縱走..."></div>
+      <div class="nc-other-wrap" id="raceOtherWrap"><input type="text" class="nc-other-input" id="raceOtherText" placeholder="例如：Spartan Race、格鬥賽、登山縱走、舞蹈比賽..."></div>
     </div>
 
     <div class="nc-field">
@@ -622,8 +631,8 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
       <div class="nc-arg-title">堅心 A.R.G. 科學恢復系統 <span class="font-en">RECOVERY SYSTEM</span></div>
       <div class="nc-arg-desc">訓練是為了變強，恢復才是變強的開始。堅心的產品線覆蓋完整的運動恢復循環，由國立體育大學產學合作研發。</div>
       <div class="nc-arg-steps">
-        <div class="nc-arg-step"><div class="nc-arg-step-icon">⚡</div><div class="nc-arg-step-label">賽前啟動</div><div class="nc-arg-step-product">食動力 運動體感膠囊</div></div>
-        <div class="nc-arg-step"><div class="nc-arg-step-icon">🔄</div><div class="nc-arg-step-label">賽後修復</div><div class="nc-arg-step-product">能易復 恢復蛋白</div></div>
+        <div class="nc-arg-step"><div class="nc-arg-step-icon">⚡</div><div class="nc-arg-step-label">訓練前啟動</div><div class="nc-arg-step-product">食動力 運動體感膠囊</div></div>
+        <div class="nc-arg-step"><div class="nc-arg-step-icon">🔄</div><div class="nc-arg-step-label">訓練後修復</div><div class="nc-arg-step-product">能易復 恢復蛋白</div></div>
         <div class="nc-arg-step"><div class="nc-arg-step-icon">🌙</div><div class="nc-arg-step-label">深度關機</div><div class="nc-arg-step-product">眠易復 運動恢復膠囊</div></div>
       </div>
     </div>
@@ -662,7 +671,7 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
 "use strict";
 var WEBHOOK_URL="";
 var ALL_SUPP_IDS=["supp0","supp1","supp2","supp3","supp4","supp5","supp6","supp7","supp8","supp9","supp10","supp11","supp12","supp13","supp14","supp15","supp16","supp_other"];
-var ALL_SPORT_IDS=["sport_marathon","sport_triathlon","sport_cycling","sport_hyrox","sport_strength","sport_trail","sport_swim","sport_other"];
+var ALL_SPORT_IDS=["sport_marathon","sport_strength","sport_ball","sport_cycling","sport_triathlon","sport_crossfit","sport_hyrox","sport_combat","sport_swim","sport_trail","sport_dance","sport_other"];
 var ALL_ISSUE_IDS=["issue1","issue2","issue3","issue4","issue5","issue6","issue7","issue8","issue_other"];
 
 function getVal(n){var e=document.querySelector('input[name="'+n+'"]:checked');return e?e.value:null}
@@ -753,10 +762,17 @@ function calculate(){
   var supps=getChecked(ALL_SUPP_IDS);
 
   var isEndurance=["marathon","triathlon","cycling","trail","swimming"].some(function(s){return sports.indexOf(s)!==-1});
+  var isStrength=sports.indexOf("strength")!==-1;
+  var isBallSport=sports.indexOf("ball")!==-1;
+  var isCombat=sports.indexOf("combat")!==-1;
+  var isMixed=["crossfit","hyrox"].some(function(s){return sports.indexOf(s)!==-1});
+  var isDance=sports.indexOf("dance")!==-1;
   var intense=freq==="5-6"||freq==="7+";
   var longSession=duration==="90+";
   var hasRace=race!=="none";
   var isFullRace=race==="full";
+  var isStrengthComp=race==="strength_comp";
+  var isFunctionalComp=race==="functional_comp";
 
   /* BMR */
   var bmr=gender==="male"?10*weight+6.25*height-5*age+5:10*weight+6.25*height-5*age-161;
@@ -764,24 +780,46 @@ function calculate(){
   var tdee=Math.round(bmr*(actMul[freq]||1.6));
   if(isEndurance)tdee=Math.round(tdee*1.07);
   if(sports.indexOf("triathlon")!==-1)tdee=Math.round(tdee*1.03);
+  if(isStrength&&intense)tdee=Math.round(tdee*1.05);
+  if(isMixed)tdee=Math.round(tdee*1.06);
+  if(isBallSport)tdee=Math.round(tdee*1.04);
+  if(isCombat)tdee=Math.round(tdee*1.05);
   if(longSession)tdee=Math.round(tdee*1.08);
   var phaseAdj={"base":1.0,"build":1.05,"peak":1.1,"recovery":0.92,"unsure":1.0};
   tdee=Math.round(tdee*(phaseAdj[phase]||1.0));
-  var goalAdj={"race_pr":1.05,"endurance_up":1.05,"faster_recovery":1.0,"body_comp":0.82,"other":1.0};
+  var goalAdj={"race_pr":1.05,"endurance_up":1.05,"muscle_gain":1.12,"faster_recovery":1.0,"body_comp":0.82,"general_health":1.0,"other":1.0};
   tdee=Math.round(tdee*(goalAdj[goal]||1.0));
   if(isFullRace&&phase==="peak")tdee=Math.round(tdee*1.05);
+  if(isStrengthComp&&phase==="peak")tdee=Math.round(tdee*1.03);
 
   /* Macros */
   var carbGPerKg,proteinGPerKg;
   if(isEndurance){
     if(freq==="7+"&&longSession)carbGPerKg=8;else if(intense||longSession)carbGPerKg=7;else if(freq==="3-4")carbGPerKg=6;else carbGPerKg=5;
+  }else if(isStrength&&!isEndurance){
+    carbGPerKg=intense?4.5:3.5;
+  }else if(isMixed||isCombat){
+    carbGPerKg=intense?6:5;
+  }else if(isBallSport){
+    carbGPerKg=intense?5.5:4.5;
+  }else if(isDance){
+    carbGPerKg=intense?5:4;
   }else{carbGPerKg=intense?5:4}
   if(phase==="peak")carbGPerKg=Math.min(carbGPerKg+1,10);
   if(phase==="recovery")carbGPerKg=Math.max(carbGPerKg-1,3);
   if(goal==="body_comp")carbGPerKg=Math.max(carbGPerKg-1.5,3);
-  if(goal==="body_comp")proteinGPerKg=2.2;else if(goal==="faster_recovery")proteinGPerKg=1.8;else if(isEndurance)proteinGPerKg=1.5;else proteinGPerKg=1.8;
+  if(goal==="muscle_gain")carbGPerKg=Math.max(carbGPerKg,4.5);
+  if(goal==="body_comp")proteinGPerKg=2.2;
+  else if(goal==="muscle_gain")proteinGPerKg=2.0;
+  else if(goal==="faster_recovery")proteinGPerKg=1.8;
+  else if(isStrength)proteinGPerKg=1.8;
+  else if(isMixed||isCombat)proteinGPerKg=1.7;
+  else if(isBallSport)proteinGPerKg=1.6;
+  else if(isEndurance)proteinGPerKg=1.5;
+  else proteinGPerKg=1.6;
   if(intense)proteinGPerKg+=0.2;
   if(phase==="build"||phase==="peak")proteinGPerKg+=0.1;
+  if(goal==="muscle_gain"&&isStrength)proteinGPerKg=Math.max(proteinGPerKg,2.2);
   var protein=Math.round(proteinGPerKg*weight),carb=Math.round(carbGPerKg*weight);
   var fatCal=tdee-protein*4-carb*4;if(fatCal<0)fatCal=0;
   var fat=Math.round(fatCal/9);
@@ -797,14 +835,14 @@ function calculate(){
   var un=document.getElementById("userName").value.trim();
   if(un)document.getElementById("reportTitle").textContent=un+"，這是你的運動營養評估報告";
   document.getElementById("resultTDEE").textContent=tdee.toLocaleString();
-  var sn=sports.map(function(s){return{"marathon":"路跑","triathlon":"三鐵","cycling":"單車","hyrox":"HYROX","strength":"肌力","trail":"越野","swimming":"游泳","other":"其他"}[s]||s}).join("、");
+  var sn=sports.map(function(s){return{"marathon":"路跑","triathlon":"三鐵","cycling":"單車","hyrox":"HYROX","strength":"重訓","ball":"球類","crossfit":"CrossFit","combat":"格鬥","trail":"越野","swimming":"游泳","dance":"舞蹈/有氧","other":"其他"}[s]||s}).join("、");
   document.getElementById("resultSummary").textContent=(gender==="male"?"男性":"女性")+"・"+age+" 歲・"+weight+" kg・"+sn;
   var em=document.getElementById("userEmail").value.trim();
   if(em)document.getElementById("sendEmail").value=em;
   else document.getElementById("sendReportSection").style.display="none";
 
   renderStatusGrid(sc);drawRadar(sc);renderMacros(protein,carb,fat,weight,tdee,isEndurance);
-  renderProducts(buildRecs(gender,weight,goal,freq,sports,duration,phase,issues,race,gi,supps,sc,intense,longSession,isEndurance,hasRace,isFullRace,rf,sq,el));
+  renderProducts(buildRecs(gender,weight,goal,freq,sports,duration,phase,issues,race,gi,supps,sc,intense,longSession,isEndurance,isStrength,isMixed,isBallSport,isCombat,isDance,hasRace,isFullRace,isStrengthComp,isFunctionalComp,rf,sq,el));
 }
 
 function renderStatusGrid(s){
@@ -831,38 +869,38 @@ function renderMacros(p,c,f,w,t,ie){
   var ms=[{n:"蛋白質",v:p,u:"g",pk:(p/w).toFixed(1),cl:"#ED5D2B",mx:Math.round(2.5*w)},{n:"碳水化合物",v:c,u:"g",pk:(c/w).toFixed(1),cl:"#1A6BF0",mx:Math.round(10*w)},{n:"脂肪",v:f,u:"g",pk:(f/w).toFixed(1),cl:"#A0A0A0",mx:Math.round(t*.4/9)}];
   var h="";ms.forEach(function(m){var pct=Math.min(100,Math.round(m.v/m.mx*100));h+='<div class="nc-nutrient"><span class="nc-nutrient-name">'+m.n+'</span><div class="nc-nutrient-bar-wrap"><div class="nc-nutrient-bar" style="width:'+pct+'%;background:'+m.cl+'"></div></div><span class="nc-nutrient-val">'+m.v+' '+m.u+'（'+m.pk+'g/kg）</span></div>'});
   document.getElementById("macroList").innerHTML=h;
-  document.getElementById("macroRef").textContent=ie?"碳水需求參考 ACSM 耐力運動員指引（5-10 g/kg/day），蛋白質參考 ISSN 立場聲明（1.2-1.6 g/kg/day）。":"蛋白質需求參考 ISSN 立場聲明（1.6-2.2 g/kg/day），碳水依訓練量調整。";
+  document.getElementById("macroRef").textContent=ie?"碳水需求參考 ACSM 耐力運動員指引（5-10 g/kg/day），蛋白質參考 ISSN 立場聲明（1.2-1.6 g/kg/day）。":"蛋白質需求參考 ISSN 立場聲明（1.6-2.2 g/kg/day for 肌力/爆發型運動），碳水依運動類型與訓練量調整。";
 }
 
-function buildRecs(gender,wt,goal,freq,sports,dur,phase,issues,race,gi,supps,sc,intense,longS,isEnd,hasRace,fullRace,rf,sq,el){
+function buildRecs(gender,wt,goal,freq,sports,dur,phase,issues,race,gi,supps,sc,intense,longS,isEnd,isStr,isMix,isBall,isCmbt,isDnc,hasRace,fullRace,strComp,funcComp,rf,sq,el){
   var its=[];
-  /* 眠易復 */
-  var sn=0;if(issues.indexOf("post_training_insomnia")!==-1)sn+=35;if(issues.indexOf("brain_fog")!==-1)sn+=15;if(issues.indexOf("slow_recovery")!==-1)sn+=10;if(issues.indexOf("mood_swings")!==-1)sn+=10;if(sc.sleep<=40)sn+=30;else if(sc.sleep<=60)sn+=15;if(intense)sn+=10;if(el<=2)sn+=10;
+  /* 眠易復 — 適用所有高強度運動類型 */
+  var sn=0;if(issues.indexOf("post_training_insomnia")!==-1)sn+=35;if(issues.indexOf("brain_fog")!==-1)sn+=15;if(issues.indexOf("slow_recovery")!==-1)sn+=10;if(issues.indexOf("mood_swings")!==-1)sn+=10;if(sc.sleep<=40)sn+=30;else if(sc.sleep<=60)sn+=15;if(intense)sn+=10;if(el<=2)sn+=10;if(isCmbt)sn+=5;if(isMix)sn+=5;
   if(sn>=25)its.push({name:"眠易復 運動恢復膠囊",icon:"🌙",bg:"rgba(20,93,221,.12)",dose:"睡前 30 分鐘服用 2 粒",reason:"含檸檬馬鞭草萃取、OLPLUS 益菌萃取、GABA 與甘胺酸鎂，引導深度睡眠，輔助生理修復。針對高強度訓練後交感神經亢奮導致的入睡困難設計。",ref:"Samuels CH. Sleep, recovery and performance. Phys Med Rehabil Clin. 2009.",pri:sn>=45?"essential":"recommended",pl:sn>=45?"核心推薦":"推薦",sc:70+sn/3,k:true});
-  /* 能易復 */
-  var rn=0;if(isEnd)rn+=20;if(longS)rn+=15;if(goal==="faster_recovery")rn+=25;if(goal==="race_pr")rn+=10;if(issues.indexOf("slow_recovery")!==-1)rn+=20;if(hasRace)rn+=10;if(supps.indexOf("protein")===-1)rn+=10;
-  if(rn>=25)its.push({name:"能易復 恢復蛋白（黑糖仙草）",icon:"🥤",bg:"rgba(237,93,43,.1)",dose:fullRace?"賽後 30 分鐘內 1 份，長距離建議攜帶 500g 盒裝":"訓練後 30 分鐘內沖泡 1 份",reason:"專利 EAAlpha 配方提供 20g 蛋白質 + 24g 碳水的恢復黃金比例，全素可食。符合 ISSN 運動後 0-2 小時蛋白質攝取窗口建議。",ref:"Jager R et al. ISSN Position Stand: protein and exercise. 2017.",pri:rn>=45?"essential":"recommended",pl:rn>=45?"核心推薦":"推薦",sc:65+rn/3,k:true});
-  /* 食動力 */
-  var gn=0;if(gi==="severe")gn+=35;if(gi==="mild")gn+=15;if(isEnd)gn+=15;if(longS)gn+=10;if(hasRace)gn+=10;if(supps.indexOf("probiotic")===-1)gn+=10;
-  if(gn>=25)its.push({name:"食動力 運動體感膠囊",icon:"⚡",bg:"rgba(237,93,43,.1)",dose:"賽前/訓練前 1 包，搭配溫水服用",reason:"TWK-10 專利益生菌 + GasAid 配方。長距離賽事中 30-50% 的選手遭遇 GI 不適，穩定腸道功能是耐力表現的基礎。",ref:"de Oliveira EP et al. GI complaints during exercise. Sports Med. 2014.",pri:gn>=40?"essential":"recommended",pl:gn>=40?"核心推薦":"推薦",sc:60+gn/3,k:true});
-  /* OARC */
-  if(fullRace&&isEnd)its.push({name:"OARC 專業科學訓練補給組",icon:"🎯",bg:"rgba(20,93,221,.1)",dose:"依賽事距離客製組合",reason:"結合食動力與能易復的完整科學循環，針對長距離賽事的系統化補給方案。",ref:"",pri:"recommended",pl:"推薦",sc:75,k:true});
+  /* 能易復 — 適用所有需肌肉修復的運動 */
+  var rn=0;if(isEnd)rn+=20;if(isStr)rn+=20;if(isMix)rn+=15;if(isBall)rn+=12;if(isCmbt)rn+=15;if(longS)rn+=15;if(goal==="faster_recovery")rn+=25;if(goal==="muscle_gain")rn+=20;if(goal==="race_pr")rn+=10;if(issues.indexOf("slow_recovery")!==-1)rn+=20;if(hasRace)rn+=10;if(supps.indexOf("protein")===-1)rn+=10;
+  if(rn>=25)its.push({name:"能易復 恢復蛋白（黑糖仙草）",icon:"🥤",bg:"rgba(237,93,43,.1)",dose:fullRace?"賽後 30 分鐘內 1 份，長距離建議攜帶 500g 盒裝":"訓練後 30 分鐘內沖泡 1 份",reason:"專利 EAAlpha 配方提供 20g 蛋白質 + 24g 碳水的恢復黃金比例，全素可食。符合 ISSN 運動後 0-2 小時蛋白質攝取窗口建議，無論耐力或肌力訓練都適用。",ref:"Jager R et al. ISSN Position Stand: protein and exercise. 2017.",pri:rn>=45?"essential":"recommended",pl:rn>=45?"核心推薦":"推薦",sc:65+rn/3,k:true});
+  /* 食動力 — 適用所有高強度及長時間運動 */
+  var gn=0;if(gi==="severe")gn+=35;if(gi==="mild")gn+=15;if(isEnd)gn+=15;if(isMix)gn+=12;if(isCmbt)gn+=10;if(isBall)gn+=8;if(longS)gn+=10;if(hasRace)gn+=10;if(intense)gn+=8;if(supps.indexOf("probiotic")===-1)gn+=10;
+  if(gn>=25)its.push({name:"食動力 運動體感膠囊",icon:"⚡",bg:"rgba(237,93,43,.1)",dose:"訓練前 1 包，搭配溫水服用",reason:"TWK-10 專利益生菌 + GasAid 配方。高強度運動中 30-50% 的運動者遭遇腸胃不適，穩定腸道功能是運動表現的基礎。",ref:"de Oliveira EP et al. GI complaints during exercise. Sports Med. 2014.",pri:gn>=40?"essential":"recommended",pl:gn>=40?"核心推薦":"推薦",sc:60+gn/3,k:true});
+  /* OARC — 適用長距離賽事 或 高強度混合賽事 */
+  if((fullRace&&isEnd)||(funcComp&&isMix))its.push({name:"OARC 專業科學訓練補給組",icon:"🎯",bg:"rgba(20,93,221,.1)",dose:"依賽事類型客製組合",reason:"結合食動力與能易復的完整科學循環，針對高強度賽事的系統化補給方案。",ref:"",pri:"recommended",pl:"推薦",sc:75,k:true});
 
   /* ===== 通用文獻佐證推薦 ===== */
   if(supps.indexOf("magnesium")===-1&&(sc.sleep<=60||issues.indexOf("post_training_insomnia")!==-1))
     its.push({name:"鎂（甘胺酸鎂/檸檬酸鎂）",icon:"💊",bg:"rgba(160,160,160,.08)",dose:"睡前 200-400mg 元素鎂",reason:"鎂參與超過 300 種酶反應，包含肌肉放鬆與神經傳導。研究顯示鎂補充可輔助改善睡眠品質與減少肌肉痙攣。耐力運動員因流汗流失鎂的風險更高。",ref:"Zhang Y et al. Association of magnesium intake with sleep. Nutrients. 2022;14(5):1116.",pri:"recommended",pl:"建議",sc:58,k:false});
 
-  if(supps.indexOf("iron")===-1&&gender==="female"&&isEnd)
-    its.push({name:"鐵劑",icon:"🩸",bg:"rgba(160,160,160,.08)",dose:"每日 15-30mg（建議搭配維生素 C 促進吸收）",reason:"女性耐力運動員是缺鐵性貧血的高風險族群。鐵是血紅素的核心組成，不足會導致運動表現與恢復力顯著下降。建議定期檢測血清鐵蛋白。",ref:"Peeling P et al. Athletic induced iron deficiency. Int J Sport Nutr Exerc Metab. 2008;18(5):501-514.",pri:"recommended",pl:"建議",sc:56,k:false});
+  if(supps.indexOf("iron")===-1&&(gender==="female"||(isEnd&&intense)))
+    its.push({name:"鐵劑",icon:"🩸",bg:"rgba(160,160,160,.08)",dose:"每日 15-30mg（建議搭配維生素 C 促進吸收）",reason:"女性運動者與高訓練量的耐力運動者是缺鐵性貧血的高風險族群。鐵是血紅素的核心組成，不足會導致運動表現與恢復力顯著下降。建議定期檢測血清鐵蛋白。",ref:"Peeling P et al. Athletic induced iron deficiency. Int J Sport Nutr Exerc Metab. 2008;18(5):501-514.",pri:"recommended",pl:"建議",sc:56,k:false});
 
   if(supps.indexOf("fish_oil")===-1&&(issues.indexOf("slow_recovery")!==-1||issues.indexOf("joint_pain")!==-1||intense))
     its.push({name:"高濃度魚油（Omega-3）",icon:"🐟",bg:"rgba(160,160,160,.08)",dose:"每日 2-3g EPA+DHA",reason:"EPA 與 DHA 具調節發炎反應的作用，有助於高強度訓練後的肌肉與關節恢復。多項統合分析支持其在運動恢復中的輔助角色。",ref:"Calder PC. Omega-3 fatty acids and inflammatory processes. Nutrients. 2010;2(3):355-374.",pri:issues.indexOf("joint_pain")!==-1?"recommended":"optional",pl:issues.indexOf("joint_pain")!==-1?"建議":"可選",sc:issues.indexOf("joint_pain")!==-1?55:45,k:false});
 
-  if((isEnd||longS)&&supps.indexOf("electrolyte")===-1)
-    its.push({name:"電解質補充",icon:"💦",bg:"rgba(160,160,160,.08)",dose:"訓練中每 30-45 分鐘，含鈉 300-500mg",reason:"長時間運動流汗導致鈉、鉀流失，影響肌肉收縮與神經傳導。汗水率與鈉流失量個體差異大，建議根據個人調整。",ref:"Sawka MN et al. ACSM Position Stand: Exercise and fluid replacement. Med Sci Sports Exerc. 2007.",pri:longS?"essential":"recommended",pl:longS?"必備":"建議",sc:longS?62:50,k:false});
+  if((isEnd||longS||isBall||isCmbt||isMix)&&supps.indexOf("electrolyte")===-1)
+    its.push({name:"電解質補充",icon:"💦",bg:"rgba(160,160,160,.08)",dose:"訓練中每 30-45 分鐘，含鈉 300-500mg",reason:"中高強度運動流汗導致鈉、鉀流失，影響肌肉收縮與神經傳導。球類、格鬥及混合訓練的流汗量不亞於耐力運動，建議根據個人調整。",ref:"Sawka MN et al. ACSM Position Stand: Exercise and fluid replacement. Med Sci Sports Exerc. 2007.",pri:longS?"essential":"recommended",pl:longS?"必備":"建議",sc:longS?62:50,k:false});
 
-  if(isEnd&&longS&&hasRace)
-    its.push({name:"賽中碳水補給（能量膠/飲品）",icon:"🍯",bg:"rgba(160,160,160,.08)",dose:"每 45-60 分鐘補充 30-60g 碳水",reason:"超過 2.5 小時賽事建議使用多重轉運體碳水（葡萄糖+果糖 2:1），可將攝取量提升至 60-90g/hr，需經腸道訓練適應。",ref:"Jeukendrup AE. Training the gut for athletes. Sports Med. 2017;47(Suppl 1):101-110.",pri:"recommended",pl:"建議",sc:58,k:false});
+  if((isEnd&&longS&&hasRace)||(isMix&&hasRace))
+    its.push({name:"運動中碳水補給（能量膠/飲品）",icon:"🍯",bg:"rgba(160,160,160,.08)",dose:"每 45-60 分鐘補充 30-60g 碳水",reason:"超過 60-90 分鐘的高強度運動建議使用多重轉運體碳水（葡萄糖+果糖 2:1），可將攝取量提升至 60-90g/hr，需經腸道訓練適應。",ref:"Jeukendrup AE. Training the gut for athletes. Sports Med. 2017;47(Suppl 1):101-110.",pri:"recommended",pl:"建議",sc:58,k:false});
 
   if(supps.indexOf("vitamin_d")===-1)
     its.push({name:"維生素 D3",icon:"☀️",bg:"rgba(160,160,160,.08)",dose:"每日 2000-4000 IU",reason:"影響骨骼健康、肌肉功能與免疫力。台灣超過 60% 的成年人維生素 D 不足，規律運動者尤其需要關注。建議檢測血清 25(OH)D，目標維持 40-60 ng/mL。",ref:"Owens DJ et al. Vitamin D and the athlete. Sports Med. 2018;48:3-16.",pri:"optional",pl:"可選",sc:42,k:false});
@@ -870,8 +908,8 @@ function buildRecs(gender,wt,goal,freq,sports,dur,phase,issues,race,gi,supps,sc,
   if(supps.indexOf("vitamin_b")===-1&&(intense||goal==="body_comp"))
     its.push({name:"維生素 B 群",icon:"🟡",bg:"rgba(160,160,160,.08)",dose:"每日 1 顆（活性型態尤佳）",reason:"B 群是能量代謝的必需輔酶，高訓練量或熱量限制期間需求增加。B1、B6、B12 對於碳水與蛋白質代謝特別重要。",ref:"Woolf K, Manore MM. B-vitamins and exercise. Int J Sport Nutr Exerc Metab. 2006;16(5):453-484.",pri:"optional",pl:"可選",sc:40,k:false});
 
-  if(supps.indexOf("creatine")===-1&&sports.indexOf("strength")!==-1)
-    its.push({name:"肌酸（Creatine Monohydrate）",icon:"⚡",bg:"rgba(160,160,160,.08)",dose:"每日 3-5g，搭配水或果汁",reason:"ISSN 評定為 A 級證據（強烈推薦）。可提升高強度短時間的力量輸出與爆發力，長期使用安全性良好。",ref:"Rawson ES et al. ISSN Position Stand: Creatine supplementation. J Int Soc Sports Nutr. 2021;18:46.",pri:"recommended",pl:"建議",sc:55,k:false});
+  if(supps.indexOf("creatine")===-1&&(isStr||isMix||isCmbt||isBall||goal==="muscle_gain"))
+    its.push({name:"肌酸（Creatine Monohydrate）",icon:"⚡",bg:"rgba(160,160,160,.08)",dose:"每日 3-5g，搭配水或果汁",reason:"ISSN 評定為 A 級證據（強烈推薦）。可提升高強度短時間的力量輸出與爆發力，對重訓、球類、格鬥及功能性訓練者皆有益處，長期使用安全性良好。",ref:"Rawson ES et al. ISSN Position Stand: Creatine supplementation. J Int Soc Sports Nutr. 2021;18:46.",pri:"recommended",pl:"建議",sc:55,k:false});
 
   if(supps.indexOf("collagen")===-1&&issues.indexOf("joint_pain")!==-1)
     its.push({name:"膠原蛋白胜肽",icon:"🦴",bg:"rgba(160,160,160,.08)",dose:"每日 10-15g，搭配維生素 C",reason:"研究顯示水解膠原蛋白搭配維生素 C 在運動前 30-60 分鐘補充，可促進肌腱與韌帶膠原蛋白合成。適合有關節不適或傷後恢復需求者。",ref:"Shaw G et al. Vitamin C-enriched gelatin supplementation. Am J Clin Nutr. 2017;105(1):136-143.",pri:"recommended",pl:"建議",sc:50,k:false});
