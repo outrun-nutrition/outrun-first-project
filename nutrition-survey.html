@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outrun Nutrition — 個人化營養評估</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#2563eb;--primary-light:#3b82f6;--primary-dark:#1d4ed8;
+  --accent:#10b981;--accent-dark:#059669;
+  --bg:#f8fafc;--surface:#ffffff;--surface-alt:#f1f5f9;
+  --text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --border:#e2e8f0;--radius:14px;
+  --shadow:0 1px 3px rgba(0,0,0,.06);
+  --shadow-md:0 4px 16px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 30px rgba(0,0,0,.1);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh}
+
+/* ===== Layout ===== */
+.ns-wrap{max-width:640px;margin:0 auto;padding:32px 20px 48px}
+.ns-brand{text-align:center;margin-bottom:8px}
+.ns-brand-name{font-size:.85rem;font-weight:600;letter-spacing:2px;color:var(--primary);text-transform:uppercase}
+.ns-header{text-align:center;margin-bottom:32px}
+.ns-header h1{font-size:1.6rem;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4}
+.ns-header p{color:var(--text-secondary);font-size:.9rem;max-width:480px;margin:0 auto}
+
+/* ===== Progress ===== */
+.ns-progress-wrap{margin-bottom:32px}
+.ns-progress-steps{display:flex;justify-content:space-between;margin-bottom:8px}
+.ns-progress-step{font-size:.72rem;font-weight:500;color:var(--text-muted);transition:color .3s}
+.ns-progress-step.active{color:var(--primary);font-weight:600}
+.ns-progress-step.done{color:var(--accent)}
+.ns-progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.ns-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--primary));border-radius:2px;transition:width .4s ease}
+
+/* ===== Card ===== */
+.ns-card{background:var(--surface);border-radius:var(--radius);padding:32px 28px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.ns-step-num{display:inline-block;font-size:.72rem;font-weight:600;color:var(--primary);background:rgba(37,99,235,.08);padding:4px 12px;border-radius:20px;margin-bottom:12px}
+.ns-step-title{font-size:1.15rem;font-weight:700;margin-bottom:4px;color:var(--text)}
+.ns-step-desc{color:var(--text-secondary);font-size:.85rem;margin-bottom:24px;line-height:1.6}
+
+/* ===== Form Fields ===== */
+.ns-field{margin-bottom:20px}
+.ns-field label.ns-label{display:block;font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:8px}
+.ns-field .ns-hint{font-size:.78rem;color:var(--text-muted);margin-top:4px}
+.ns-field input[type="number"],.ns-field select{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:.95rem;color:var(--text);background:var(--surface);transition:border-color .2s,box-shadow .2s;font-family:var(--font)}
+.ns-field input:focus,.ns-field select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.ns-row{display:flex;gap:12px}
+.ns-row .ns-field{flex:1}
+
+/* ===== Toggle Group (radio/checkbox as cards) ===== */
+.ns-toggle-group{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ns-toggle-group.cols-3{grid-template-columns:repeat(3,1fr)}
+.ns-toggle-group input{display:none}
+.ns-toggle-group label.ns-toggle{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 10px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s;text-align:center;font-size:.82rem;font-weight:500;color:var(--text-secondary);user-select:none}
+.ns-toggle-group label.ns-toggle:hover{border-color:var(--primary-light);background:rgba(37,99,235,.02)}
+.ns-toggle-group input:checked+label.ns-toggle{border-color:var(--primary);background:rgba(37,99,235,.05);color:var(--primary);font-weight:600}
+.ns-toggle .ns-icon{font-size:1.4rem}
+.ns-toggle .ns-toggle-desc{font-size:.72rem;color:var(--text-muted);font-weight:400;line-height:1.3}
+.ns-toggle-group input:checked+label.ns-toggle .ns-toggle-desc{color:var(--primary)}
+
+/* ===== Buttons ===== */
+.ns-actions{display:flex;gap:10px;margin-top:28px}
+.ns-btn{flex:1;padding:14px 24px;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.ns-btn-primary{background:var(--primary);color:#fff}
+.ns-btn-primary:hover{background:var(--primary-dark);box-shadow:var(--shadow-md)}
+.ns-btn-secondary{background:var(--surface);color:var(--text-secondary);border:1.5px solid var(--border)}
+.ns-btn-secondary:hover{background:var(--surface-alt);border-color:var(--text-muted)}
+.ns-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ===== Results Page ===== */
+.ns-result-hero{text-align:center;padding:28px 20px;background:linear-gradient(135deg,#eff6ff,#ecfdf5);border-radius:var(--radius);margin-bottom:28px}
+.ns-result-hero .ns-big-num{font-size:2.8rem;font-weight:800;color:var(--primary);line-height:1}
+.ns-result-hero .ns-big-label{font-size:.85rem;color:var(--text-secondary);margin-top:6px}
+.ns-result-hero .ns-user-summary{font-size:.82rem;color:var(--text-muted);margin-top:10px}
+
+.ns-section{margin-bottom:28px}
+.ns-section h3{font-size:1rem;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--surface-alt);display:flex;align-items:center;gap:8px}
+.ns-section h3 .ns-section-icon{font-size:1.1rem}
+
+/* Macro bars */
+.ns-macro{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--surface-alt)}
+.ns-macro:last-child{border-bottom:none}
+.ns-macro-name{width:90px;font-size:.85rem;font-weight:600;flex-shrink:0;color:var(--text)}
+.ns-macro-bar-wrap{flex:1;height:10px;background:var(--surface-alt);border-radius:5px;overflow:hidden}
+.ns-macro-bar{height:100%;border-radius:5px;transition:width .8s ease}
+.ns-macro-val{width:100px;text-align:right;font-size:.82rem;font-weight:600;flex-shrink:0;color:var(--text-secondary)}
+
+/* Micro nutrient alerts */
+.ns-micro-card{padding:14px 16px;background:var(--surface-alt);border-radius:10px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px}
+.ns-micro-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
+.ns-micro-info{flex:1}
+.ns-micro-name{font-size:.88rem;font-weight:600;color:var(--text)}
+.ns-micro-detail{font-size:.78rem;color:var(--text-secondary);margin-top:2px;line-height:1.5}
+.ns-micro-status{padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600;white-space:nowrap;flex-shrink:0;align-self:center}
+.ns-status-warning{background:#fef3c7;color:#b45309}
+.ns-status-ok{background:#d1fae5;color:#059669}
+.ns-status-low{background:#fee2e2;color:#dc2626}
+
+/* Product recommendations */
+.ns-product{display:flex;gap:14px;padding:16px;background:var(--surface-alt);border-radius:12px;margin-bottom:10px;align-items:center;transition:box-shadow .2s}
+.ns-product:hover{box-shadow:var(--shadow-md)}
+.ns-product-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.ns-product-info{flex:1}
+.ns-product-name{font-weight:600;font-size:.9rem;color:var(--text)}
+.ns-product-dose{font-size:.78rem;color:var(--text-secondary);margin-top:2px}
+.ns-product-reason{font-size:.75rem;color:var(--text-muted);margin-top:3px;line-height:1.4}
+.ns-product-evidence{font-size:.68rem;color:var(--primary);margin-top:2px;font-weight:500}
+.ns-product-tag{padding:4px 10px;border-radius:20px;font-size:.72rem;font-weight:600;white-space:nowrap;flex-shrink:0}
+.ns-tag-essential{background:#dbeafe;color:#1d4ed8}
+.ns-tag-recommended{background:#d1fae5;color:#059669}
+.ns-tag-optional{background:#fef3c7;color:#b45309}
+
+/* Contact collection */
+.ns-contact-box{padding:24px;background:linear-gradient(135deg,#eff6ff,#f0fdf4);border-radius:var(--radius);margin-bottom:24px;border:1px solid var(--border)}
+.ns-contact-box h3{font-size:.95rem;font-weight:700;margin-bottom:4px;border:none;padding:0}
+.ns-contact-box p{font-size:.8rem;color:var(--text-secondary);margin-bottom:16px}
+.ns-contact-row{display:flex;gap:10px;margin-bottom:10px}
+.ns-contact-row .ns-field{flex:1;margin-bottom:0}
+.ns-contact-row input{padding:10px 14px;font-size:.88rem}
+.ns-btn-submit-contact{width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font);margin-top:6px}
+.ns-btn-submit-contact:hover{background:var(--accent-dark)}
+.ns-contact-success{display:none;text-align:center;padding:16px;color:var(--accent-dark);font-weight:600;font-size:.9rem}
+
+/* Disclaimer */
+.ns-disclaimer{margin-top:24px;padding:14px 18px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;font-size:.75rem;color:#92400e;line-height:1.6}
+
+/* Restart & PDF */
+.ns-bottom-actions{display:flex;gap:10px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.ns-btn-action{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font);border:2px solid var(--border);background:var(--surface);color:var(--text-secondary)}
+.ns-btn-action:hover{border-color:var(--primary);color:var(--primary)}
+.ns-btn-action.ns-btn-pdf{border-color:var(--primary);color:var(--primary)}
+.ns-btn-action.ns-btn-pdf:hover{background:var(--primary);color:#fff}
+
+/* Reference */
+.ns-references{margin-top:20px;padding:16px 18px;background:var(--surface-alt);border-radius:10px}
+.ns-references summary{font-size:.82rem;font-weight:600;color:var(--text-secondary);cursor:pointer}
+.ns-references .ns-ref-list{margin-top:10px;font-size:.72rem;color:var(--text-muted);line-height:1.8}
+
+/* Responsive */
+@media(max-width:480px){
+  .ns-wrap{padding:20px 14px 40px}
+  .ns-card{padding:24px 18px}
+  .ns-toggle-group{grid-template-columns:1fr 1fr}
+  .ns-toggle-group.cols-3{grid-template-columns:1fr 1fr}
+  .ns-row{flex-direction:column;gap:0}
+  .ns-result-hero .ns-big-num{font-size:2.2rem}
+  .ns-contact-row{flex-direction:column}
+  .ns-progress-steps{display:none}
+}
+
+/* Utility */
+.ns-hidden{display:none!important}
+.ns-fade-in{animation:nsFadeIn .4s ease}
+@keyframes nsFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="ns-wrap" id="nsApp">
+  <div class="ns-brand"><span class="ns-brand-name">Outrun Nutrition</span></div>
+  <div class="ns-header">
+    <h1>個人化營養評估</h1>
+    <p>花 3 分鐘了解你的營養狀態，獲得專屬建議<br>所有建議皆基於台灣衛福部 DRIs 與國際運動營養學會研究</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="ns-progress-wrap">
+    <div class="ns-progress-steps" id="nsProgressSteps">
+      <span class="ns-progress-step active" data-step="1">基本資料</span>
+      <span class="ns-progress-step" data-step="2">飲食習慣</span>
+      <span class="ns-progress-step" data-step="3">生活型態</span>
+      <span class="ns-progress-step" data-step="4">健康目標</span>
+      <span class="ns-progress-step" data-step="5">評估結果</span>
+    </div>
+    <div class="ns-progress-bar"><div class="ns-progress-fill" id="nsProgressFill" style="width:20%"></div></div>
+  </div>
+
+  <!-- ==================== Step 1: 基本資料 ==================== -->
+  <div class="ns-card ns-fade-in" id="step1">
+    <span class="ns-step-num">Step 1 / 5</span>
+    <div class="ns-step-title">基本資料</div>
+    <div class="ns-step-desc">我們需要這些數據來計算你的基礎代謝率（BMR）</div>
+
+    <div class="ns-field">
+      <label class="ns-label">生理性別</label>
+      <div class="ns-toggle-group">
+        <input type="radio" name="gender" id="genderM" value="male" checked>
+        <label class="ns-toggle" for="genderM"><span class="ns-icon">♂</span>男性</label>
+        <input type="radio" name="gender" id="genderF" value="female">
+        <label class="ns-toggle" for="genderF"><span class="ns-icon">♀</span>女性</label>
+      </div>
+    </div>
+
+    <div class="ns-row">
+      <div class="ns-field">
+        <label class="ns-label" for="age">年齡</label>
+        <input type="number" id="age" min="15" max="80" placeholder="歲">
+      </div>
+      <div class="ns-field">
+        <label class="ns-label" for="height">身高</label>
+        <input type="number" id="height" min="100" max="230" placeholder="公分">
+      </div>
+      <div class="ns-field">
+        <label class="ns-label" for="weight">體重</label>
+        <input type="number" id="weight" min="30" max="200" step="0.1" placeholder="公斤">
+      </div>
+    </div>
+
+    <div class="ns-actions">
+      <button class="ns-btn ns-btn-primary" onclick="goStep(2)">下一步</button>
+    </div>
+  </div>
+
+  <!-- ==================== Step 2: 飲食習慣 ==================== -->
+  <div class="ns-card ns-hidden" id="step2">
+    <span class="ns-step-num">Step 2 / 5</span>
+    <div class="ns-step-title">飲食習慣</div>
+    <div class="ns-step-desc">了解你的日常飲食模式，幫助我們評估營養攝取狀況</div>
+
+    <div class="ns-field">
+      <label class="ns-label">每天正餐數量</label>
+      <div class="ns-toggle-group cols-3">
+        <input type="radio" name="meals" id="meals1" value="1-2">
+        <label class="ns-toggle" for="meals1"><span class="ns-icon">🍽</span>1-2 餐</label>
+        <input type="radio" name="meals" id="meals2" value="3" checked>
+        <label class="ns-toggle" for="meals2"><span class="ns-icon">🍽🍽</span>3 餐</label>
+        <input type="radio" name="meals" id="meals3" value="4+">
+        <label class="ns-toggle" for="meals3"><span class="ns-icon">🍽🍽🍽</span>4 餐以上</label>
+      </div>
+    </div>
+
+    <div class="ns-field">
+      <label class="ns-label">飲食類型</label>
+      <div class="ns-toggle-group">
+        <input type="radio" name="dietType" id="diet1" value="omnivore" checked>
+        <label class="ns-toggle" for="diet1"><span class="ns-icon">🥩</span>葷食為主</label>
+        <input type="radio" name="dietType" id="diet2" value="mostly-plant">
+        <label class="ns-toggle" for="diet2"><span class="ns-icon">🥗</span>蔬食為主</label>
+        <input type="radio" name="dietType" id="diet3" value="vegetarian">
+        <label class="ns-toggle" for="diet3"><span class="ns-icon">🌿</span>素食</label>
+        <input type="radio" name="dietType" id="diet4" value="vegan">
+        <label class="ns-toggle" for="diet4"><span class="ns-icon">🌱</span>全素</label>
+      </div>
+    </div>
+
+    <div class="ns-field">
+      <label class="ns-label">每週吃到以下食物的頻率？</label>
+      <div class="ns-hint">這幫助我們評估你的蛋白質與微量營養素攝取</div>
+    </div>
+
+    <div class="ns-field">
+      <label class="ns-label" style="font-weight:500;font-size:.82rem;color:var(--text-secondary)">乳製品（牛奶、優格、起司）</label>
+      <div class="ns-toggle-group cols-3">
+        <input type="radio" name="dairy" id="dairy0" value="rarely">
+        <label class="ns-toggle" for="dairy0">很少</label>
+        <input type="radio" name="dairy" id="dairy1" value="1-3" checked>
+        <label class="ns-toggle" for="dairy1">1-3 次</label>
+        <input type="radio" name="dairy" id="dairy2" value="daily">
+        <label class="ns-toggle" for="dairy2">每天</label>
+      </div>
+    </div>
+
+    <div class="ns-field">
+      <label class="ns-label" style="font-weight:500;font-size:.82rem;color:var(--text-secondary)">魚類與海鮮</label>
+      <div class="ns-toggle-group cols-3">
+        <input type="radio" name="fish" id="fish0" value="rarely">
+        <label class="ns-toggle" for="fish0">很少</label>
+        <input type="radio" name="fish" id="fish1" value="1-2" checked>
+        <label class="ns-toggle" for="fish1">1-2 次</label>
+        <input type="radio" name="fish" id="fish2" value="3+">
+        <label class="ns-toggle" for="fish2">3 次以上</label>
+      </div>
+    </div>
+
+    <div class="ns-field">
+      <label class="ns-label" style="font-weight:500;font-size:.82rem;color:var(--text-secondary)">蔬菜與水果</label>
+      <div class="ns-toggle-group cols-3">
+        <input type="radio" name="veggies" id="veg0" value="rarely">
+        <label class="ns-toggle" for="veg0">偶爾吃</label>
+        <input type="radio" name="veggies" id="veg1" value="some" checked>
+        <label class="ns-toggle" for="veg1">每天 1-2 份</label>
+        <input type="radio" name="veggies" id="veg2" value="plenty">
+        <label class="ns-toggle" for="veg2">每天 3 份以上</label>
+      </div>
+    </div>
+
+    <div class="ns-actions">
+      <button class="ns-btn ns-btn-secondary" onclick="goStep(1)">上一步</button>
+      <button class="ns-btn ns-btn-primary" onclick="goStep(3)">下一步</button>
+    </div>
+  </div>
+
+  <!-- ==================== Step 3: 生活型態 ==================== -->
+  <div class="ns-card ns-hidden" id="step3">
+    <span class="ns-step-num">Step 3 / 5</span>
+    <div class="ns-step-title">生活型態與運動習慣</div>
+    <div class="ns-step-desc">活動量會影響你的每日熱量與營養素需求</div>
+
+    <div class="ns-field">
+      <label class="ns-label">每週運動頻率</label>
+      <div class="ns-toggle-group">
+        <input type="radio" name="frequency" id="freq0" value="0">
+        <label class="ns-toggle" for="freq0"><span class="ns-icon">🚶</span>幾乎不運動</label>
+        <input type="radio" name="frequency" id="freq1" value="1-2">
+        <label class="ns-toggle" for="freq1"><span class="ns-icon">🏃</span>1-2 次</label>
+        <input type="radio" name="frequency" id="freq2" value="3-4" checked>
+        <label class="ns-toggle" for="freq2"><span class="ns-icon">💪</span>3-4 次</label>
+        <input type="radio" name="frequency" id="freq3" value="5+">
+        <label class="ns-toggle" for="freq3"><span class="ns-icon">🔥</span>5 次以上</label>
+      </div>
+    </div>
+
+    <div class="ns-field">
+      <label class="ns-label">主要運動類型</label>
+      <div class="ns-toggle-group cols-3">
+        <input type="radio" name="sport" id="sport1" value="strength" checked>
+        <label class="ns-toggle" for="sport1"><span class="ns-icon">🏋️</span>重量訓練</label>
+        <input type="radio" name="sport" id="sport2" value="cardio">
+        <label class="ns-toggle" for="sport2"><span class="ns-icon">🏃‍♂️</span>有氧運動</label>
+        <input type="radio" name="sport" id="sport3" value="mixed">
+        <label class="ns-toggle" for="sport3"><span class="ns-icon">⚡</span>混合訓練</label>
+      </div>
+    </div>
+
+    <div class="ns-field">
+      <label class="ns-label">日常戶外日曬時間</label>
+      <div class="ns-hint">日曬是維生素 D 的重要來源（NAHSIT 調查顯示台灣成人普遍不足）</div>
+      <div class="ns-toggle-group cols-3">
+        <input type="radio" name="sun" id="sun0" value="rarely">
+        <label class="ns-toggle" for="sun0"><span class="ns-icon">🏢</span>很少曬太陽</label>
+        <input type="radio" name="sun" id="sun1" value="some" checked>
+        <label class="ns-toggle" for="sun1"><span class="ns-icon">⛅</span>偶爾 15-30 分</label>
+        <input type="radio" name="sun" id="sun2" value="plenty">
+        <label class="ns-toggle" for="sun2"><span class="ns-icon">☀️</span>每天 30 分以上</label>
+      </div>
+    </div>
+
+    <div class="ns-field">
+      <label class="ns-label">睡眠品質</label>
+      <div class="ns-toggle-group cols-3">
+        <input type="radio" name="sleep" id="sleep0" value="poor">
+        <label class="ns-toggle" for="sleep0"><span class="ns-icon">😩</span>不太好</label>
+        <input type="radio" name="sleep" id="sleep1" value="ok" checked>
+        <label class="ns-toggle" for="sleep1"><span class="ns-icon">😐</span>一般</label>
+        <input type="radio" name="sleep" id="sleep2" value="good">
+        <label class="ns-toggle" for="sleep2"><span class="ns-icon">😴</span>很好</label>
+      </div>
+    </div>
+
+    <div class="ns-actions">
+      <button class="ns-btn ns-btn-secondary" onclick="goStep(2)">上一步</button>
+      <button class="ns-btn ns-btn-primary" onclick="goStep(4)">下一步</button>
+    </div>
+  </div>
+
+  <!-- ==================== Step 4: 健康目標 ==================== -->
+  <div class="ns-card ns-hidden" id="step4">
+    <span class="ns-step-num">Step 4 / 5</span>
+    <div class="ns-step-title">健康目標與困擾</div>
+    <div class="ns-step-desc">最後一步！告訴我們你的目標，就能看到你的專屬報告</div>
+
+    <div class="ns-field">
+      <label class="ns-label">目前最主要的目標</label>
+      <div class="ns-toggle-group">
+        <input type="radio" name="goal" id="goal1" value="muscle" checked>
+        <label class="ns-toggle" for="goal1"><span class="ns-icon">💪</span>增肌<span class="ns-toggle-desc">增加肌肉量與力量</span></label>
+        <input type="radio" name="goal" id="goal2" value="lean">
+        <label class="ns-toggle" for="goal2"><span class="ns-icon">🔥</span>減脂<span class="ns-toggle-desc">降低體脂肪率</span></label>
+        <input type="radio" name="goal" id="goal3" value="health">
+        <label class="ns-toggle" for="goal3"><span class="ns-icon">🌿</span>健康維持<span class="ns-toggle-desc">維持整體健康</span></label>
+        <input type="radio" name="goal" id="goal4" value="performance">
+        <label class="ns-toggle" for="goal4"><span class="ns-icon">🚀</span>運動表現<span class="ns-toggle-desc">提升耐力與爆發力</span></label>
+      </div>
+    </div>
+
+    <div class="ns-field">
+      <label class="ns-label">目前有以下困擾嗎？（可複選）</label>
+      <div class="ns-toggle-group">
+        <input type="checkbox" id="issue1" value="recovery">
+        <label class="ns-toggle" for="issue1"><span class="ns-icon">😩</span>運動後恢復慢</label>
+        <input type="checkbox" id="issue2" value="fatigue">
+        <label class="ns-toggle" for="issue2"><span class="ns-icon">😴</span>容易疲勞</label>
+        <input type="checkbox" id="issue3" value="digestion">
+        <label class="ns-toggle" for="issue3"><span class="ns-icon">🤢</span>消化不順</label>
+        <input type="checkbox" id="issue4" value="joint">
+        <label class="ns-toggle" for="issue4"><span class="ns-icon">🦴</span>關節不適</label>
+      </div>
+    </div>
+
+    <div class="ns-field">
+      <label class="ns-label">目前是否有使用營養補充品？</label>
+      <div class="ns-toggle-group">
+        <input type="radio" name="supplement" id="supp0" value="none" checked>
+        <label class="ns-toggle" for="supp0"><span class="ns-icon">✖</span>沒有</label>
+        <input type="radio" name="supplement" id="supp1" value="basic">
+        <label class="ns-toggle" for="supp1"><span class="ns-icon">💊</span>基礎保健品</label>
+        <input type="radio" name="supplement" id="supp2" value="sports">
+        <label class="ns-toggle" for="supp2"><span class="ns-icon">🥤</span>運動補充品</label>
+        <input type="radio" name="supplement" id="supp3" value="both">
+        <label class="ns-toggle" for="supp3"><span class="ns-icon">✅</span>兩者都有</label>
+      </div>
+    </div>
+
+    <div class="ns-actions">
+      <button class="ns-btn ns-btn-secondary" onclick="goStep(3)">上一步</button>
+      <button class="ns-btn ns-btn-primary" onclick="calculate()">查看我的評估結果</button>
+    </div>
+  </div>
+
+  <!-- ==================== Step 5: Results ==================== -->
+  <div class="ns-card ns-hidden" id="step5">
+    <span class="ns-step-num">你的專屬營養報告</span>
+    <div class="ns-step-title" id="resultTitle">個人化營養評估結果</div>
+    <div class="ns-step-desc" id="resultDesc"></div>
+
+    <!-- TDEE Hero -->
+    <div class="ns-result-hero">
+      <div class="ns-big-num" id="resultTDEE">0</div>
+      <div class="ns-big-label">每日建議攝取熱量 (kcal)</div>
+      <div class="ns-user-summary" id="resultSummary"></div>
+    </div>
+
+    <!-- Macros -->
+    <div class="ns-section">
+      <h3><span class="ns-section-icon">📊</span> 巨量營養素分配</h3>
+      <div id="macroList"></div>
+    </div>
+
+    <!-- Micronutrient alerts -->
+    <div class="ns-section">
+      <h3><span class="ns-section-icon">🔍</span> 微量營養素風險評估</h3>
+      <div id="microList"></div>
+    </div>
+
+    <!-- Supplement recommendations -->
+    <div class="ns-section">
+      <h3><span class="ns-section-icon">💊</span> 建議營養補充方案</h3>
+      <div id="productList"></div>
+    </div>
+
+    <!-- Contact collection -->
+    <div class="ns-contact-box" id="contactBox">
+      <h3>📩 取得完整報告</h3>
+      <p>留下聯繫方式，我們會將完整評估報告寄送給你，也會不定期分享營養知識與專屬優惠</p>
+      <div class="ns-contact-row">
+        <div class="ns-field">
+          <input type="email" id="contactEmail" placeholder="Email">
+        </div>
+      </div>
+      <div class="ns-contact-row">
+        <div class="ns-field">
+          <input type="text" id="contactLine" placeholder="LINE ID（選填）">
+        </div>
+      </div>
+      <button class="ns-btn-submit-contact" id="btnSubmitContact" onclick="submitContact()">送出</button>
+      <div class="ns-contact-success" id="contactSuccess">✓ 已收到！我們會盡快與你聯繫</div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="ns-disclaimer">
+      ⚠️ 本評估結果僅供參考，計算公式基於 Mifflin-St Jeor 方程式，營養建議參考衛福部第八版 DRIs 及國際運動營養學會（ISSN）研究。實際需求因個人體質與健康狀況而異，如有特殊疾病或用藥，請先諮詢醫師或營養師。
+    </div>
+
+    <!-- References -->
+    <details class="ns-references">
+      <summary>參考文獻與資料來源</summary>
+      <div class="ns-ref-list">
+        1. Mifflin MD, St Jeor ST, et al. (1990). A new predictive equation for resting energy expenditure. <em>Am J Clin Nutr</em>, 51(2), 241-247.<br>
+        2. 衛生福利部國民健康署（2020）。國人膳食營養素參考攝取量第八版。<br>
+        3. Jäger R, Kerksick CM, et al. (2017). ISSN Position Stand: Protein and exercise. <em>J Int Soc Sports Nutr</em>, 14:20.<br>
+        4. Kerksick CM, et al. (2018). ISSN exercise & sports nutrition review update. <em>J Int Soc Sports Nutr</em>, 15:38.<br>
+        5. 國民營養健康狀況變遷調查（NAHSIT 2013-2020）。
+      </div>
+    </details>
+
+    <!-- Bottom actions -->
+    <div class="ns-bottom-actions">
+      <button class="ns-btn-action" onclick="restart()">↻ 重新評估</button>
+      <button class="ns-btn-action ns-btn-pdf" onclick="downloadPDF()">📄 下載 PDF 報告</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ====== Helpers ====== */
+function getVal(name){
+  var el=document.querySelector('input[name="'+name+'"]:checked');
+  return el?el.value:null;
+}
+function getNum(id){return parseFloat(document.getElementById(id).value)||0}
+function getChecked(){
+  var ids=["issue1","issue2","issue3","issue4"],out=[];
+  ids.forEach(function(id){if(document.getElementById(id).checked) out.push(document.getElementById(id).value)});
+  return out;
+}
+
+/* ====== Step Navigation ====== */
+var currentStep=1;
+window.goStep=function(n){
+  if(n===2 && currentStep===1){
+    if(!getNum("age")||!getNum("weight")||!getNum("height")){alert("請填寫完整的基本資料（年齡、身高、體重）");return}
+    if(getNum("age")<15||getNum("age")>80){alert("請輸入合理的年齡（15-80 歲）");return}
+  }
+  document.getElementById("step"+currentStep).classList.add("ns-hidden");
+  var target=document.getElementById("step"+n);
+  target.classList.remove("ns-hidden");
+  target.classList.remove("ns-fade-in");
+  void target.offsetWidth;
+  target.classList.add("ns-fade-in");
+  currentStep=n;
+  updateProgress();
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+function updateProgress(){
+  var fill=document.getElementById("nsProgressFill");
+  fill.style.width=(currentStep/5*100)+"%";
+  var steps=document.querySelectorAll(".ns-progress-step");
+  steps.forEach(function(s){
+    var si=parseInt(s.getAttribute("data-step"));
+    s.classList.remove("active","done");
+    if(si<currentStep) s.classList.add("done");
+    else if(si===currentStep) s.classList.add("active");
+  });
+}
+
+/* ====== Main Calculation ====== */
+window.calculate=function(){
+  var gender=getVal("gender"),age=getNum("age"),weight=getNum("weight"),height=getNum("height");
+  var meals=getVal("meals"),dietType=getVal("dietType");
+  var dairy=getVal("dairy"),fish=getVal("fish"),veggies=getVal("veggies");
+  var freq=getVal("frequency"),sport=getVal("sport"),sun=getVal("sun"),sleep=getVal("sleep");
+  var goal=getVal("goal"),issues=getChecked(),supplement=getVal("supplement");
+
+  /* === BMR (Mifflin-St Jeor, 1990) === */
+  var bmr;
+  if(gender==="male") bmr=10*weight+6.25*height-5*age+5;
+  else bmr=10*weight+6.25*height-5*age-161;
+
+  /* === TDEE === */
+  var actMul={"0":1.2,"1-2":1.375,"3-4":1.55,"5+":1.725};
+  var tdee=Math.round(bmr*(actMul[freq]||1.55));
+
+  /* Goal adjustment */
+  var goalAdj={"muscle":1.10,"lean":0.80,"health":1.0,"performance":1.05};
+  tdee=Math.round(tdee*(goalAdj[goal]||1));
+
+  /* === Macros (ISSN guidelines) === */
+  var proteinPerKg,fatPct;
+  switch(goal){
+    case"muscle":      proteinPerKg=2.0; fatPct=0.25; break;
+    case"lean":        proteinPerKg=2.4; fatPct=0.28; break;
+    case"performance": proteinPerKg=1.8; fatPct=0.22; break;
+    default:           proteinPerKg=1.4; fatPct=0.28;
+  }
+  if(freq==="5+") proteinPerKg+=0.2;
+
+  var protein=Math.round(proteinPerKg*weight);
+  var fat=Math.round((tdee*fatPct)/9);
+  var carb=Math.round((tdee-protein*4-fat*9)/4);
+  if(carb<0) carb=0;
+
+  /* === Render TDEE & Summary === */
+  document.getElementById("resultTDEE").textContent=tdee.toLocaleString();
+  document.getElementById("resultSummary").textContent=
+    (gender==="male"?"男性":"女性")+" · "+age+" 歲 · "+height+" cm · "+weight+" kg";
+  document.getElementById("resultDesc").textContent=
+    "根據你的身體數據、飲食習慣與訓練目標，以下是我們為你量身打造的營養建議。";
+
+  /* === Render Macros === */
+  var macros=[
+    {name:"蛋白質",val:protein,unit:"g",cal:protein*4,color:"#2563eb"},
+    {name:"碳水化合物",val:carb,unit:"g",cal:carb*4,color:"#f59e0b"},
+    {name:"脂肪",val:fat,unit:"g",cal:fat*9,color:"#ef4444"}
+  ];
+  var macroHTML="";
+  macros.forEach(function(m){
+    var pct=Math.round(m.cal/tdee*100);
+    macroHTML+='<div class="ns-macro">'
+      +'<span class="ns-macro-name">'+m.name+'</span>'
+      +'<div class="ns-macro-bar-wrap"><div class="ns-macro-bar" style="width:'+pct+'%;background:'+m.color+'"></div></div>'
+      +'<span class="ns-macro-val">'+m.val+' '+m.unit+' ('+pct+'%)</span></div>';
+  });
+  document.getElementById("macroList").innerHTML=macroHTML;
+
+  /* === Micronutrient Risk Assessment === */
+  var micros=buildMicroAssessment(gender,age,dairy,fish,veggies,sun,dietType,issues);
+  var microHTML="";
+  micros.forEach(function(m){
+    microHTML+='<div class="ns-micro-card">'
+      +'<span class="ns-micro-icon">'+m.icon+'</span>'
+      +'<div class="ns-micro-info">'
+      +'<div class="ns-micro-name">'+m.name+'</div>'
+      +'<div class="ns-micro-detail">'+m.detail+'</div></div>'
+      +'<span class="ns-micro-status ns-status-'+m.status+'">'+m.statusLabel+'</span></div>';
+  });
+  document.getElementById("microList").innerHTML=microHTML;
+
+  /* === Product Recommendations === */
+  var products=buildRecommendations(gender,weight,goal,freq,sport,dietType,dairy,fish,veggies,sun,issues,supplement,protein);
+  var prodHTML="";
+  products.forEach(function(p){
+    prodHTML+='<div class="ns-product">'
+      +'<div class="ns-product-icon" style="background:'+p.bgColor+'">'+p.icon+'</div>'
+      +'<div class="ns-product-info">'
+      +'<div class="ns-product-name">'+p.name+'</div>'
+      +'<div class="ns-product-dose">建議用量：'+p.dose+'</div>'
+      +'<div class="ns-product-reason">'+p.reason+'</div>'
+      +(p.evidence?'<div class="ns-product-evidence">'+p.evidence+'</div>':'')
+      +'</div>'
+      +'<span class="ns-product-tag ns-tag-'+p.priority+'">'+p.priorityLabel+'</span></div>';
+  });
+  document.getElementById("productList").innerHTML=prodHTML;
+
+  /* Store data for PDF */
+  window._surveyResult={gender:gender,age:age,weight:weight,height:height,tdee:tdee,
+    protein:protein,carb:carb,fat:fat,macros:macros,micros:micros,products:products,
+    goal:goal,freq:freq,sport:sport,dietType:dietType};
+
+  goStep(5);
+};
+
+/* ====== Micronutrient Assessment ====== */
+function buildMicroAssessment(gender,age,dairy,fish,veggies,sun,dietType,issues){
+  var items=[];
+
+  /* Vitamin D — NAHSIT: 22-43% deficiency in TW adults */
+  var vitDstatus="warning",vitDlabel="留意";
+  if(sun==="rarely"){vitDstatus="low";vitDlabel="偏低風險"}
+  else if(sun==="plenty"){vitDstatus="ok";vitDlabel="良好"}
+  items.push({
+    name:"維生素 D",icon:"☀️",status:vitDstatus,statusLabel:vitDlabel,
+    detail:"台灣 NAHSIT 調查顯示 22-43% 成人維生素 D 不足。衛福部建議每日攝取 400 IU（19-50 歲）。"+
+      (sun==="rarely"?"你的日曬時間偏少，建議額外補充。":"")
+  });
+
+  /* Calcium — consistently below DRI in TW */
+  var caStatus="warning",caLabel="留意";
+  if(dairy==="daily"){caStatus="ok";caLabel="良好"}
+  else if(dairy==="rarely"){caStatus="low";caLabel="偏低風險"}
+  items.push({
+    name:"鈣質",icon:"🦴",status:caStatus,statusLabel:caLabel,
+    detail:"衛福部建議成人每日 1,000 mg。NAHSIT 數據顯示多數台灣成人攝取量低於建議值 70%。"+
+      (dairy==="rarely"?"你的乳製品攝取偏少，建議增加或考慮補充。":"")
+  });
+
+  /* Iron — especially for women */
+  var feStatus="ok",feLabel="良好";
+  if(gender==="female"&&age<50){
+    feStatus="warning";feLabel="留意";
+    if(dietType==="vegetarian"||dietType==="vegan"){feStatus="low";feLabel="偏低風險"}
+  }
+  if(dietType==="vegan"){feStatus="warning";feLabel="留意"}
+  items.push({
+    name:"鐵質",icon:"🩸",status:feStatus,statusLabel:feLabel,
+    detail:"衛福部建議：男性 10 mg/天，育齡女性 15 mg/天。"+
+      (gender==="female"&&age<50?"育齡女性需求較高，建議注意攝取。":"")+
+      (dietType==="vegan"?"植物性飲食中的鐵質吸收率較低，建議搭配維生素 C 攝取。":"")
+  });
+
+  /* Omega-3 */
+  var o3Status="ok",o3Label="良好";
+  if(fish==="rarely"){o3Status="warning";o3Label="留意"}
+  if(fish==="rarely"&&(issues.indexOf("joint")!==-1||issues.indexOf("recovery")!==-1)){o3Status="low";o3Label="偏低風險"}
+  items.push({
+    name:"Omega-3 脂肪酸",icon:"🐟",status:o3Status,statusLabel:o3Label,
+    detail:"EPA 與 DHA 有助於抗發炎與心血管健康。"+
+      (fish==="rarely"?"你的魚類攝取偏少，可考慮魚油補充。":"每週 1-2 次魚類攝取有助維持。")
+  });
+
+  /* Fiber */
+  var fibStatus="ok",fibLabel="良好";
+  if(veggies==="rarely"){fibStatus="low";fibLabel="偏低風險"}
+  else if(veggies==="some"){fibStatus="warning";fibLabel="留意"}
+  items.push({
+    name:"膳食纖維",icon:"🥬",status:fibStatus,statusLabel:fibLabel,
+    detail:"衛福部建議每日 25-35g。NAHSIT 顯示多數台灣成人攝取不足。"+
+      (veggies==="rarely"?"建議增加蔬果攝取量。":"")
+  });
+
+  /* Magnesium — moderate deficiency in TW */
+  var mgStatus="ok",mgLabel="良好";
+  if(veggies==="rarely"&&dairy==="rarely"){mgStatus="warning";mgLabel="留意"}
+  if(issues.indexOf("fatigue")!==-1||issues.indexOf("recovery")!==-1){
+    if(mgStatus==="ok"){mgStatus="warning";mgLabel="留意"}
+  }
+  items.push({
+    name:"鎂",icon:"⚡",status:mgStatus,statusLabel:mgLabel,
+    detail:"衛福部建議：男性 380 mg/天，女性 320 mg/天。鎂參與 300 種以上酵素反應，與肌肉功能和睡眠品質密切相關。"
+  });
+
+  return items;
+}
+
+/* ====== Supplement Recommendations ====== */
+function buildRecommendations(gender,weight,goal,freq,sport,dietType,dairy,fish,veggies,sun,issues,supplement,proteinTarget){
+  var items=[];
+  var active=(freq==="3-4"||freq==="5+");
+  var intense=(freq==="5+");
+  var isVeg=(dietType==="vegetarian"||dietType==="vegan");
+
+  /* 1. Whey Protein — ISSN Category A */
+  if(goal==="muscle"||goal==="lean"||goal==="performance"||active){
+    var proteinGap=Math.round(proteinTarget*0.35);
+    var scoops=Math.max(1,Math.ceil(proteinGap/25));
+    items.push({
+      name:isVeg?"植物蛋白（豌豆+米蛋白）":"乳清蛋白",
+      icon:"🥤",bgColor:"#dbeafe",
+      dose:"每日 "+scoops+" 份（約 "+(scoops*25)+"g 蛋白質）",
+      reason:"補足每日蛋白質缺口，支持肌肉合成與修復。ISSN 建議運動者攝取 "+
+        (goal==="lean"?"2.3-3.1":"1.4-2.0")+" g/kg/天。",
+      evidence:"ISSN Category A — 強力證據支持",
+      priority:"essential",priorityLabel:"核心推薦",score:100
+    });
+  }
+
+  /* 2. Creatine — ISSN Category A */
+  if(goal==="muscle"||goal==="performance"||sport==="strength"||sport==="mixed"){
+    items.push({
+      name:"肌酸（Creatine Monohydrate）",
+      icon:"⚡",bgColor:"#fef3c7",
+      dose:"每日 3-5g，搭配水或果汁",
+      reason:"提升力量輸出與高強度運動表現，加速磷酸肌酸再合成",
+      evidence:"ISSN Category A — 研究最充分的運動補充品之一",
+      priority:"essential",priorityLabel:"核心推薦",score:95
+    });
+  }
+
+  /* 3. Vitamin D — based on TW deficiency data */
+  if(sun!=="plenty"){
+    items.push({
+      name:"維生素 D3",
+      icon:"☀️",bgColor:"#fef9c3",
+      dose:sun==="rarely"?"每日 1000-2000 IU":"每日 400-1000 IU",
+      reason:"NAHSIT 調查顯示台灣成人普遍不足（22-43%），影響骨骼、肌肉功能與免疫力",
+      evidence:"衛福部 DRIs 第八版建議 400 IU/天（19-50 歲）",
+      priority:sun==="rarely"?"essential":"recommended",
+      priorityLabel:sun==="rarely"?"核心推薦":"建議補充",score:sun==="rarely"?88:65
+    });
+  }
+
+  /* 4. Calcium */
+  if(dairy!=="daily"){
+    items.push({
+      name:"鈣質補充",
+      icon:"🦴",bgColor:"#f0fdf4",
+      dose:"每日 500-600 mg（分次服用吸收較佳）",
+      reason:"NAHSIT 數據顯示台灣成人鈣質攝取普遍低於 DRI 建議的 1,000 mg/天",
+      evidence:"衛福部 DRIs 第八版",
+      priority:dairy==="rarely"?"essential":"recommended",
+      priorityLabel:dairy==="rarely"?"核心推薦":"建議補充",score:dairy==="rarely"?82:60
+    });
+  }
+
+  /* 5. Fish Oil / Omega-3 */
+  if(fish==="rarely"||(issues.indexOf("joint")!==-1)||(issues.indexOf("recovery")!==-1)){
+    items.push({
+      name:"高濃度魚油（Omega-3）",
+      icon:"🐟",bgColor:"#dbeafe",
+      dose:"每日 2-3g EPA+DHA",
+      reason:issues.indexOf("joint")!==-1
+        ?"EPA/DHA 具抗發炎功效，有助於緩解關節不適與促進運動恢復"
+        :"補充 EPA/DHA，支持心血管健康與抗發炎功能",
+      evidence:"",
+      priority:issues.indexOf("joint")!==-1?"essential":"recommended",
+      priorityLabel:issues.indexOf("joint")!==-1?"核心推薦":"建議補充",
+      score:issues.indexOf("joint")!==-1?85:62
+    });
+  }
+
+  /* 6. Magnesium — sleep/fatigue */
+  if(issues.indexOf("fatigue")!==-1||issues.indexOf("recovery")!==-1||
+    (veggies==="rarely"&&dairy==="rarely")){
+    items.push({
+      name:"鎂（甘胺酸鎂）",
+      icon:"🌙",bgColor:"#ede9fe",
+      dose:"睡前 200-400 mg",
+      reason:issues.indexOf("fatigue")!==-1
+        ?"鎂參與能量代謝與肌肉功能，有助改善疲勞感"
+        :"支持肌肉恢復與放鬆，改善睡眠品質",
+      evidence:"衛福部 DRIs：男性 380 mg、女性 320 mg/天",
+      priority:"recommended",priorityLabel:"建議補充",score:70
+    });
+  }
+
+  /* 7. BCAA — for intense training or fat loss */
+  if(intense||goal==="lean"){
+    items.push({
+      name:"BCAA 支鏈胺基酸",
+      icon:"💧",bgColor:"#d1fae5",
+      dose:"訓練中 5-10g",
+      reason:goal==="lean"?"減脂期間維持肌肉量，延緩訓練疲勞":"支持高強度訓練恢復，減少肌肉分解",
+      evidence:"",
+      priority:"recommended",priorityLabel:"建議補充",score:68
+    });
+  }
+
+  /* 8. Caffeine — ISSN Category A for performance */
+  if(goal==="performance"||(intense&&issues.indexOf("fatigue")!==-1)){
+    items.push({
+      name:"咖啡因",
+      icon:"☕",bgColor:"#fef3c7",
+      dose:"訓練前 30 分鐘，3-6 mg/kg 體重（約 "+(Math.round(weight*4))+" mg）",
+      reason:"提升運動表現、專注力與耐力",
+      evidence:"ISSN Category A — 最廣泛研究的運動增補劑之一",
+      priority:"recommended",priorityLabel:"建議補充",score:66
+    });
+  }
+
+  /* 9. Iron — for veg women */
+  if(gender==="female"&&age<50&&(isVeg||dietType==="mostly-plant")){
+    items.push({
+      name:"鐵質補充",
+      icon:"🩸",bgColor:"#fce7f3",
+      dose:"每日 10-15 mg，搭配維生素 C 服用",
+      reason:"育齡女性需求較高（DRI 15 mg/天），植物性飲食中非血基質鐵吸收率較低",
+      evidence:"衛福部 DRIs 第八版",
+      priority:"recommended",priorityLabel:"建議補充",score:72
+    });
+  }
+
+  /* 10. Glutamine — digestion/recovery */
+  if(issues.indexOf("digestion")!==-1||issues.indexOf("recovery")!==-1){
+    items.push({
+      name:"麩醯胺酸（Glutamine）",
+      icon:"🔬",bgColor:"#fce7f3",
+      dose:"訓練後 5-10g",
+      reason:issues.indexOf("digestion")!==-1
+        ?"支持腸道黏膜修復與消化道健康"
+        :"加速肌肉修復，支持免疫功能",
+      evidence:"",
+      priority:"optional",priorityLabel:"可考慮",score:55
+    });
+  }
+
+  items.sort(function(a,b){return b.score-a.score});
+  return items;
+}
+
+/* ====== Contact Submission ====== */
+window.submitContact=function(){
+  var email=document.getElementById("contactEmail").value.trim();
+  var line=document.getElementById("contactLine").value.trim();
+  if(!email){alert("請輸入 Email");return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("請輸入有效的 Email");return}
+
+  /* In production, send to backend API. For now, store in localStorage. */
+  var data=window._surveyResult||{};
+  data.email=email;
+  data.line=line;
+  data.timestamp=new Date().toISOString();
+  try{
+    var existing=JSON.parse(localStorage.getItem("ns_contacts")||"[]");
+    existing.push(data);
+    localStorage.setItem("ns_contacts",JSON.stringify(existing));
+  }catch(e){}
+
+  document.getElementById("btnSubmitContact").style.display="none";
+  document.getElementById("contactSuccess").style.display="block";
+};
+
+/* ====== PDF Download ====== */
+window.downloadPDF=function(){
+  var d=window._surveyResult;
+  if(!d) return;
+
+  var goalMap={"muscle":"增肌","lean":"減脂","health":"健康維持","performance":"運動表現"};
+  var lines=[];
+  lines.push("═══════════════════════════════════════════");
+  lines.push("     OUTRUN NUTRITION — 個人化營養評估報告");
+  lines.push("═══════════════════════════════════════════");
+  lines.push("");
+  lines.push("產出日期："+new Date().toLocaleDateString("zh-TW"));
+  lines.push("");
+  lines.push("【 基本資料 】");
+  lines.push("  性別：  "+(d.gender==="male"?"男性":"女性"));
+  lines.push("  年齡：  "+d.age+" 歲");
+  lines.push("  身高：  "+d.height+" cm");
+  lines.push("  體重：  "+d.weight+" kg");
+  lines.push("  目標：  "+(goalMap[d.goal]||d.goal));
+  lines.push("");
+  lines.push("───────────────────────────────────────────");
+  lines.push("【 每日建議攝取熱量 】");
+  lines.push("  TDEE = "+d.tdee.toLocaleString()+" kcal");
+  lines.push("  （基於 Mifflin-St Jeor 公式 × 活動係數 × 目標係數）");
+  lines.push("");
+  lines.push("───────────────────────────────────────────");
+  lines.push("【 巨量營養素分配 】");
+  lines.push("  蛋白質：    "+d.protein+" g （"+Math.round(d.protein*4/d.tdee*100)+"%）");
+  lines.push("  碳水化合物："+d.carb+" g （"+Math.round(d.carb*4/d.tdee*100)+"%）");
+  lines.push("  脂肪：      "+d.fat+" g （"+Math.round(d.fat*9/d.tdee*100)+"%）");
+  lines.push("");
+  lines.push("───────────────────────────────────────────");
+  lines.push("【 微量營養素風險評估 】");
+  d.micros.forEach(function(m){
+    var tag=m.status==="ok"?"✓ 良好":m.status==="warning"?"△ 留意":"✗ 偏低風險";
+    lines.push("  "+m.icon+" "+m.name+"  "+tag);
+    lines.push("     "+m.detail.replace(/<[^>]*>/g,""));
+    lines.push("");
+  });
+  lines.push("───────────────────────────────────────────");
+  lines.push("【 建議營養補充方案 】");
+  d.products.forEach(function(p,i){
+    lines.push("  "+(i+1)+". "+p.name+" ["+p.priorityLabel+"]");
+    lines.push("     用量："+p.dose);
+    lines.push("     原因："+p.reason);
+    if(p.evidence) lines.push("     依據："+p.evidence);
+    lines.push("");
+  });
+  lines.push("───────────────────────────────────────────");
+  lines.push("【 參考文獻 】");
+  lines.push("  1. Mifflin MD, St Jeor ST, et al. (1990). Am J Clin Nutr, 51(2), 241-247.");
+  lines.push("  2. 衛福部（2020）國人膳食營養素參考攝取量第八版");
+  lines.push("  3. Jäger R, et al. (2017). ISSN Position Stand: Protein and exercise.");
+  lines.push("  4. Kerksick CM, et al. (2018). ISSN exercise & sports nutrition review.");
+  lines.push("  5. 國民營養健康狀況變遷調查（NAHSIT 2013-2020）");
+  lines.push("");
+  lines.push("═══════════════════════════════════════════");
+  lines.push("⚠️ 本報告僅供參考，不構成醫療建議。");
+  lines.push("   如有特殊健康狀況，請諮詢專業醫療人員。");
+  lines.push("");
+  lines.push("Outrun Nutrition — 陪你跑得更遠");
+
+  var text=lines.join("\n");
+  var blob=new Blob(["\uFEFF"+text],{type:"text/plain;charset=utf-8"});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");
+  a.href=url;
+  a.download="Outrun_Nutrition_營養評估報告.txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+/* ====== Restart ====== */
+window.restart=function(){
+  document.getElementById("step5").classList.add("ns-hidden");
+  document.getElementById("step1").classList.remove("ns-hidden");
+  document.getElementById("step1").classList.add("ns-fade-in");
+  currentStep=1;
+  updateProgress();
+  document.getElementById("age").value="";
+  document.getElementById("height").value="";
+  document.getElementById("weight").value="";
+  /* Reset contact */
+  document.getElementById("contactEmail").value="";
+  document.getElementById("contactLine").value="";
+  document.getElementById("btnSubmitContact").style.display="";
+  document.getElementById("contactSuccess").style.display="none";
+  window.scrollTo({top:0,behavior:"smooth"});
+};
+
+})();
+</script>
+</body>
+</html>
