@@ -631,7 +631,7 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
       <div class="nc-arg-title">堅心 A.R.G. 科學恢復系統 <span class="font-en">RECOVERY SYSTEM</span></div>
       <div class="nc-arg-desc">訓練是為了變強，恢復才是變強的開始。堅心的產品線覆蓋完整的運動恢復循環，由國立體育大學產學合作研發。</div>
       <div class="nc-arg-steps">
-        <div class="nc-arg-step"><div class="nc-arg-step-icon">⚡</div><div class="nc-arg-step-label">訓練前啟動</div><div class="nc-arg-step-product">食動力 運動體感膠囊</div></div>
+        <div class="nc-arg-step"><div class="nc-arg-step-icon">⚡</div><div class="nc-arg-step-label">訓練前啟動</div><div class="nc-arg-step-product">食動力 運動益生菌</div></div>
         <div class="nc-arg-step"><div class="nc-arg-step-icon">🔄</div><div class="nc-arg-step-label">訓練後修復</div><div class="nc-arg-step-product">能易復 恢復蛋白</div></div>
         <div class="nc-arg-step"><div class="nc-arg-step-icon">🌙</div><div class="nc-arg-step-label">深度關機</div><div class="nc-arg-step-product">眠易復 運動恢復膠囊</div></div>
       </div>
@@ -882,7 +882,7 @@ function buildRecs(gender,wt,goal,freq,sports,dur,phase,issues,race,gi,supps,sc,
   if(rn>=25)its.push({name:"能易復 恢復蛋白（黑糖仙草）",icon:"🥤",bg:"rgba(237,93,43,.1)",dose:fullRace?"賽後 30 分鐘內 1 份，長距離建議攜帶 500g 盒裝":"訓練後 30 分鐘內沖泡 1 份",reason:"專利 EAAlpha 配方提供 20g 蛋白質 + 24g 碳水的恢復黃金比例，全素可食。符合 ISSN 運動後 0-2 小時蛋白質攝取窗口建議，無論耐力或肌力訓練都適用。",ref:"Jager R et al. ISSN Position Stand: protein and exercise. 2017.",pri:rn>=45?"essential":"recommended",pl:rn>=45?"核心推薦":"推薦",sc:65+rn/3,k:true});
   /* 食動力 — 適用所有高強度及長時間運動 */
   var gn=0;if(gi==="severe")gn+=35;if(gi==="mild")gn+=15;if(isEnd)gn+=15;if(isMix)gn+=12;if(isCmbt)gn+=10;if(isBall)gn+=8;if(longS)gn+=10;if(hasRace)gn+=10;if(intense)gn+=8;if(supps.indexOf("probiotic")===-1)gn+=10;
-  if(gn>=25)its.push({name:"食動力 運動體感膠囊",icon:"⚡",bg:"rgba(237,93,43,.1)",dose:"訓練前 1 包，搭配溫水服用",reason:"TWK-10 專利益生菌 + GasAid 配方。高強度運動中 30-50% 的運動者遭遇腸胃不適，穩定腸道功能是運動表現的基礎。",ref:"de Oliveira EP et al. GI complaints during exercise. Sports Med. 2014.",pri:gn>=40?"essential":"recommended",pl:gn>=40?"核心推薦":"推薦",sc:60+gn/3,k:true});
+  if(gn>=25)its.push({name:"食動力 運動益生菌",icon:"⚡",bg:"rgba(237,93,43,.1)",dose:"訓練前 1 包，搭配溫水服用",reason:"TWK-10 專利益生菌 + GasAid 配方。高強度運動中 30-50% 的運動者遭遇腸胃不適，穩定腸道功能是運動表現的基礎。",ref:"de Oliveira EP et al. GI complaints during exercise. Sports Med. 2014.",pri:gn>=40?"essential":"recommended",pl:gn>=40?"核心推薦":"推薦",sc:60+gn/3,k:true});
   /* OARC — 適用長距離賽事 或 高強度混合賽事 */
   if((fullRace&&isEnd)||(funcComp&&isMix))its.push({name:"OARC 專業科學訓練補給組",icon:"🎯",bg:"rgba(20,93,221,.1)",dose:"依賽事類型客製組合",reason:"結合食動力與能易復的完整科學循環，針對高強度賽事的系統化補給方案。",ref:"",pri:"recommended",pl:"推薦",sc:75,k:true});
 
