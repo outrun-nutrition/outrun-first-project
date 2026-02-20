@@ -305,17 +305,17 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
     <div class="nc-field">
       <label>你目前主要從事哪些運動？（可複選）</label>
       <div class="nc-toggle-group cols-3">
-        <input type="checkbox" id="sport_marathon" value="marathon"><label class="nc-toggle" for="sport_marathon"><span class="nc-icon">🏃</span>路跑/馬拉松</label>
-        <input type="checkbox" id="sport_strength" value="strength"><label class="nc-toggle" for="sport_strength"><span class="nc-icon">🏋️</span>重量訓練</label>
-        <input type="checkbox" id="sport_cycling" value="cycling"><label class="nc-toggle" for="sport_cycling"><span class="nc-icon">🚴</span>自行車</label>
+        <input type="checkbox" id="sport_marathon" value="marathon"><label class="nc-toggle" for="sport_marathon">路跑/馬拉松</label>
+        <input type="checkbox" id="sport_strength" value="strength"><label class="nc-toggle" for="sport_strength">重量訓練</label>
+        <input type="checkbox" id="sport_cycling" value="cycling"><label class="nc-toggle" for="sport_cycling">自行車</label>
         <input type="checkbox" id="sport_triathlon" value="triathlon"><label class="nc-toggle" for="sport_triathlon">鐵人三項</label>
         <input type="checkbox" id="sport_hyrox" value="hyrox"><label class="nc-toggle" for="sport_hyrox">HYROX</label>
         <input type="checkbox" id="sport_crossfit" value="crossfit"><label class="nc-toggle" for="sport_crossfit">CrossFit/功能性</label>
-        <input type="checkbox" id="sport_ball" value="ball"><label class="nc-toggle" for="sport_ball"><span class="nc-icon">⚽</span>球類運動</label>
-        <input type="checkbox" id="sport_trail" value="trail"><label class="nc-toggle" for="sport_trail"><span class="nc-icon">⛰️</span>越野/登山</label>
-        <input type="checkbox" id="sport_swimming" value="swimming"><label class="nc-toggle" for="sport_swimming"><span class="nc-icon">🏊</span>游泳</label>
-        <input type="checkbox" id="sport_combat" value="combat"><label class="nc-toggle" for="sport_combat"><span class="nc-icon">🥊</span>格鬥/武術</label>
-        <input type="checkbox" id="sport_yoga" value="yoga"><label class="nc-toggle" for="sport_yoga"><span class="nc-icon">🧘</span>瑜珈/伸展</label>
+        <input type="checkbox" id="sport_ball" value="ball"><label class="nc-toggle" for="sport_ball">球類運動</label>
+        <input type="checkbox" id="sport_trail" value="trail"><label class="nc-toggle" for="sport_trail">越野/登山</label>
+        <input type="checkbox" id="sport_swimming" value="swimming"><label class="nc-toggle" for="sport_swimming">游泳</label>
+        <input type="checkbox" id="sport_combat" value="combat"><label class="nc-toggle" for="sport_combat">格鬥/武術</label>
+        <input type="checkbox" id="sport_yoga" value="yoga"><label class="nc-toggle" for="sport_yoga">瑜珈/伸展</label>
         <input type="checkbox" id="sport_other" value="other"><label class="nc-toggle" for="sport_other">其他</label>
       </div>
       <div class="nc-other-wrap" id="sportOtherWrap"><input type="text" class="nc-other-input" id="sportOtherText" placeholder="請輸入你的運動項目..."></div>
@@ -366,7 +366,6 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
         <input type="checkbox" id="prod_energy" value="energy_recover"><label class="nc-toggle" for="prod_energy">能易復 恢復蛋白</label>
         <input type="checkbox" id="prod_gut" value="gut_power"><label class="nc-toggle" for="prod_gut">食動力 運動益生菌</label>
         <input type="checkbox" id="prod_tempo" value="tempo"><label class="nc-toggle" for="prod_tempo">TEMPO 膠囊</label>
-        <input type="checkbox" id="prod_oarc" value="oarc"><label class="nc-toggle" for="prod_oarc">OARC 補給組</label>
       </div>
     </div>
 
@@ -543,7 +542,7 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
   <!-- ====== THANK YOU ====== -->
   <div class="nc-card nc-hidden" id="step7">
     <img class="nc-card-logo" src="logo-white.png" alt="堅心">
-    <div class="nc-step-title" id="thankTitle">感謝你！你的聲音我們收到了 🧡</div>
+    <div class="nc-step-title" id="thankTitle">感謝你！你的聲音我們收到了</div>
     <div class="nc-step-desc">每一份回饋都是堅心前進的燃料。我們會認真消化你的每一個回答，努力讓產品和服務都更貼近你的需求。</div>
 
     <div class="nc-discount-box">
@@ -582,8 +581,7 @@ var WEBHOOK_URL="";
 /* ===== ID Arrays ===== */
 var ALL_SPORT_IDS=["sport_marathon","sport_strength","sport_cycling","sport_triathlon","sport_hyrox","sport_crossfit","sport_ball","sport_trail","sport_swimming","sport_combat","sport_yoga","sport_other"];
 var ALL_EVT_IDS=["evt_half","evt_full","evt_ultra","evt_tri","evt_hyrox","evt_strength","evt_fun","evt_none","evt_other"];
-var ALL_PROD_IDS=["prod_sleep","prod_energy","prod_gut","prod_tempo","prod_oarc"];
-var ALL_IMP_IDS=["imp_taste","imp_effect","imp_pkg","imp_price","imp_info","imp_variety","imp_dissolve","imp_none","imp_other"];
+var ALL_PROD_IDS=["prod_sleep","prod_energy","prod_gut","prod_tempo"];
 var ALL_RSN_IDS=["rsn_ntsu","rsn_coach","rsn_ingredient","rsn_taste","rsn_recovery","rsn_brand","rsn_event","rsn_social","rsn_other"];
 var ALL_FLV_IDS=["flv_taro","flv_matcha","flv_cocoa","flv_sesame","flv_lemon","flv_peanut","flv_vanilla","flv_berry","flv_original","flv_banana","flv_other"];
 var ALL_NP_IDS=["np_gel","np_electrolyte","np_bar","np_collagen","np_vitamin","np_focus","np_women","np_caffeine","np_enough","np_other"];
@@ -641,20 +639,52 @@ var PROD_MAP=[
   {id:"prod_sleep",label:"眠易復 運動恢復膠囊",key:"sat_sleep_recover"},
   {id:"prod_energy",label:"能易復 恢復蛋白",key:"sat_energy_recover"},
   {id:"prod_gut",label:"食動力 運動益生菌",key:"sat_gut_power"},
-  {id:"prod_tempo",label:"TEMPO 膠囊",key:"sat_tempo"},
-  {id:"prod_oarc",label:"OARC 補給組",key:"sat_oarc"}
+  {id:"prod_tempo",label:"TEMPO 膠囊",key:"sat_tempo"}
 ];
 
-var FEEDBACK_OPTIONS=[
-  {value:"taste",label:"口味可以再調整"},
-  {value:"effect",label:"體感效果不夠明顯"},
-  {value:"packaging",label:"包裝/攜帶便利性"},
-  {value:"price",label:"價格偏高"},
-  {value:"info",label:"產品說明不夠清楚"},
-  {value:"variety",label:"希望更多口味選擇"},
-  {value:"dissolve",label:"沖泡/溶解性"},
-  {value:"satisfied",label:"目前很滿意"}
-];
+/* Per-product feedback options tailored to product attributes */
+var FEEDBACK_MAP={
+  "sat_sleep_recover":[
+    {value:"sleep_depth",label:"深度睡眠感受不夠明顯"},
+    {value:"onset_speed",label:"入睡速度沒有改善"},
+    {value:"next_day",label:"隔天精神提升不明顯"},
+    {value:"capsule_size",label:"膠囊顆粒偏大"},
+    {value:"packaging",label:"包裝/攜帶便利性"},
+    {value:"price",label:"價格偏高"},
+    {value:"info",label:"使用方式說明不夠清楚"},
+    {value:"satisfied",label:"目前很滿意"}
+  ],
+  "sat_energy_recover":[
+    {value:"taste",label:"口味可以再調整"},
+    {value:"dissolve",label:"沖泡溶解性"},
+    {value:"recovery_feel",label:"恢復體感不夠明顯"},
+    {value:"variety",label:"希望更多口味選擇"},
+    {value:"texture",label:"口感/質地"},
+    {value:"packaging",label:"包裝/攜帶便利性"},
+    {value:"price",label:"價格偏高"},
+    {value:"satisfied",label:"目前很滿意"}
+  ],
+  "sat_gut_power":[
+    {value:"gut_feel",label:"腸胃體感不夠明顯"},
+    {value:"bloating",label:"賽中脹氣改善不明顯"},
+    {value:"endurance",label:"耐力提升感受不明顯"},
+    {value:"onset_time",label:"需要更快感受到效果"},
+    {value:"packaging",label:"包裝/攜帶便利性"},
+    {value:"price",label:"價格偏高"},
+    {value:"info",label:"使用時機說明不夠清楚"},
+    {value:"satisfied",label:"目前很滿意"}
+  ],
+  "sat_tempo":[
+    {value:"pace_feel",label:"配速穩定感不夠明顯"},
+    {value:"endurance",label:"後半段耐力支撐不明顯"},
+    {value:"onset_time",label:"需要更快感受到效果"},
+    {value:"capsule_size",label:"膠囊顆粒偏大"},
+    {value:"packaging",label:"包裝/攜帶便利性"},
+    {value:"price",label:"價格偏高"},
+    {value:"info",label:"使用時機說明不夠清楚"},
+    {value:"satisfied",label:"目前很滿意"}
+  ]
+};
 
 function renderSatisfaction(){
   var c=document.getElementById("satContainer");
@@ -688,9 +718,11 @@ function renderFeedback(){
   }
   var h="";
   checked.forEach(function(p){
+    var opts=FEEDBACK_MAP[p.key]||[];
+    if(opts.length===0)return;
     h+='<div class="nc-sat-field"><div class="nc-sat-name">'+p.label+'</div>';
     h+='<div class="nc-toggle-group cols-3" style="margin-bottom:6px">';
-    FEEDBACK_OPTIONS.forEach(function(opt){
+    opts.forEach(function(opt){
       var fbId="fb_"+p.key+"_"+opt.value;
       h+='<input type="checkbox" id="'+fbId+'" value="'+opt.value+'" data-fb-group="'+p.key+'">';
       h+='<label class="nc-toggle" for="'+fbId+'">'+opt.label+'</label>';
@@ -742,7 +774,7 @@ window.submitSurvey=function(){
   setTimeout(function(){
     btn.innerHTML='送出問卷 →';btn.disabled=false;
     var name=document.getElementById("memberName").value.trim();
-    if(name)document.getElementById("thankTitle").textContent="感謝你，"+name+"！你的聲音我們收到了 🧡";
+    if(name)document.getElementById("thankTitle").textContent="感謝你，"+name+"！你的聲音我們收到了";
     goStep(7);
   },1000);
 };
@@ -804,14 +836,12 @@ function sendToSheet(){
   var satEnergy=getVal("sat_energy_recover")||"";
   var satGut=getVal("sat_gut_power")||"";
   var satTempo=getVal("sat_tempo")||"";
-  var satOarc=getVal("sat_oarc")||"";
 
   /* Per-product feedback */
   var fbSleep=getFeedbackForProduct("sat_sleep_recover");
   var fbEnergy=getFeedbackForProduct("sat_energy_recover");
   var fbGut=getFeedbackForProduct("sat_gut_power");
   var fbTempo=getFeedbackForProduct("sat_tempo");
-  var fbOarc=getFeedbackForProduct("sat_oarc");
 
   var d={
     timestamp:new Date().toISOString(),
@@ -826,12 +856,10 @@ function sendToSheet(){
     sat_energy_recover:satEnergy,
     sat_gut_power:satGut,
     sat_tempo:satTempo,
-    sat_oarc:satOarc,
     fb_sleep_recover:fbSleep,
     fb_energy_recover:fbEnergy,
     fb_gut_power:fbGut,
     fb_tempo:fbTempo,
-    fb_oarc:fbOarc,
     purchase_reason:reasons.join(","),
     new_flavors:flavors.join(","),
     new_products:newProducts.join(","),
