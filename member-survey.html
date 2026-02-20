@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>會員回饋問卷｜堅心 Outrun Nutrition</title>
+<meta name="description" content="花 5 分鐘告訴我們你的想法，你的每一個回答都會直接影響堅心的下一步。填完問卷即獲得專屬折扣碼。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --kenshin-black:#2F2F2F;--kenshin-orange:#ED5D2B;--kenshin-orange-hover:#D94F20;
+  --kenshin-orange-glow:rgba(237,93,43,.12);--kenshin-blue:#145DDD;--kenshin-blue-light:#1A6BF0;
+  --kenshin-blue-glow:rgba(20,93,221,.12);--layer-gray:#3A3A3A;--soft-white:#E0E0E0;
+  --neutral-gray:#A0A0A0;--bg:var(--kenshin-black);--surface:var(--layer-gray);
+  --surface-alt:#333333;--text:var(--soft-white);--text-secondary:var(--neutral-gray);
+  --text-muted:#787878;--border:#4A4A4A;--radius:12px;--radius-sm:4px;
+  --shadow:0 2px 8px rgba(0,0,0,.3);--shadow-lg:0 8px 32px rgba(0,0,0,.4);
+  --green:#34C759;--yellow:#FFD60A;--red:#FF453A;
+}
+body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+.font-en{font-family:'Montserrat','Noto Sans TC',sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.nc-wrap{max-width:720px;margin:0 auto;padding:32px 16px 48px}
+
+/* Header */
+.nc-header{text-align:center;margin-bottom:32px}
+.nc-brand{display:flex;justify-content:center;margin-bottom:18px}
+.nc-brand-logo{height:44px;width:auto;object-fit:contain}
+@media(max-width:480px){.nc-brand-logo{height:34px}}
+.nc-header h1{font-size:1.6rem;font-weight:700;color:var(--soft-white);margin-bottom:6px}
+.nc-header .nc-subtitle{color:var(--neutral-gray);font-size:.9rem;max-width:540px;margin:0 auto 12px;line-height:1.7}
+.nc-header .nc-meta{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.nc-meta-tag{padding:4px 12px;border-radius:var(--radius-sm);font-size:.75rem;font-weight:500}
+.nc-meta-tag.time{background:rgba(160,160,160,.1);color:var(--neutral-gray)}
+.nc-meta-tag.gift{background:var(--kenshin-orange-glow);color:var(--kenshin-orange)}
+
+/* Progress */
+.nc-progress-wrap{margin-bottom:24px}
+.nc-step-labels{display:flex;justify-content:space-between;margin-bottom:6px;padding:0 2px}
+.nc-step-labels span{font-size:.68rem;color:var(--text-muted);font-weight:500;transition:color .3s}
+.nc-step-labels span.active{color:var(--kenshin-orange)}
+.nc-step-labels span.done{color:var(--kenshin-blue)}
+.nc-progress{display:flex;gap:4px}
+.nc-progress .bar{flex:1;height:3px;border-radius:2px;background:var(--border);transition:background .4s}
+.nc-progress .bar.active{background:var(--kenshin-orange)}
+.nc-progress .bar.done{background:var(--kenshin-blue)}
+
+/* Card */
+.nc-card{background:var(--surface);border-radius:var(--radius);padding:28px 24px;box-shadow:var(--shadow);border:1px solid var(--border);position:relative}
+.nc-card-logo{position:absolute;top:14px;right:16px;height:16px;width:auto;opacity:.25;object-fit:contain}
+@media(max-width:480px){.nc-card-logo{height:13px;top:12px;right:12px}}
+.nc-step-title{font-size:1.12rem;font-weight:600;margin-bottom:3px;color:var(--soft-white)}
+.nc-step-desc{color:var(--neutral-gray);font-size:.85rem;margin-bottom:20px;line-height:1.6}
+
+/* Form */
+.nc-field{margin-bottom:16px}
+.nc-field>label{display:block;font-size:.83rem;font-weight:500;color:var(--neutral-gray);margin-bottom:6px}
+.nc-field input[type="email"],.nc-field input[type="text"],.nc-field textarea{
+  width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;
+  font-size:1rem;color:var(--soft-white);background:var(--surface-alt);transition:border-color .2s;font-family:inherit
+}
+.nc-field textarea{min-height:80px;resize:vertical;line-height:1.6}
+.nc-field input::placeholder,.nc-field textarea::placeholder{color:var(--text-muted)}
+.nc-field input:focus,.nc-field textarea:focus{outline:none;border-color:var(--kenshin-orange)}
+.nc-field .nc-hint{font-size:.73rem;color:var(--text-muted);margin-top:4px;line-height:1.5}
+.nc-row{display:flex;gap:12px}
+.nc-row .nc-field{flex:1}
+
+/* Toggle group */
+.nc-toggle-group{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.nc-toggle-group.cols-3{grid-template-columns:repeat(3,1fr)}
+.nc-toggle-group.cols-5{grid-template-columns:repeat(5,1fr)}
+.nc-toggle-group input[type="radio"],.nc-toggle-group input[type="checkbox"]{display:none}
+.nc-toggle-group label.nc-toggle{
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 6px;
+  border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;
+  text-align:center;font-size:.82rem;font-weight:500;color:var(--neutral-gray);
+  background:transparent;min-height:48px;justify-content:center
+}
+.nc-toggle-group label.nc-toggle:hover{border-color:rgba(237,93,43,.4);background:rgba(237,93,43,.03)}
+.nc-toggle-group input:checked+label.nc-toggle{border-color:var(--kenshin-orange);background:rgba(237,93,43,.08);color:var(--soft-white)}
+.nc-toggle-group label.nc-toggle.nc-disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+.nc-toggle .nc-icon{font-size:1.35rem;margin-bottom:1px}
+
+/* Other text input inside toggle */
+.nc-other-input{
+  margin-top:6px;width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;
+  font-size:.8rem;color:var(--soft-white);background:var(--surface-alt);font-family:inherit;
+  transition:border-color .2s
+}
+.nc-other-input:focus{outline:none;border-color:var(--kenshin-orange)}
+.nc-other-input::placeholder{color:var(--text-muted)}
+.nc-other-wrap{display:none}.nc-other-wrap.show{display:block}
+
+/* Likert scale */
+.nc-likert{display:flex;gap:6px}
+.nc-likert input{display:none}
+.nc-likert label{flex:1;text-align:center;padding:10px 4px;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;font-size:.78rem;font-weight:500;color:var(--text-muted)}
+.nc-likert label:hover{border-color:rgba(237,93,43,.3)}
+.nc-likert input:checked+label{border-color:var(--kenshin-orange);background:rgba(237,93,43,.08);color:var(--soft-white)}
+.nc-likert-labels{display:flex;justify-content:space-between;font-size:.68rem;color:var(--text-muted);margin-top:4px;padding:0 4px}
+
+/* Dynamic satisfaction fields */
+.nc-sat-field{margin-bottom:14px;padding:12px;background:var(--surface-alt);border-radius:8px}
+.nc-sat-field .nc-sat-name{font-size:.85rem;font-weight:600;color:var(--soft-white);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.nc-sat-field .nc-sat-name .nc-sat-icon{font-size:1.1rem}
+.nc-sat-placeholder{padding:16px;text-align:center;color:var(--text-muted);font-size:.83rem;background:var(--surface-alt);border-radius:8px;line-height:1.6}
+
+/* Max selection hint */
+.nc-max-hint{font-size:.73rem;color:var(--kenshin-orange);margin-top:4px;display:none}
+.nc-max-hint.show{display:block}
+
+/* Buttons */
+.nc-actions{display:flex;gap:10px;margin-top:24px}
+.nc-btn{flex:1;padding:13px 20px;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.nc-btn-primary{background:var(--kenshin-orange);color:#fff}
+.nc-btn-primary:hover{background:var(--kenshin-orange-hover)}
+.nc-btn-secondary{background:var(--surface-alt);color:var(--neutral-gray);border:1px solid var(--border)}
+.nc-btn-secondary:hover{background:var(--border);color:var(--soft-white)}
+.nc-btn:disabled{opacity:.5;cursor:not-allowed}
+.nc-btn-lg{padding:15px 24px;font-size:1rem}
+.nc-btn-ghost{display:inline-flex;align-items:center;gap:5px;padding:9px 20px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--neutral-gray);font-size:.85rem;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit}
+.nc-btn-ghost:hover{border-color:var(--soft-white);color:var(--soft-white)}
+
+/* Discount box */
+.nc-discount-box{display:flex;justify-content:center;align-items:center;flex-direction:column;gap:8px;padding:24px;background:linear-gradient(135deg,rgba(237,93,43,.08),rgba(20,93,221,.06));border-radius:var(--radius);margin:20px 0;border:1px solid rgba(237,93,43,.15)}
+.nc-discount-code{font-family:'Montserrat',sans-serif;font-size:1.8rem;font-weight:800;color:var(--kenshin-orange);letter-spacing:.08em}
+.nc-discount-desc{color:var(--neutral-gray);font-size:.85rem;text-align:center;line-height:1.6}
+.nc-discount-detail{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:2px}
+.nc-copy-btn{margin-top:8px;padding:8px 20px;border:1px solid var(--kenshin-orange);border-radius:8px;background:transparent;color:var(--kenshin-orange);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.nc-copy-btn:hover{background:var(--kenshin-orange);color:#fff}
+.nc-copy-btn.copied{background:var(--green);border-color:var(--green);color:#fff}
+
+/* Bonus box */
+.nc-bonus-box{padding:16px;background:var(--kenshin-blue-glow);border:1px solid rgba(20,93,221,.15);border-radius:var(--radius);margin-bottom:20px}
+.nc-bonus-box h4{font-size:.88rem;font-weight:600;color:var(--kenshin-blue-light);margin-bottom:4px}
+.nc-bonus-box p{font-size:.8rem;color:var(--neutral-gray);line-height:1.6}
+
+/* CTA banner */
+.nc-cta-banner{margin-top:24px;padding:20px;border-radius:var(--radius);text-align:center;background:linear-gradient(135deg,rgba(237,93,43,.1),rgba(237,93,43,.04));border:1px solid rgba(237,93,43,.2)}
+.nc-cta-banner h4{font-size:.95rem;font-weight:600;color:var(--soft-white);margin-bottom:4px}
+.nc-cta-banner p{font-size:.8rem;color:var(--neutral-gray);margin-bottom:14px}
+.nc-cta-banner .nc-btn{max-width:280px;margin:0 auto;display:block;flex:none}
+
+/* Privacy */
+.nc-privacy{margin-top:16px;margin-bottom:4px}
+.nc-privacy-check{display:flex;align-items:flex-start;gap:10px;cursor:pointer;position:relative;padding-left:0}
+.nc-privacy-check input[type="checkbox"]{position:absolute;opacity:0;width:0;height:0}
+.nc-checkmark{width:20px;height:20px;min-width:20px;border:2px solid var(--border);border-radius:4px;background:var(--surface-alt);display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:1px}
+.nc-privacy-check input:checked~.nc-checkmark{background:var(--kenshin-orange);border-color:var(--kenshin-orange)}
+.nc-privacy-check input:checked~.nc-checkmark::after{content:'\2713';color:#fff;font-size:.75rem;font-weight:700}
+.nc-privacy-text{font-size:.82rem;color:var(--neutral-gray);line-height:1.5}
+.nc-privacy-text a{color:var(--kenshin-blue-light);text-decoration:underline;font-weight:500}
+.nc-privacy-text a:hover{color:var(--kenshin-orange)}
+.nc-privacy-content{margin-top:10px;max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:rgba(47,47,47,.5)}
+.nc-privacy-body{padding:14px 16px;font-size:.73rem;color:var(--text-muted);line-height:1.7}
+.nc-privacy-body strong{color:var(--soft-white);font-size:.78rem}
+.nc-privacy-body b{color:var(--neutral-gray)}
+.nc-privacy-content::-webkit-scrollbar{width:4px}
+.nc-privacy-content::-webkit-scrollbar-track{background:transparent}
+.nc-privacy-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* Footer */
+.nc-footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px solid var(--border)}
+.nc-footer-sub{font-size:.7rem;color:var(--text-muted);margin-top:3px}
+
+/* Responsive — tablet */
+@media(max-width:768px){
+  .nc-wrap{padding:24px 14px 40px}
+  .nc-card{padding:24px 18px}
+}
+/* Responsive — mobile */
+@media(max-width:480px){
+  html{font-size:15px;-webkit-text-size-adjust:100%}
+  .nc-wrap{padding:16px 10px 36px}
+  .nc-card{padding:18px 14px}
+  .nc-header h1{font-size:1.35rem}
+  .nc-header .nc-subtitle{font-size:.84rem}
+  .nc-header .nc-meta{gap:6px}
+  .nc-meta-tag{font-size:.7rem;padding:3px 8px}
+  .nc-step-labels span{font-size:.6rem}
+  .nc-step-title{font-size:1.05rem}
+  .nc-step-desc{font-size:.82rem}
+  .nc-field>label{font-size:.82rem}
+  .nc-field input[type="email"],.nc-field input[type="text"],.nc-field textarea{font-size:16px;padding:12px 14px}
+  .nc-toggle-group,.nc-toggle-group.cols-3{grid-template-columns:1fr 1fr}
+  .nc-toggle-group.cols-5{grid-template-columns:repeat(3,1fr)}
+  .nc-toggle-group label.nc-toggle{padding:10px 6px;font-size:.8rem;min-height:44px}
+  .nc-toggle .nc-icon{font-size:1.2rem}
+  .nc-row{flex-direction:column;gap:0}
+  .nc-btn{padding:14px 20px;font-size:.95rem;min-height:48px}
+  .nc-btn-lg{padding:16px 24px;font-size:1rem}
+  .nc-likert{gap:3px}
+  .nc-likert label{padding:10px 2px;font-size:.75rem;min-height:44px}
+  .nc-likert-labels span{font-size:.64rem}
+  .nc-privacy-body{font-size:.7rem}
+  .nc-discount-code{font-size:1.5rem}
+}
+@supports(-webkit-touch-callout:none){
+  .nc-field input,.nc-field textarea{font-size:16px!important}
+}
+@media(pointer:coarse){
+  .nc-toggle-group label.nc-toggle{min-height:48px}
+  .nc-likert label{min-height:48px}
+  .nc-btn{min-height:48px}
+  .nc-checkmark{width:22px;height:22px;min-width:22px}
+}
+.nc-hidden{display:none!important}
+.nc-fade-in{animation:ncFadeIn .35s ease}
+@keyframes ncFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.nc-spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:ncSpin .6s linear infinite;margin-right:6px;vertical-align:middle}
+@keyframes ncSpin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="nc-wrap" id="ncApp">
+
+  <!-- Header -->
+  <div class="nc-header">
+    <div class="nc-brand">
+      <img class="nc-brand-logo" src="logo-white.png" alt="堅心 Outrun Nutrition">
+    </div>
+    <h1>堅心會員回饋問卷</h1>
+    <p class="nc-subtitle">你的每一個回答，都會直接影響堅心的下一步。花幾分鐘告訴我們你的真實想法，幫堅心變得更好</p>
+    <div class="nc-meta">
+      <span class="nc-meta-tag time">⏱️ 約 5 分鐘完成</span>
+      <span class="nc-meta-tag gift">🎁 填完獲得專屬折扣碼</span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="nc-progress-wrap">
+    <div class="nc-step-labels" id="ncStepLabels">
+      <span class="active">歡迎</span><span>運動日常</span><span>產品回饋</span><span>新品期待</span><span>周邊票選</span><span>未來</span><span>完成</span>
+    </div>
+    <div class="nc-progress" id="ncProgress">
+      <div class="bar active"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+  </div>
+
+  <!-- ====== WELCOME ====== -->
+  <div class="nc-card nc-fade-in" id="step1">
+    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
+    <div class="nc-step-title">嘿，謝謝你一路陪著我們跑到現在 🧡</div>
+    <div class="nc-step-desc">這份問卷大約 5 分鐘，我們想聽聽你的真實想法 — 不管是產品哪裡可以更好、你期待什麼新品、還是想要什麼周邊，好的壞的我們都想聽。填完問卷後，我們準備了一份小小心意送給你。</div>
+    <div class="nc-field">
+      <label for="memberName">你的名字（或暱稱）</label>
+      <input type="text" id="memberName" placeholder="例：阿明">
+    </div>
+    <div class="nc-field">
+      <label for="memberEmail">Email</label>
+      <input type="email" id="memberEmail" placeholder="your@email.com">
+      <div class="nc-hint">折扣碼會在問卷最後一頁直接顯示，Email 用於日後新品優先通知。</div>
+    </div>
+    <div class="nc-privacy">
+      <label class="nc-privacy-check">
+        <input type="checkbox" id="privacyAgree">
+        <span class="nc-checkmark"></span>
+        <span class="nc-privacy-text">我已閱讀並同意<a href="javascript:void(0)" id="privacyToggle">《隱私權條款》</a></span>
+      </label>
+      <div class="nc-privacy-content nc-hidden" id="privacyContent">
+        <div class="nc-privacy-body">
+          <strong>焠爾瑯股份有限公司（堅心 Outrun Nutrition）個人資料蒐集、處理及利用同意書</strong><br><br>
+          感謝你參與本次會員回饋問卷。焠爾瑯股份有限公司（以下稱「本公司」，品牌名稱為「堅心 Outrun Nutrition」）依據中華民國《個人資料保護法》（以下稱「個資法」）及相關法規，向你說明本次資料蒐集之相關事項：<br><br>
+          <b>一、蒐集機關名稱</b><br>
+          焠爾瑯股份有限公司（品牌：堅心 Outrun Nutrition）。<br><br>
+          <b>二、蒐集目的</b><br>
+          本公司蒐集你的個人資料，係基於以下特定目的：<br>
+          (1) 行銷業務（代碼 040）：會員滿意度調查、產品開發參考、行銷活動通知。<br>
+          (2) 消費者保護（代碼 090）：會員服務優化與權益維護。<br>
+          (3) 調查、統計與研究分析（代碼 157）：進行去識別化之產品開發與市場研究。<br><br>
+          <b>三、蒐集之個人資料類別</b><br>
+          ・辨識類（C001）：姓名/暱稱、電子信箱。<br>
+          ・社會活動（C061）：運動類型、訓練頻率、賽事參與。<br>
+          ・消費偏好：產品使用體驗、滿意度評價、品牌周邊偏好。<br><br>
+          <b>四、個人資料利用之期間、地區、對象及方式</b><br>
+          (1) 期間：自蒐集之日起，至本公司停止營業或你請求刪除之日止。<br>
+          (2) 地區：中華民國境內。<br>
+          (3) 對象：僅限本公司內部人員，不會將個人資料提供予第三方。<br>
+          (4) 方式：自動化或非自動化方式進行蒐集、處理與利用。<br><br>
+          <b>五、當事人權利</b><br>
+          依據個資法第 3 條，你得隨時向本公司行使查詢、閱覽、複製、補充、更正、停止蒐集處理利用及刪除等權利。如需行使權利，請透過堅心官網或客服聯繫。<br><br>
+          <b>六、不提供個人資料之影響</b><br>
+          未提供姓名或 Email 不影響問卷填答，惟將無法收到折扣碼或新品優先通知。<br><br>
+          <b>七、聯繫方式</b><br>
+          焠爾瑯股份有限公司<br>
+          品牌：堅心 Outrun Nutrition<br>
+          官網：outrunnutrition.com
+        </div>
+      </div>
+    </div>
+    <div class="nc-actions">
+      <button class="nc-btn nc-btn-primary nc-btn-lg" onclick="goStep(2)" id="startBtn" disabled>開始填寫 →</button>
+    </div>
+  </div>
+
+  <!-- ====== STEP 1: 你的運動日常 ====== -->
+  <div class="nc-card nc-hidden" id="step2">
+    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
+    <div class="nc-step-title">先聊聊你的運動生活</div>
+    <div class="nc-step-desc">了解你現在的運動狀態，幫助我們提供更貼近你需求的產品和內容 🏃</div>
+
+    <div class="nc-field">
+      <label>你目前主要從事哪些運動？（可複選）</label>
+      <div class="nc-toggle-group cols-3">
+        <input type="checkbox" id="sport_marathon" value="marathon"><label class="nc-toggle" for="sport_marathon"><span class="nc-icon">🏃‍♂️</span>路跑/馬拉松</label>
+        <input type="checkbox" id="sport_strength" value="strength"><label class="nc-toggle" for="sport_strength"><span class="nc-icon">🏋️</span>重量訓練</label>
+        <input type="checkbox" id="sport_cycling" value="cycling"><label class="nc-toggle" for="sport_cycling"><span class="nc-icon">🚴</span>自行車</label>
+        <input type="checkbox" id="sport_triathlon" value="triathlon"><label class="nc-toggle" for="sport_triathlon"><span class="nc-icon">🏊‍♂️</span>鐵人三項</label>
+        <input type="checkbox" id="sport_hyrox" value="hyrox"><label class="nc-toggle" for="sport_hyrox"><span class="nc-icon">⚡</span>HYROX</label>
+        <input type="checkbox" id="sport_crossfit" value="crossfit"><label class="nc-toggle" for="sport_crossfit"><span class="nc-icon">🔥</span>CrossFit/功能性</label>
+        <input type="checkbox" id="sport_ball" value="ball"><label class="nc-toggle" for="sport_ball"><span class="nc-icon">⚽</span>球類運動</label>
+        <input type="checkbox" id="sport_trail" value="trail"><label class="nc-toggle" for="sport_trail"><span class="nc-icon">⛰️</span>越野/登山</label>
+        <input type="checkbox" id="sport_swimming" value="swimming"><label class="nc-toggle" for="sport_swimming"><span class="nc-icon">🏊</span>游泳</label>
+        <input type="checkbox" id="sport_combat" value="combat"><label class="nc-toggle" for="sport_combat"><span class="nc-icon">🥊</span>格鬥/武術</label>
+        <input type="checkbox" id="sport_yoga" value="yoga"><label class="nc-toggle" for="sport_yoga"><span class="nc-icon">🧘</span>瑜珈/伸展</label>
+        <input type="checkbox" id="sport_other" value="other"><label class="nc-toggle" for="sport_other"><span class="nc-icon">✏️</span>其他</label>
+      </div>
+      <div class="nc-other-wrap" id="sportOtherWrap"><input type="text" class="nc-other-input" id="sportOtherText" placeholder="請輸入你的運動項目..."></div>
+    </div>
+
+    <div class="nc-field">
+      <label>你的訓練頻率大約是？</label>
+      <div class="nc-toggle-group">
+        <input type="radio" name="frequency" id="freq1" value="1-2"><label class="nc-toggle" for="freq1"><span class="nc-icon">🚶</span>每週 1-2 天</label>
+        <input type="radio" name="frequency" id="freq2" value="3-4" checked><label class="nc-toggle" for="freq2"><span class="nc-icon">🏃</span>每週 3-4 天</label>
+        <input type="radio" name="frequency" id="freq3" value="5-6"><label class="nc-toggle" for="freq3"><span class="nc-icon">💪</span>每週 5-6 天</label>
+        <input type="radio" name="frequency" id="freq4" value="7+"><label class="nc-toggle" for="freq4"><span class="nc-icon">🔥</span>幾乎每天</label>
+      </div>
+    </div>
+
+    <div class="nc-field">
+      <label>最近一年有參加或計畫參加什麼賽事嗎？（可複選）</label>
+      <div class="nc-toggle-group cols-3">
+        <input type="checkbox" id="evt_half" value="half_marathon"><label class="nc-toggle" for="evt_half"><span class="nc-icon">🏅</span>半馬</label>
+        <input type="checkbox" id="evt_full" value="full_marathon"><label class="nc-toggle" for="evt_full"><span class="nc-icon">🏆</span>全馬</label>
+        <input type="checkbox" id="evt_ultra" value="ultra"><label class="nc-toggle" for="evt_ultra"><span class="nc-icon">⛰️</span>超馬/越野賽</label>
+        <input type="checkbox" id="evt_tri" value="triathlon"><label class="nc-toggle" for="evt_tri"><span class="nc-icon">🏊‍♂️</span>鐵人三項</label>
+        <input type="checkbox" id="evt_hyrox" value="hyrox_event"><label class="nc-toggle" for="evt_hyrox"><span class="nc-icon">⚡</span>HYROX</label>
+        <input type="checkbox" id="evt_strength" value="strength_comp"><label class="nc-toggle" for="evt_strength"><span class="nc-icon">🏋️</span>健力/舉重賽</label>
+        <input type="checkbox" id="evt_fun" value="fun_run"><label class="nc-toggle" for="evt_fun"><span class="nc-icon">🎉</span>趣味/公益路跑</label>
+        <input type="checkbox" id="evt_none" value="none"><label class="nc-toggle" for="evt_none"><span class="nc-icon">🙂</span>目前沒有計畫</label>
+        <input type="checkbox" id="evt_other" value="other"><label class="nc-toggle" for="evt_other"><span class="nc-icon">✏️</span>其他</label>
+      </div>
+      <div class="nc-other-wrap" id="evtOtherWrap"><input type="text" class="nc-other-input" id="evtOtherText" placeholder="例如：Spartan Race、舞蹈比賽..."></div>
+    </div>
+
+    <div class="nc-actions">
+      <button class="nc-btn nc-btn-secondary" onclick="goStep(1)">上一步</button>
+      <button class="nc-btn nc-btn-primary" onclick="goStep(3)">下一步</button>
+    </div>
+  </div>
+
+  <!-- ====== STEP 2: 產品使用回饋 ====== -->
+  <div class="nc-card nc-hidden" id="step3">
+    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
+    <div class="nc-step-title">聊聊你用過的堅心產品</div>
+    <div class="nc-step-desc">你的真實感受是我們進步最重要的力量。好的壞的都說，我們全部都想聽 💪</div>
+
+    <div class="nc-field">
+      <label>你目前使用或曾經使用過哪些堅心的產品？（可複選）</label>
+      <div class="nc-toggle-group" id="productsUsedGroup">
+        <input type="checkbox" id="prod_sleep" value="sleep_recover"><label class="nc-toggle" for="prod_sleep"><span class="nc-icon">🌙</span>眠易復 運動恢復膠囊</label>
+        <input type="checkbox" id="prod_energy750" value="energy_recover_750"><label class="nc-toggle" for="prod_energy750"><span class="nc-icon">🥤</span>能易復 恢復蛋白 750g</label>
+        <input type="checkbox" id="prod_energy500" value="energy_recover_500"><label class="nc-toggle" for="prod_energy500"><span class="nc-icon">📦</span>能易復 恢復蛋白 500g</label>
+        <input type="checkbox" id="prod_gut" value="gut_power"><label class="nc-toggle" for="prod_gut"><span class="nc-icon">⚡</span>食動力 運動益生菌</label>
+        <input type="checkbox" id="prod_oarc" value="oarc"><label class="nc-toggle" for="prod_oarc"><span class="nc-icon">🎯</span>OARC 補給組</label>
+      </div>
+    </div>
+
+    <div class="nc-field" id="satField">
+      <label>針對你用過的產品，整體體驗滿意度如何？</label>
+      <div id="satContainer">
+        <div class="nc-sat-placeholder">先在上方勾選你用過的產品，這裡會出現對應的評分 🙂</div>
+      </div>
+    </div>
+
+    <div class="nc-field">
+      <label>有什麼地方你覺得可以做得更好嗎？（可複選）</label>
+      <div class="nc-toggle-group cols-3">
+        <input type="checkbox" id="imp_taste" value="taste"><label class="nc-toggle" for="imp_taste"><span class="nc-icon">👅</span>口味可以再調整</label>
+        <input type="checkbox" id="imp_effect" value="effect"><label class="nc-toggle" for="imp_effect"><span class="nc-icon">💡</span>體感效果不夠明顯</label>
+        <input type="checkbox" id="imp_pkg" value="packaging"><label class="nc-toggle" for="imp_pkg"><span class="nc-icon">📦</span>包裝/攜帶便利性</label>
+        <input type="checkbox" id="imp_price" value="price"><label class="nc-toggle" for="imp_price"><span class="nc-icon">💰</span>價格偏高</label>
+        <input type="checkbox" id="imp_info" value="info"><label class="nc-toggle" for="imp_info"><span class="nc-icon">📋</span>產品說明不夠清楚</label>
+        <input type="checkbox" id="imp_variety" value="variety"><label class="nc-toggle" for="imp_variety"><span class="nc-icon">🎨</span>希望更多口味選擇</label>
+        <input type="checkbox" id="imp_dissolve" value="dissolve"><label class="nc-toggle" for="imp_dissolve"><span class="nc-icon">🥤</span>沖泡/溶解性</label>
+        <input type="checkbox" id="imp_none" value="none"><label class="nc-toggle" for="imp_none"><span class="nc-icon">👍</span>目前都很滿意！</label>
+        <input type="checkbox" id="imp_other" value="other"><label class="nc-toggle" for="imp_other"><span class="nc-icon">✏️</span>其他</label>
+      </div>
+      <div class="nc-other-wrap" id="impOtherWrap"><input type="text" class="nc-other-input" id="impOtherText" placeholder="請告訴我們具體的建議..."></div>
+    </div>
+
+    <div class="nc-field">
+      <label>當初是什麼原因讓你選擇堅心？（最多選 3 個）</label>
+      <div class="nc-toggle-group cols-3" id="reasonGroup">
+        <input type="checkbox" id="rsn_ntsu" value="ntsu"><label class="nc-toggle" for="rsn_ntsu"><span class="nc-icon">🔬</span>國體大實證背書</label>
+        <input type="checkbox" id="rsn_coach" value="coach_rec"><label class="nc-toggle" for="rsn_coach"><span class="nc-icon">🗣️</span>教練/跑友推薦</label>
+        <input type="checkbox" id="rsn_ingredient" value="ingredient"><label class="nc-toggle" for="rsn_ingredient"><span class="nc-icon">🧪</span>成分配方吸引我</label>
+        <input type="checkbox" id="rsn_taste" value="taste_first"><label class="nc-toggle" for="rsn_taste"><span class="nc-icon">😋</span>口味好、沒化學感</label>
+        <input type="checkbox" id="rsn_recovery" value="recovery_focus"><label class="nc-toggle" for="rsn_recovery"><span class="nc-icon">🔄</span>主打恢復的理念</label>
+        <input type="checkbox" id="rsn_brand" value="brand_feel"><label class="nc-toggle" for="rsn_brand"><span class="nc-icon">✨</span>品牌質感和設計</label>
+        <input type="checkbox" id="rsn_event" value="event_exp"><label class="nc-toggle" for="rsn_event"><span class="nc-icon">🏁</span>賽事/活動現場體驗</label>
+        <input type="checkbox" id="rsn_social" value="social_media"><label class="nc-toggle" for="rsn_social"><span class="nc-icon">📱</span>社群內容看到的</label>
+        <input type="checkbox" id="rsn_other" value="other"><label class="nc-toggle" for="rsn_other"><span class="nc-icon">✏️</span>其他</label>
+      </div>
+      <div class="nc-max-hint" id="reasonMaxHint">已選滿 3 個囉！</div>
+      <div class="nc-other-wrap" id="rsnOtherWrap"><input type="text" class="nc-other-input" id="rsnOtherText" placeholder="請告訴我們..."></div>
+    </div>
+
+    <div class="nc-actions">
+      <button class="nc-btn nc-btn-secondary" onclick="goStep(2)">上一步</button>
+      <button class="nc-btn nc-btn-primary" onclick="goStep(4)">下一步</button>
+    </div>
+  </div>
+
+  <!-- ====== STEP 3: 新品與口味期待 ====== -->
+  <div class="nc-card nc-hidden" id="step4">
+    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
+    <div class="nc-step-title">接下來你想看到什麼？</div>
+    <div class="nc-step-desc">堅心的下一步，由你來決定。告訴我們你最期待的新品方向和口味 🎨</div>
+
+    <div class="nc-field">
+      <label>如果能易復要出新口味，你最想要哪種？（最多選 3 個）</label>
+      <div class="nc-toggle-group cols-3" id="flavorGroup">
+        <input type="checkbox" id="flv_taro" value="taro"><label class="nc-toggle" for="flv_taro"><span class="nc-icon">🟣</span>芋頭牛奶</label>
+        <input type="checkbox" id="flv_matcha" value="matcha"><label class="nc-toggle" for="flv_matcha"><span class="nc-icon">🍵</span>抹茶</label>
+        <input type="checkbox" id="flv_cocoa" value="cocoa"><label class="nc-toggle" for="flv_cocoa"><span class="nc-icon">🍫</span>可可</label>
+        <input type="checkbox" id="flv_sesame" value="sesame"><label class="nc-toggle" for="flv_sesame"><span class="nc-icon">⚫</span>黑芝麻</label>
+        <input type="checkbox" id="flv_mango" value="mango"><label class="nc-toggle" for="flv_mango"><span class="nc-icon">🥭</span>芒果</label>
+        <input type="checkbox" id="flv_lemon" value="lemon"><label class="nc-toggle" for="flv_lemon"><span class="nc-icon">🍋</span>檸檬/柑橘</label>
+        <input type="checkbox" id="flv_peanut" value="peanut"><label class="nc-toggle" for="flv_peanut"><span class="nc-icon">🥜</span>花生</label>
+        <input type="checkbox" id="flv_vanilla" value="vanilla"><label class="nc-toggle" for="flv_vanilla"><span class="nc-icon">🍦</span>香草</label>
+        <input type="checkbox" id="flv_berry" value="berry"><label class="nc-toggle" for="flv_berry"><span class="nc-icon">🫐</span>莓果</label>
+        <input type="checkbox" id="flv_original" value="original"><label class="nc-toggle" for="flv_original"><span class="nc-icon">🧋</span>黑糖仙草就好</label>
+        <input type="checkbox" id="flv_other" value="other"><label class="nc-toggle" for="flv_other"><span class="nc-icon">✏️</span>其他</label>
+      </div>
+      <div class="nc-max-hint" id="flavorMaxHint">已選滿 3 個囉！</div>
+      <div class="nc-other-wrap" id="flvOtherWrap"><input type="text" class="nc-other-input" id="flvOtherText" placeholder="你想要什麼口味？"></div>
+    </div>
+
+    <div class="nc-field">
+      <label>你還希望堅心推出什麼類型的新產品？（可複選）</label>
+      <div class="nc-toggle-group cols-3">
+        <input type="checkbox" id="np_gel" value="energy_gel"><label class="nc-toggle" for="np_gel"><span class="nc-icon">🍯</span>賽事能量膠</label>
+        <input type="checkbox" id="np_electrolyte" value="electrolyte"><label class="nc-toggle" for="np_electrolyte"><span class="nc-icon">💦</span>電解質補充</label>
+        <input type="checkbox" id="np_bar" value="bar"><label class="nc-toggle" for="np_bar"><span class="nc-icon">🍫</span>能量棒/蛋白棒</label>
+        <input type="checkbox" id="np_collagen" value="collagen"><label class="nc-toggle" for="np_collagen"><span class="nc-icon">🦴</span>膠原蛋白/關節修護</label>
+        <input type="checkbox" id="np_vitamin" value="daily_vitamin"><label class="nc-toggle" for="np_vitamin"><span class="nc-icon">💊</span>日常綜合營養包</label>
+        <input type="checkbox" id="np_focus" value="focus"><label class="nc-toggle" for="np_focus"><span class="nc-icon">🧠</span>專注力/工作配方</label>
+        <input type="checkbox" id="np_women" value="women"><label class="nc-toggle" for="np_women"><span class="nc-icon">🌸</span>女性運動配方</label>
+        <input type="checkbox" id="np_caffeine" value="caffeine"><label class="nc-toggle" for="np_caffeine"><span class="nc-icon">☕</span>咖啡因/賽前提神</label>
+        <input type="checkbox" id="np_enough" value="enough"><label class="nc-toggle" for="np_enough"><span class="nc-icon">👍</span>目前產品線夠了</label>
+        <input type="checkbox" id="np_other" value="other"><label class="nc-toggle" for="np_other"><span class="nc-icon">✏️</span>其他</label>
+      </div>
+      <div class="nc-other-wrap" id="npOtherWrap"><input type="text" class="nc-other-input" id="npOtherText" placeholder="你想要什麼類型的產品？"></div>
+    </div>
+
+    <div class="nc-field">
+      <label>除了運動補給品，你希望堅心做什麼？</label>
+      <textarea id="brandExtension" placeholder="例如：舉辦跑團活動、推出聯名商品、開設線上課程... 什麼都可以說！"></textarea>
+      <div class="nc-hint">不知道也沒關係，可以直接跳過 🙂</div>
+    </div>
+
+    <div class="nc-actions">
+      <button class="nc-btn nc-btn-secondary" onclick="goStep(3)">上一步</button>
+      <button class="nc-btn nc-btn-primary" onclick="goStep(5)">下一步</button>
+    </div>
+  </div>
+
+  <!-- ====== STEP 4: 品牌周邊票選 ====== -->
+  <div class="nc-card nc-hidden" id="step5">
+    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
+    <div class="nc-step-title">來投票！你想要什麼堅心周邊？</div>
+    <div class="nc-step-desc">我們正在考慮推出一些品牌周邊，想聽聽你最想帶走哪幾樣 🗳️</div>
+
+    <div class="nc-field">
+      <label>以下哪些周邊品項你最有興趣？（最多選 5 個）</label>
+      <div class="nc-toggle-group cols-3" id="merchGroup">
+        <input type="checkbox" id="mrch_cap" value="running_cap"><label class="nc-toggle" for="mrch_cap"><span class="nc-icon">🧢</span>輕量跑步帽</label>
+        <input type="checkbox" id="mrch_sleeve" value="arm_sleeve"><label class="nc-toggle" for="mrch_sleeve"><span class="nc-icon">💪</span>運動袖套</label>
+        <input type="checkbox" id="mrch_headband" value="headband"><label class="nc-toggle" for="mrch_headband"><span class="nc-icon">🎽</span>運動頭帶</label>
+        <input type="checkbox" id="mrch_belt" value="race_belt"><label class="nc-toggle" for="mrch_belt"><span class="nc-icon">🏃</span>號碼布腰帶</label>
+        <input type="checkbox" id="mrch_shaker" value="shaker"><label class="nc-toggle" for="mrch_shaker"><span class="nc-icon">🥤</span>堅心搖搖杯</label>
+        <input type="checkbox" id="mrch_towel" value="towel"><label class="nc-toggle" for="mrch_towel"><span class="nc-icon">🏋️</span>運動毛巾</label>
+        <input type="checkbox" id="mrch_tote" value="tote_bag"><label class="nc-toggle" for="mrch_tote"><span class="nc-icon">👜</span>帆布托特包</label>
+        <input type="checkbox" id="mrch_sticker" value="sticker_set"><label class="nc-toggle" for="mrch_sticker"><span class="nc-icon">🏷️</span>品牌貼紙組</label>
+        <input type="checkbox" id="mrch_tumbler" value="tumbler"><label class="nc-toggle" for="mrch_tumbler"><span class="nc-icon">☕</span>保溫隨行杯</label>
+        <input type="checkbox" id="mrch_socks" value="socks"><label class="nc-toggle" for="mrch_socks"><span class="nc-icon">🧦</span>運動機能襪</label>
+        <input type="checkbox" id="mrch_patch" value="patch"><label class="nc-toggle" for="mrch_patch"><span class="nc-icon">🎖️</span>品牌布章/徽章</label>
+        <input type="checkbox" id="mrch_roller" value="muscle_roller"><label class="nc-toggle" for="mrch_roller"><span class="nc-icon">🔵</span>筋膜球/按摩滾筒</label>
+      </div>
+      <div class="nc-max-hint" id="merchMaxHint">已選滿 5 個囉！</div>
+    </div>
+
+    <div class="nc-field">
+      <label>你還有想到什麼周邊品項嗎？</label>
+      <textarea id="merchOther" placeholder="不管天馬行空或很實際的想法，我們都歡迎！"></textarea>
+      <div class="nc-hint">選填。有想法再寫就好 🙂</div>
+    </div>
+
+    <div class="nc-actions">
+      <button class="nc-btn nc-btn-secondary" onclick="goStep(4)">上一步</button>
+      <button class="nc-btn nc-btn-primary" onclick="goStep(6)">下一步</button>
+    </div>
+  </div>
+
+  <!-- ====== STEP 5: 你與堅心的未來 ====== -->
+  <div class="nc-card nc-hidden" id="step6">
+    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
+    <div class="nc-step-title">最後聊幾句，馬上就好</div>
+    <div class="nc-step-desc">幫助我們用你最喜歡的方式和你保持聯繫 📬</div>
+
+    <div class="nc-field">
+      <label>你比較喜歡從哪裡收到堅心的資訊？（可複選）</label>
+      <div class="nc-toggle-group cols-3">
+        <input type="checkbox" id="ch_line" value="line_oa"><label class="nc-toggle" for="ch_line"><span class="nc-icon">💬</span>LINE 官方帳號</label>
+        <input type="checkbox" id="ch_ig" value="ig"><label class="nc-toggle" for="ch_ig"><span class="nc-icon">📸</span>Instagram</label>
+        <input type="checkbox" id="ch_fb" value="fb"><label class="nc-toggle" for="ch_fb"><span class="nc-icon">👍</span>Facebook</label>
+        <input type="checkbox" id="ch_email" value="email"><label class="nc-toggle" for="ch_email"><span class="nc-icon">📧</span>Email 電子報</label>
+        <input type="checkbox" id="ch_yt" value="youtube"><label class="nc-toggle" for="ch_yt"><span class="nc-icon">🎬</span>YouTube</label>
+        <input type="checkbox" id="ch_blog" value="blog"><label class="nc-toggle" for="ch_blog"><span class="nc-icon">🌐</span>官網部落格</label>
+        <input type="checkbox" id="ch_event" value="event"><label class="nc-toggle" for="ch_event"><span class="nc-icon">🏁</span>實體賽事/活動</label>
+      </div>
+    </div>
+
+    <div class="nc-field">
+      <label>你會繼續回購堅心的產品嗎？</label>
+      <div class="nc-toggle-group cols-5">
+        <input type="radio" name="repurchase" id="rp1" value="definitely" checked><label class="nc-toggle" for="rp1"><span class="nc-icon">🧡</span>一定會</label>
+        <input type="radio" name="repurchase" id="rp2" value="likely"><label class="nc-toggle" for="rp2"><span class="nc-icon">👍</span>很有可能</label>
+        <input type="radio" name="repurchase" id="rp3" value="maybe"><label class="nc-toggle" for="rp3"><span class="nc-icon">🤔</span>看情況</label>
+        <input type="radio" name="repurchase" id="rp4" value="unlikely"><label class="nc-toggle" for="rp4"><span class="nc-icon">😐</span>可能不會</label>
+        <input type="radio" name="repurchase" id="rp5" value="no"><label class="nc-toggle" for="rp5"><span class="nc-icon">❌</span>不會了</label>
+      </div>
+    </div>
+
+    <div class="nc-field">
+      <label>最後，有什麼想對堅心說的話嗎？</label>
+      <textarea id="openFeedback" placeholder="任何鼓勵、建議、許願都可以，我們每一則都會認真看 🙌"></textarea>
+      <div class="nc-hint">選填。沒有也完全沒關係！</div>
+    </div>
+
+    <div class="nc-actions">
+      <button class="nc-btn nc-btn-secondary" onclick="goStep(5)">上一步</button>
+      <button class="nc-btn nc-btn-primary nc-btn-lg" onclick="submitSurvey()" id="submitBtn">送出問卷 →</button>
+    </div>
+  </div>
+
+  <!-- ====== THANK YOU ====== -->
+  <div class="nc-card nc-hidden" id="step7">
+    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
+    <div class="nc-step-title" id="thankTitle">感謝你！你的聲音我們收到了 🧡</div>
+    <div class="nc-step-desc">每一份回饋都是堅心前進的燃料。我們會認真消化你的每一個回答，努力讓產品和服務都更貼近你的需求。</div>
+
+    <div class="nc-discount-box">
+      <div style="font-size:.8rem;color:var(--neutral-gray);margin-bottom:4px">你的專屬折扣碼</div>
+      <div class="nc-discount-code" id="discountCode">THANKYOU15</div>
+      <div class="nc-discount-desc">全品項 85 折，單筆消費滿 $800 即可使用</div>
+      <div class="nc-discount-detail">有效期限：自今日起 30 天內</div>
+      <button class="nc-copy-btn" id="copyBtn" onclick="copyDiscount()">複製折扣碼</button>
+    </div>
+
+    <div class="nc-bonus-box">
+      <h4>🎁 額外加碼</h4>
+      <p>你已自動加入「新品優先體驗名單」！未來堅心有新品或限定活動，你會比別人早 48 小時收到通知。</p>
+    </div>
+
+    <div class="nc-cta-banner">
+      <h4>現在就用折扣碼逛逛？</h4>
+      <p>前往堅心官網，找到最適合你的運動補給方案</p>
+      <a class="nc-btn nc-btn-primary" href="https://www.outrunnutrition.com/" target="_blank" rel="noopener">前往堅心官網 →</a>
+    </div>
+  </div>
+
+  <div class="nc-footer">
+    <div style="display:flex;justify-content:center;margin-bottom:8px">
+      <img src="logo-white.png" alt="堅心 Outrun Nutrition" style="height:24px;width:auto;opacity:.5">
+    </div>
+    <div class="nc-footer-sub">堅心｜恢復即競爭力</div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var WEBHOOK_URL="";
+
+/* ===== ID Arrays ===== */
+var ALL_SPORT_IDS=["sport_marathon","sport_strength","sport_cycling","sport_triathlon","sport_hyrox","sport_crossfit","sport_ball","sport_trail","sport_swimming","sport_combat","sport_yoga","sport_other"];
+var ALL_EVT_IDS=["evt_half","evt_full","evt_ultra","evt_tri","evt_hyrox","evt_strength","evt_fun","evt_none","evt_other"];
+var ALL_PROD_IDS=["prod_sleep","prod_energy750","prod_energy500","prod_gut","prod_oarc"];
+var ALL_IMP_IDS=["imp_taste","imp_effect","imp_pkg","imp_price","imp_info","imp_variety","imp_dissolve","imp_none","imp_other"];
+var ALL_RSN_IDS=["rsn_ntsu","rsn_coach","rsn_ingredient","rsn_taste","rsn_recovery","rsn_brand","rsn_event","rsn_social","rsn_other"];
+var ALL_FLV_IDS=["flv_taro","flv_matcha","flv_cocoa","flv_sesame","flv_mango","flv_lemon","flv_peanut","flv_vanilla","flv_berry","flv_original","flv_other"];
+var ALL_NP_IDS=["np_gel","np_electrolyte","np_bar","np_collagen","np_vitamin","np_focus","np_women","np_caffeine","np_enough","np_other"];
+var ALL_MRCH_IDS=["mrch_cap","mrch_sleeve","mrch_headband","mrch_belt","mrch_shaker","mrch_towel","mrch_tote","mrch_sticker","mrch_tumbler","mrch_socks","mrch_patch","mrch_roller"];
+var ALL_CH_IDS=["ch_line","ch_ig","ch_fb","ch_email","ch_yt","ch_blog","ch_event"];
+
+/* ===== Utility ===== */
+function getVal(n){var e=document.querySelector('input[name="'+n+'"]:checked');return e?e.value:null}
+function getChecked(ids){var o=[];ids.forEach(function(id){var e=document.getElementById(id);if(e&&e.checked)o.push(e.value)});return o}
+
+/* ===== Other toggle ===== */
+function setupOtherToggle(checkboxId,wrapId){
+  var cb=document.getElementById(checkboxId);
+  if(!cb)return;
+  cb.addEventListener("change",function(){document.getElementById(wrapId).classList.toggle("show",this.checked)});
+}
+setupOtherToggle("sport_other","sportOtherWrap");
+setupOtherToggle("evt_other","evtOtherWrap");
+setupOtherToggle("imp_other","impOtherWrap");
+setupOtherToggle("rsn_other","rsnOtherWrap");
+setupOtherToggle("flv_other","flvOtherWrap");
+setupOtherToggle("np_other","npOtherWrap");
+
+/* ===== Event none mutual exclusion ===== */
+document.getElementById("evt_none").addEventListener("change",function(){if(this.checked)ALL_EVT_IDS.forEach(function(id){if(id!=="evt_none"){var e=document.getElementById(id);if(e)e.checked=false}})});
+ALL_EVT_IDS.forEach(function(id){if(id!=="evt_none"){var e=document.getElementById(id);if(e)e.addEventListener("change",function(){if(this.checked)document.getElementById("evt_none").checked=false})}});
+
+/* Improvement none mutual exclusion */
+document.getElementById("imp_none").addEventListener("change",function(){if(this.checked)ALL_IMP_IDS.forEach(function(id){if(id!=="imp_none"){var e=document.getElementById(id);if(e)e.checked=false}})});
+ALL_IMP_IDS.forEach(function(id){if(id!=="imp_none"){var e=document.getElementById(id);if(e)e.addEventListener("change",function(){if(this.checked)document.getElementById("imp_none").checked=false})}});
+
+/* New product enough mutual exclusion */
+document.getElementById("np_enough").addEventListener("change",function(){if(this.checked)ALL_NP_IDS.forEach(function(id){if(id!=="np_enough"){var e=document.getElementById(id);if(e)e.checked=false}})});
+ALL_NP_IDS.forEach(function(id){if(id!=="np_enough"){var e=document.getElementById(id);if(e)e.addEventListener("change",function(){if(this.checked)document.getElementById("np_enough").checked=false})}});
+
+/* ===== Max selection limiter ===== */
+function setupMaxSelection(ids,max,hintId){
+  function update(){
+    var cnt=0;ids.forEach(function(id){if(document.getElementById(id).checked)cnt++});
+    var atMax=cnt>=max;
+    ids.forEach(function(id){
+      var cb=document.getElementById(id);
+      var lbl=cb.nextElementSibling;
+      if(!cb.checked&&atMax){lbl.classList.add("nc-disabled")}else{lbl.classList.remove("nc-disabled")}
+    });
+    if(hintId)document.getElementById(hintId).classList.toggle("show",atMax);
+  }
+  ids.forEach(function(id){document.getElementById(id).addEventListener("change",update)});
+}
+setupMaxSelection(ALL_RSN_IDS,3,"reasonMaxHint");
+setupMaxSelection(ALL_FLV_IDS,3,"flavorMaxHint");
+setupMaxSelection(ALL_MRCH_IDS,5,"merchMaxHint");
+
+/* ===== Privacy ===== */
+document.getElementById("privacyToggle").addEventListener("click",function(e){e.preventDefault();document.getElementById("privacyContent").classList.toggle("nc-hidden")});
+document.getElementById("privacyAgree").addEventListener("change",function(){document.getElementById("startBtn").disabled=!this.checked});
+
+/* ===== Dynamic Satisfaction Likert ===== */
+var PROD_MAP=[
+  {id:"prod_sleep",label:"眠易復 運動恢復膠囊",icon:"🌙",key:"sat_sleep_recover"},
+  {id:"prod_energy750",label:"能易復 恢復蛋白 750g",icon:"🥤",key:"sat_energy_recover_750"},
+  {id:"prod_energy500",label:"能易復 恢復蛋白 500g",icon:"📦",key:"sat_energy_recover_500"},
+  {id:"prod_gut",label:"食動力 運動益生菌",icon:"⚡",key:"sat_gut_power"},
+  {id:"prod_oarc",label:"OARC 補給組",icon:"🎯",key:"sat_oarc"}
+];
+
+function renderSatisfaction(){
+  var c=document.getElementById("satContainer");
+  var checked=[];
+  PROD_MAP.forEach(function(p){if(document.getElementById(p.id).checked)checked.push(p)});
+  if(checked.length===0){
+    c.innerHTML='<div class="nc-sat-placeholder">先在上方勾選你用過的產品，這裡會出現對應的評分 🙂</div>';
+    return;
+  }
+  var h="";
+  checked.forEach(function(p){
+    h+='<div class="nc-sat-field"><div class="nc-sat-name"><span class="nc-sat-icon">'+p.icon+'</span>'+p.label+'</div>';
+    h+='<div class="nc-likert">';
+    for(var i=1;i<=5;i++){
+      var chk=i===3?" checked":"";
+      h+='<input type="radio" name="'+p.key+'" id="'+p.key+'_'+i+'" value="'+i+'"'+chk+'><label for="'+p.key+'_'+i+'">'+i+'</label>';
+    }
+    h+='</div><div class="nc-likert-labels"><span>不太滿意</span><span>非常滿意</span></div></div>';
+  });
+  c.innerHTML=h;
+}
+ALL_PROD_IDS.forEach(function(id){document.getElementById(id).addEventListener("change",renderSatisfaction)});
+
+/* ===== Step Navigation ===== */
+var currentStep=1;
+window.goStep=function(n){
+  document.getElementById("step"+currentStep).classList.add("nc-hidden");
+  document.getElementById("step"+n).classList.remove("nc-hidden");
+  document.getElementById("step"+n).classList.add("nc-fade-in");
+  currentStep=n;updateProgress();
+  document.getElementById("step"+n).scrollIntoView({behavior:"smooth",block:"start"});
+};
+function updateProgress(){
+  document.querySelectorAll("#ncProgress .bar").forEach(function(b,i){b.className="bar";if(i<currentStep-1)b.classList.add("done");else if(i===currentStep-1)b.classList.add("active")});
+  document.querySelectorAll("#ncStepLabels span").forEach(function(l,i){l.className="";if(i<currentStep-1)l.classList.add("done");else if(i===currentStep-1)l.classList.add("active")});
+}
+
+/* ===== URL Param: tier ===== */
+var memberTier=(new URLSearchParams(window.location.search)).get("tier")||"bronze";
+
+/* ===== Submit ===== */
+window.submitSurvey=function(){
+  var btn=document.getElementById("submitBtn");
+  btn.innerHTML='<span class="nc-spinner"></span>送出中...';btn.disabled=true;
+  sendToSheet();
+  setTimeout(function(){
+    btn.innerHTML='送出問卷 →';btn.disabled=false;
+    var name=document.getElementById("memberName").value.trim();
+    if(name)document.getElementById("thankTitle").textContent="感謝你，"+name+"！你的聲音我們收到了 🧡";
+    goStep(7);
+  },1000);
+};
+
+/* ===== Copy Discount ===== */
+window.copyDiscount=function(){
+  var code=document.getElementById("discountCode").textContent;
+  var btn=document.getElementById("copyBtn");
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(code).then(function(){
+      btn.textContent="已複製！";btn.classList.add("copied");
+      setTimeout(function(){btn.textContent="複製折扣碼";btn.classList.remove("copied")},2000);
+    });
+  }else{
+    var t=document.createElement("textarea");t.value=code;document.body.appendChild(t);t.select();document.execCommand("copy");document.body.removeChild(t);
+    btn.textContent="已複製！";btn.classList.add("copied");
+    setTimeout(function(){btn.textContent="複製折扣碼";btn.classList.remove("copied")},2000);
+  }
+};
+
+/* ===== Send to Google Sheets ===== */
+function sendToSheet(){
+  if(!WEBHOOK_URL)return;
+  var sports=getChecked(ALL_SPORT_IDS);
+  var otherSport=document.getElementById("sportOtherText").value.trim();
+  if(otherSport)sports.push("other:"+otherSport);
+
+  var events=getChecked(ALL_EVT_IDS);
+  var otherEvt=document.getElementById("evtOtherText").value.trim();
+  if(otherEvt)events.push("other:"+otherEvt);
+
+  var products=getChecked(ALL_PROD_IDS);
+  var improvements=getChecked(ALL_IMP_IDS);
+  var otherImp=document.getElementById("impOtherText").value.trim();
+  if(otherImp)improvements.push("other:"+otherImp);
+
+  var reasons=getChecked(ALL_RSN_IDS);
+  var otherRsn=document.getElementById("rsnOtherText").value.trim();
+  if(otherRsn)reasons.push("other:"+otherRsn);
+
+  var flavors=getChecked(ALL_FLV_IDS);
+  var otherFlv=document.getElementById("flvOtherText").value.trim();
+  if(otherFlv)flavors.push("other:"+otherFlv);
+
+  var newProducts=getChecked(ALL_NP_IDS);
+  var otherNp=document.getElementById("npOtherText").value.trim();
+  if(otherNp)newProducts.push("other:"+otherNp);
+
+  var merch=getChecked(ALL_MRCH_IDS);
+  var channels=getChecked(ALL_CH_IDS);
+
+  /* Satisfaction scores */
+  var satSleep=getVal("sat_sleep_recover")||"";
+  var satE750=getVal("sat_energy_recover_750")||"";
+  var satE500=getVal("sat_energy_recover_500")||"";
+  var satGut=getVal("sat_gut_power")||"";
+  var satOarc=getVal("sat_oarc")||"";
+
+  var d={
+    timestamp:new Date().toISOString(),
+    member_name:document.getElementById("memberName").value.trim(),
+    member_email:document.getElementById("memberEmail").value.trim(),
+    member_tier:memberTier,
+    sports:sports.join(","),
+    frequency:getVal("frequency"),
+    events:events.join(","),
+    products_used:products.join(","),
+    sat_sleep_recover:satSleep,
+    sat_energy_recover_750:satE750,
+    sat_energy_recover_500:satE500,
+    sat_gut_power:satGut,
+    sat_oarc:satOarc,
+    improvements:improvements.join(","),
+    purchase_reason:reasons.join(","),
+    new_flavors:flavors.join(","),
+    new_products:newProducts.join(","),
+    brand_extension:document.getElementById("brandExtension").value.trim(),
+    merch_votes:merch.join(","),
+    merch_other:document.getElementById("merchOther").value.trim(),
+    info_channels:channels.join(","),
+    repurchase:getVal("repurchase"),
+    open_feedback:document.getElementById("openFeedback").value.trim()
+  };
+  try{var img=new Image();img.src=WEBHOOK_URL+"?"+Object.keys(d).map(function(k){return encodeURIComponent(k)+"="+encodeURIComponent(d[k])}).join("&")}catch(e){}
+}
+
+})();
+</script>
+</body>
+</html>
