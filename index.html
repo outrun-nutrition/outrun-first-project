@@ -1,0 +1,4712 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="堅心記帳">
+<meta name="theme-color" content="#2F2F2F">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%232F2F2F'/><text x='96' y='120' text-anchor='middle' font-size='100'>🥜</text></svg>">
+<title>堅心記帳 — Outrun Nutrition 營運記帳系統</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ==================== 基礎設定 ==================== */
+:root {
+  --black: #2F2F2F;
+  --orange: #ED5D2B;
+  --orange-hover: #d14e1f;
+  --blue: #145DDD;
+  --dark-gray: #3A3A3A;
+  --card-gray: #444444;
+  --text-primary: #E0E0E0;
+  --text-secondary: #A0A0A0;
+  --text-dim: #707070;
+  --danger: #E53935;
+  --success: #43A047;
+  --warning: #FB8C00;
+  --radius-lg: 12px;
+  --radius-sm: 6px;
+  --radius-xs: 4px;
+  --font-zh: 'Noto Sans TC', sans-serif;
+  --font-en: 'Montserrat', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; }
+body {
+  font-family: var(--font-zh);
+  background: var(--black);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==================== 頂部導覽 ==================== */
+.top-bar {
+  background: var(--dark-gray);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(237, 93, 43, 0.3);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--orange);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.brand-name {
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.sync-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.sync-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.sync-dot.offline { background: var(--warning); }
+.sync-dot.error { background: var(--danger); }
+
+/* ==================== 分頁導覽 ==================== */
+.tab-nav {
+  display: flex;
+  background: var(--dark-gray);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 12px 8px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-zh);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tab-btn.active {
+  color: var(--orange);
+  border-bottom-color: var(--orange);
+}
+
+.tab-btn:hover { color: var(--text-primary); }
+
+.tab-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+
+/* ==================== 主內容區 ==================== */
+.main-content {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ==================== 卡片元件 ==================== */
+.card {
+  background: var(--dark-gray);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.card-badge {
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+  background: rgba(237, 93, 43, 0.15);
+  color: var(--orange);
+}
+
+/* ==================== 表單元件 ==================== */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.form-label .required {
+  color: var(--orange);
+  margin-left: 2px;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-zh);
+  font-size: 15px;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--orange);
+  background: rgba(237, 93, 43, 0.05);
+}
+
+.form-input::placeholder { color: var(--text-dim); }
+
+.form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A0A0A0' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+/* 金額輸入特殊樣式 */
+.amount-input-wrap {
+  position: relative;
+}
+
+.amount-input-wrap .currency {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-family: var(--font-en);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.amount-input-wrap .form-input {
+  padding-left: 46px;
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 18px;
+}
+.amount-preview {
+  font-family: var(--font-en);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  padding-left: 4px;
+  min-height: 16px;
+}
+
+/* ==================== 照片上傳 ==================== */
+.photo-upload {
+  border: 2px dashed rgba(255,255,255,0.15);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.photo-upload:hover, .photo-upload.drag-over {
+  border-color: var(--orange);
+  background: rgba(237, 93, 43, 0.05);
+}
+
+.photo-upload-icon { font-size: 32px; margin-bottom: 8px; }
+
+.photo-upload-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.photo-upload-text strong {
+  color: var(--orange);
+}
+
+.photo-upload input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.photo-preview {
+  display: none;
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.photo-preview img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.photo-preview .remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  background: rgba(0,0,0,0.7);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==================== 按鈕 ==================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-zh);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--orange);
+  color: #fff;
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+}
+
+.btn-primary:hover { background: var(--orange-hover); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secondary {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover { background: rgba(255,255,255,0.12); }
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text-primary);
+}
+
+.btn-outline:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.btn-danger {
+  background: rgba(229, 57, 53, 0.15);
+  color: var(--danger);
+}
+
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+.btn-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* ==================== 自訂下拉選單（深色主題） ==================== */
+.custom-select {
+  position: relative;
+}
+
+.custom-select-trigger {
+  width: 100%;
+  padding: 10px 36px 10px 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-zh);
+  font-size: 15px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+  position: relative;
+}
+
+.custom-select-trigger::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--text-secondary);
+  transition: transform 0.2s;
+}
+
+.custom-select.open .custom-select-trigger::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.custom-select-trigger:hover,
+.custom-select.open .custom-select-trigger {
+  border-color: var(--orange);
+  background: rgba(237, 93, 43, 0.05);
+}
+
+.custom-select-trigger .placeholder {
+  color: var(--text-dim);
+}
+
+.custom-select-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--dark-gray);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  z-index: 50;
+}
+
+.custom-select.open .custom-select-dropdown {
+  display: block;
+  animation: fadeSlideIn 0.15s ease;
+}
+
+.custom-select-search {
+  position: sticky;
+  top: 0;
+  background: var(--dark-gray);
+  padding: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  z-index: 1;
+}
+
+.custom-select-search input {
+  width: 100%;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-xs);
+  color: var(--text-primary);
+  font-family: var(--font-zh);
+  font-size: 13px;
+  outline: none;
+}
+
+.custom-select-search input:focus {
+  border-color: var(--orange);
+}
+
+.custom-select-search input::placeholder {
+  color: var(--text-dim);
+}
+
+.custom-select-group-label {
+  padding: 8px 12px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--orange);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-en);
+  position: sticky;
+  top: 0;
+  background: var(--dark-gray);
+}
+
+.custom-select-dropdown.has-search .custom-select-group-label {
+  top: 41px;
+}
+
+.custom-select-option {
+  padding: 9px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.1s;
+}
+
+.custom-select-option:hover {
+  background: rgba(237, 93, 43, 0.1);
+}
+
+.custom-select-option.selected {
+  background: rgba(237, 93, 43, 0.15);
+  color: var(--orange);
+  font-weight: 500;
+}
+
+.custom-select-option .option-icon {
+  font-size: 16px;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.custom-select-option .option-code {
+  font-family: var(--font-en);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.custom-select-empty {
+  padding: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* 廠商搜尋選單額外樣式 */
+.vendor-select-trigger {
+  min-height: 42px;
+}
+
+.vendor-select-trigger .vendor-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(237, 93, 43, 0.12);
+  color: var(--orange);
+  border-radius: var(--radius-xs);
+  padding: 2px 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.custom-select-option .option-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* 廠商選項：含編輯刪除按鈕 */
+.vendor-option {
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.vendor-option-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 4px 9px 12px;
+  cursor: pointer;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.vendor-option-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-right: 6px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.vendor-option:hover .vendor-option-actions {
+  opacity: 1;
+}
+
+.vendor-action-btn {
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  transition: all 0.15s;
+}
+
+.vendor-action-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary);
+}
+
+.vendor-action-del:hover {
+  background: rgba(229, 57, 53, 0.15);
+  color: var(--danger);
+}
+
+/* 廠商行內編輯模式 */
+.vendor-edit-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  width: 100%;
+}
+
+.vendor-edit-inline input {
+  flex: 1;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-xs);
+  color: var(--text-primary);
+  font-size: 13px;
+  padding: 4px 8px;
+  font-family: var(--font-zh);
+}
+
+.vendor-edit-inline input:focus {
+  outline: none;
+  border-color: var(--orange);
+}
+
+.vendor-edit-inline button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: var(--font-zh);
+}
+
+.vendor-edit-save {
+  background: var(--orange);
+  color: #fff;
+}
+
+.vendor-edit-cancel {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-secondary);
+}
+
+.custom-select-footer {
+  padding: 6px 8px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  gap: 6px;
+  position: sticky;
+  bottom: 0;
+  background: var(--dark-gray);
+}
+
+.custom-select-footer button {
+  flex: 1;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-family: var(--font-zh);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.custom-select-footer button:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+/* 下拉選單捲軸 */
+.custom-select-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 3px;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* 原生 select 深色修補（付款方式、發票類型等較簡單的欄位） */
+.form-select {
+  color-scheme: dark;
+}
+
+.form-select optgroup {
+  background: var(--dark-gray);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.form-select option {
+  background: var(--dark-gray);
+  color: var(--text-primary);
+  padding: 6px 8px;
+}
+
+/* ==================== 搜尋/篩選列 ==================== */
+.search-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.search-bar input {
+  flex: 1;
+  min-width: 120px;
+  padding: 8px 12px;
+  background: var(--dark-gray);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-zh);
+  font-size: 13px;
+}
+.search-bar input:focus {
+  outline: none;
+  border-color: var(--orange);
+}
+.search-bar input::placeholder { color: var(--text-dim); }
+.search-bar select {
+  padding: 8px 10px;
+  background: var(--dark-gray);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-zh);
+  font-size: 13px;
+  color-scheme: dark;
+}
+.search-bar select:focus { outline: none; border-color: var(--orange); }
+
+/* ==================== 年度趨勢圖 ==================== */
+.trend-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 120px;
+  padding: 8px 0;
+}
+.trend-bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+.trend-bar {
+  width: 100%;
+  max-width: 28px;
+  background: var(--orange);
+  border-radius: 3px 3px 0 0;
+  transition: height 0.3s;
+  min-height: 2px;
+}
+.trend-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  font-family: var(--font-en);
+}
+.trend-value {
+  font-size: 9px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  font-family: var(--font-en);
+  white-space: nowrap;
+}
+.trend-summary {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.trend-summary strong { color: var(--text-primary); font-family: var(--font-en); }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==================== OCR 辨識結果 ==================== */
+.ocr-status {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.75);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.ocr-result {
+  margin-top: 12px;
+  background: rgba(67, 160, 71, 0.08);
+  border: 1px solid rgba(67, 160, 71, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  animation: fadeSlideIn 0.3s ease;
+}
+
+.ocr-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.ocr-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 13px;
+}
+
+.ocr-field:last-child { border-bottom: none; }
+
+.ocr-field-label {
+  color: var(--text-secondary);
+  min-width: 70px;
+}
+
+.ocr-field-value {
+  font-weight: 500;
+  text-align: right;
+  flex: 1;
+}
+
+.ocr-field-value.amount {
+  font-family: var(--font-en);
+  font-weight: 700;
+  color: var(--orange);
+}
+
+.ocr-field-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text-secondary);
+  border-radius: var(--radius-xs);
+  padding: 2px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: all 0.15s;
+}
+
+.ocr-field-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.ocr-field-btn.applied {
+  background: rgba(67, 160, 71, 0.15);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.ocr-progress {
+  width: 100%;
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.ocr-progress-bar {
+  height: 100%;
+  background: var(--orange);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+.ocr-status-text {
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* ==================== 預算進度 ==================== */
+.budget-row {
+  margin-bottom: 12px;
+}
+
+.budget-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.budget-row-label { color: var(--text-secondary); }
+
+.budget-row-amount {
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.budget-row-amount.ok { color: var(--text-primary); }
+.budget-row-amount.warn { color: var(--warning); }
+.budget-row-amount.over { color: var(--danger); }
+
+.budget-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.budget-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.budget-bar-fill.ok { background: var(--success); }
+.budget-bar-fill.warn { background: var(--warning); }
+.budget-bar-fill.over { background: var(--danger); }
+
+.budget-over-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  background: rgba(229, 57, 53, 0.15);
+  color: var(--danger);
+  margin-left: 6px;
+}
+
+/* ==================== 費用列表 ==================== */
+.expense-list { list-style: none; }
+
+.expense-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin: 0 -20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.expense-item:hover { background: rgba(255,255,255,0.03); }
+.expense-item:last-child { border-bottom: none; }
+
+.expense-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.expense-icon.cat-sales { background: rgba(237, 93, 43, 0.15); }
+.expense-icon.cat-admin { background: rgba(20, 93, 221, 0.15); }
+.expense-icon.cat-ops { background: rgba(67, 160, 71, 0.15); }
+.expense-icon.cat-tax { background: rgba(251, 140, 0, 0.15); }
+
+.expense-info { flex: 1; min-width: 0; }
+
+.expense-name {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.expense-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.expense-amount {
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.expense-amount .currency-sign {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* 有發票照片標記 */
+.has-photo {
+  width: 6px;
+  height: 6px;
+  background: var(--success);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ==================== 統計卡片 ==================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--dark-gray);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.stat-card.wide { grid-column: span 2; }
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-family: var(--font-en);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stat-value .unit {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.stat-change {
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.stat-change.up { color: var(--danger); }
+.stat-change.down { color: var(--success); }
+
+/* 分類長條圖 */
+.bar-chart { margin-top: 12px; }
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.bar-label {
+  width: 80px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.bar-track {
+  flex: 1;
+  height: 24px;
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: var(--radius-xs);
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  font-family: var(--font-en);
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+}
+
+.bar-fill.sales { background: var(--orange); }
+.bar-fill.admin { background: var(--blue); }
+.bar-fill.ops { background: var(--success); }
+.bar-fill.tax { background: var(--warning); }
+
+/* ==================== 篩選列 ==================== */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.month-picker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--dark-gray);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+
+.month-picker button {
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-xs);
+  font-size: 16px;
+}
+
+.month-picker button:hover { background: rgba(255,255,255,0.08); }
+
+.month-picker .current-month {
+  font-family: var(--font-en);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 0 8px;
+  min-width: 100px;
+  text-align: center;
+}
+
+/* ==================== 報表頁 ==================== */
+.report-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.report-section {
+  margin-top: 20px;
+}
+
+.report-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--font-en);
+  margin-bottom: 12px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.report-table th {
+  text-align: left;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text-secondary);
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.report-table th:last-child,
+.report-table td:last-child {
+  text-align: right;
+}
+
+.report-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.report-table tr.total-row {
+  font-weight: 700;
+  border-top: 2px solid var(--orange);
+}
+
+.report-table tr.total-row td {
+  padding-top: 12px;
+  color: var(--orange);
+}
+
+/* ==================== 設定頁 ==================== */
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.setting-label { font-size: 14px; }
+.setting-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+/* Toggle 開關 */
+.toggle {
+  width: 44px;
+  height: 24px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.toggle.active { background: var(--orange); }
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: left 0.2s;
+}
+
+.toggle.active::after { left: 22px; }
+
+/* ==================== Toast 通知 ==================== */
+.toast-container {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--dark-gray);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  padding: 12px 20px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s;
+  pointer-events: auto;
+}
+
+.toast.success { border-left: 3px solid var(--success); }
+.toast.error { border-left: 3px solid var(--danger); }
+.toast.info { border-left: 3px solid var(--blue); }
+
+@keyframes toastIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* ==================== Modal ==================== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 300;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: var(--dark-gray);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  width: 100%;
+  max-width: 640px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 24px 20px;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.modal-handle {
+  width: 36px;
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+/* ==================== 空狀態 ==================== */
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-secondary);
+}
+
+.empty-state-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state-text { font-size: 14px; margin-bottom: 16px; }
+
+/* ==================== Loading ==================== */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: var(--orange);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ==================== 響應式 ==================== */
+@media (min-width: 768px) {
+  .main-content { padding: 24px; }
+  .modal { border-radius: var(--radius-lg); margin-bottom: 40px; }
+  .modal-overlay { align-items: center; }
+}
+
+@media (max-width: 360px) {
+  .form-row { grid-template-columns: 1fr; }
+  .form-row-3 { grid-template-columns: 1fr 1fr; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .stat-card.wide { grid-column: span 1; }
+}
+
+/* ==================== 列印樣式 ==================== */
+@media print {
+  body { background: white; color: #333; }
+  .top-bar, .tab-nav, .btn, .filter-bar, .photo-upload { display: none; }
+  .card { background: white; border: 1px solid #ddd; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== 頂部導覽 ==================== -->
+<header class="top-bar">
+  <div class="brand">
+    <div class="brand-icon">🥜</div>
+    <div>
+      <div class="brand-name">Expense Tracker</div>
+      <div class="brand-sub">堅心營運記帳</div>
+    </div>
+  </div>
+  <div class="sync-status" id="syncStatus">
+    <span class="sync-dot" id="syncDot"></span>
+    <span id="syncText">本地模式</span>
+  </div>
+</header>
+
+<!-- ==================== 分頁導覽 ==================== -->
+<nav class="tab-nav">
+  <button class="tab-btn active" data-tab="add">
+    <span class="tab-icon">✏️</span> 記帳
+  </button>
+  <button class="tab-btn" data-tab="list">
+    <span class="tab-icon">📋</span> 明細
+  </button>
+  <button class="tab-btn" data-tab="stats">
+    <span class="tab-icon">📊</span> 統計
+  </button>
+  <button class="tab-btn" data-tab="report">
+    <span class="tab-icon">📄</span> 報表
+  </button>
+  <button class="tab-btn" data-tab="settings">
+    <span class="tab-icon">⚙️</span> 設定
+  </button>
+</nav>
+
+<!-- ==================== 主內容區 ==================== -->
+<main class="main-content">
+
+  <!-- ===== 記帳頁 ===== -->
+  <div class="tab-panel active" id="tab-add">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">新增費用</span>
+        <span class="card-badge">NEW ENTRY</span>
+      </div>
+
+      <!-- 範本快選 + 批次模式 -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <div class="custom-select" id="templateSelect" style="flex:1;min-width:180px">
+          <div class="custom-select-trigger" onclick="toggleCustomSelect('templateSelect')" style="padding:8px 12px;font-size:13px">
+            <span style="margin-right:4px">📋</span>
+            <span class="placeholder">從範本快速帶入...</span>
+          </div>
+          <div class="custom-select-dropdown" id="templateDropdown" style="min-width:280px">
+            <div id="templateOptions">
+              <!-- 動態產生 -->
+            </div>
+            <div class="custom-select-empty" id="templateEmpty" style="display:none">尚無範本，儲存費用後可建立範本</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);white-space:nowrap">
+          <div class="toggle" id="toggleBatchMode" onclick="toggleBatchMode()" style="width:36px;height:20px"></div>
+          <span>批次模式</span>
+        </div>
+      </div>
+
+      <form id="expenseForm">
+        <!-- 日期 -->
+        <div class="form-group">
+          <label class="form-label">日期 <span class="required">*</span></label>
+          <input type="date" class="form-input" id="expDate" required>
+        </div>
+
+        <!-- 金額 -->
+        <div class="form-group">
+          <label class="form-label">金額（含稅） <span class="required">*</span></label>
+          <div class="amount-input-wrap">
+            <span class="currency">NTD</span>
+            <input type="number" class="form-input" id="expAmount" placeholder="0" min="0" step="1" required inputmode="numeric"
+              oninput="updateAmountPreview()">
+          </div>
+          <div class="amount-preview" id="amountPreview"></div>
+        </div>
+
+        <!-- 稅額與未稅（自動計算） -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">稅額（5%）</label>
+            <div class="amount-input-wrap">
+              <span class="currency">NTD</span>
+              <input type="number" class="form-input" id="expTax" placeholder="自動" step="1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">未稅金額</label>
+            <div class="amount-input-wrap">
+              <span class="currency">NTD</span>
+              <input type="number" class="form-input" id="expNet" placeholder="自動" step="1">
+            </div>
+          </div>
+        </div>
+
+        <!-- 費用分類（自訂深色下拉） -->
+        <div class="form-group">
+          <label class="form-label">費用分類 <span class="required">*</span></label>
+          <input type="hidden" id="expCategory" required>
+          <div class="custom-select" id="categorySelect">
+            <div class="custom-select-trigger" onclick="toggleCustomSelect('categorySelect')">
+              <span class="placeholder">選擇費用科目...</span>
+            </div>
+            <div class="custom-select-dropdown" id="categoryDropdown">
+              <div id="categoryOptions">
+                <!-- 動態產生 -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 發票資訊 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">發票號碼</label>
+            <input type="text" class="form-input" id="expInvoice" placeholder="AB-12345678" maxlength="11"
+              style="font-family: var(--font-en); letter-spacing: 0.05em; text-transform: uppercase;"
+              oninput="formatInvoiceNumber(this)" onblur="validateInvoiceNumber(this)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">發票類型</label>
+            <select class="form-select" id="expInvoiceType">
+              <option value="電子發票">電子發票</option>
+              <option value="紙本發票">紙本發票</option>
+              <option value="收據">收據</option>
+              <option value="無">無</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 付款方式與廠商 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">付款方式 <span class="required">*</span></label>
+            <select class="form-select" id="expPayment" required>
+              <option value="轉帳">轉帳</option>
+              <option value="信用卡">信用卡</option>
+              <option value="現金">現金</option>
+              <option value="Line Pay">Line Pay</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">廠商/對象</label>
+            <input type="hidden" id="expVendor">
+            <div class="custom-select" id="vendorSelect">
+              <div class="custom-select-trigger vendor-select-trigger" onclick="toggleCustomSelect('vendorSelect')">
+                <span class="placeholder">搜尋或新增廠商...</span>
+              </div>
+              <div class="custom-select-dropdown has-search" id="vendorDropdown">
+                <div class="custom-select-search">
+                  <input type="text" id="vendorSearchInput" placeholder="🔍 輸入廠商名稱..." oninput="filterVendorOptions(this.value)">
+                </div>
+                <div id="vendorOptions">
+                  <!-- 動態產生 -->
+                </div>
+                <div class="custom-select-footer">
+                  <button type="button" onclick="addNewVendorFromSearch()">＋ 新增為常用廠商</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 備註 -->
+        <div class="form-group">
+          <label class="form-label">備註</label>
+          <textarea class="form-textarea" id="expNote" placeholder="補充說明..." rows="2"></textarea>
+        </div>
+
+        <!-- 發票掃描 / 照片上傳 -->
+        <div class="form-group">
+          <label class="form-label">發票 / 收據</label>
+          <div class="photo-upload" id="photoUpload">
+            <input type="file" id="photoFile" accept="image/*" capture="environment">
+            <div class="photo-upload-icon">📷</div>
+            <div class="photo-upload-text">
+              <strong>拍照掃描發票</strong>，自動辨識帶入<br>
+              <span style="font-size: 11px; color: var(--text-dim);">支援統一發票、電子發票、收據 · 也可選擇檔案</span>
+            </div>
+          </div>
+          <div class="photo-preview" id="photoPreview">
+            <img id="previewImg" src="" alt="預覽">
+            <button type="button" class="remove-btn" onclick="removePhoto()">✕</button>
+            <div class="ocr-status" id="ocrStatus" style="display:none">
+              <div class="loading-spinner"></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+                <span class="ocr-status-text" id="ocrStatusText">正在辨識發票...</span>
+                <div class="ocr-progress"><div class="ocr-progress-bar" id="ocrProgressBar"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ocr-result" id="ocrResult" style="display:none">
+            <div class="ocr-result-header">
+              <span>🤖 辨識結果</span>
+              <button type="button" class="btn btn-sm btn-secondary" onclick="applyOcrResult()">套用全部</button>
+            </div>
+            <div class="ocr-fields" id="ocrFields">
+              <!-- 動態填入辨識結果 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 送出按鈕 -->
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          💾 儲存這筆費用
+        </button>
+        <div style="display:flex;justify-content:center;margin-top:8px">
+          <button type="button" class="btn btn-sm" style="background:none;color:var(--text-dim);font-size:12px" onclick="saveAsTemplate()">
+            ⭐ 儲存為常用範本
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== 明細頁 ===== -->
+  <div class="tab-panel" id="tab-list">
+    <div class="filter-bar">
+      <div class="month-picker">
+        <button onclick="changeMonth(-1)">◀</button>
+        <span class="current-month" id="listMonth"></span>
+        <button onclick="changeMonth(1)">▶</button>
+      </div>
+      <div style="flex:1"></div>
+      <span id="listCount" style="font-size:12px;color:var(--text-secondary)"></span>
+    </div>
+
+    <div class="card" style="padding:12px 20px">
+      <div class="search-bar">
+        <input type="text" id="listSearch" placeholder="搜尋關鍵字（科目、廠商、備註、發票）" oninput="renderExpenseList()">
+        <select id="listFilterPayment" onchange="renderExpenseList()">
+          <option value="">全部付款方式</option>
+          <option value="匯款">匯款</option>
+          <option value="現金">現金</option>
+          <option value="信用卡">信用卡</option>
+          <option value="電子支付">電子支付</option>
+        </select>
+      </div>
+      <ul class="expense-list" id="expenseList">
+        <!-- 動態載入 -->
+      </ul>
+      <div class="empty-state" id="listEmpty" style="display:none;">
+        <div class="empty-state-icon">📭</div>
+        <div class="empty-state-text">這個月還沒有記帳紀錄</div>
+        <button class="btn btn-secondary btn-sm" onclick="switchTab('add')">新增第一筆</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 統計頁 ===== -->
+  <div class="tab-panel" id="tab-stats">
+    <div class="filter-bar">
+      <div class="month-picker">
+        <button onclick="changeStatsMonth(-1)">◀</button>
+        <span class="current-month" id="statsMonth"></span>
+        <button onclick="changeStatsMonth(1)">▶</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card wide">
+        <div class="stat-label">本月總支出</div>
+        <div class="stat-value" id="statTotal">$0 <span class="unit">NTD</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">記帳筆數</div>
+        <div class="stat-value" id="statCount">0 <span class="unit">筆</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">平均每筆</div>
+        <div class="stat-value" id="statAvg">$0 <span class="unit">NTD</span></div>
+      </div>
+    </div>
+
+    <!-- 預算進度 -->
+    <div class="card" id="budgetCard" style="display:none">
+      <div class="card-header">
+        <span class="card-title">預算進度</span>
+        <span class="card-badge" id="budgetBadge">ON TRACK</span>
+      </div>
+      <div id="budgetBars">
+        <!-- 動態產生 -->
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">分類佔比</span>
+      </div>
+      <div class="bar-chart" id="categoryChart">
+        <!-- 動態產生 -->
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">付款方式分布</span>
+      </div>
+      <div class="bar-chart" id="paymentChart">
+        <!-- 動態產生 -->
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">年度月趨勢</span>
+        <span class="card-badge" id="trendYear"></span>
+      </div>
+      <div class="trend-chart" id="trendChart">
+        <!-- 動態產生 -->
+      </div>
+      <div class="trend-summary" id="trendSummary"></div>
+    </div>
+  </div>
+
+  <!-- ===== 報表頁 ===== -->
+  <div class="tab-panel" id="tab-report">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">月報匯出</span>
+        <span class="card-badge">REPORT</span>
+      </div>
+
+      <div class="form-row" style="margin-bottom:16px">
+        <div class="form-group">
+          <label class="form-label">年份</label>
+          <select class="form-select" id="reportYear"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">月份</label>
+          <select class="form-select" id="reportMonth">
+            <option value="1">1 月</option><option value="2">2 月</option>
+            <option value="3">3 月</option><option value="4">4 月</option>
+            <option value="5">5 月</option><option value="6">6 月</option>
+            <option value="7">7 月</option><option value="8">8 月</option>
+            <option value="9">9 月</option><option value="10">10 月</option>
+            <option value="11">11 月</option><option value="12">12 月</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="report-actions">
+        <button class="btn btn-primary" onclick="generatePDF()" style="flex:1">
+          📄 產出 PDF 報表
+        </button>
+        <button class="btn btn-secondary" onclick="exportCSV()" style="flex:1">
+          📊 匯出 CSV
+        </button>
+      </div>
+      <div style="margin-top:8px">
+        <button class="btn btn-secondary" onclick="exportAccountingCSV()" style="width:100%;background:rgba(20,93,221,0.15);border-color:var(--blue)">
+          🧾 匯出會計傳票格式
+        </button>
+      </div>
+    </div>
+
+    <!-- 報表預覽 -->
+    <div class="card" id="reportPreview" style="display:none">
+      <div class="card-header">
+        <span class="card-title">報表預覽</span>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-title">Summary</div>
+        <div class="stats-grid" style="margin-bottom:0">
+          <div class="stat-card">
+            <div class="stat-label">總支出</div>
+            <div class="stat-value" id="rptTotal" style="font-size:18px"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">總稅額</div>
+            <div class="stat-value" id="rptTax" style="font-size:18px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-title">By Category</div>
+        <table class="report-table" id="rptCatTable">
+          <thead>
+            <tr><th>分類</th><th>筆數</th><th>金額</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-title">Detail</div>
+        <table class="report-table" id="rptDetailTable">
+          <thead>
+            <tr><th>日期</th><th>科目</th><th>廠商</th><th>金額</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 設定頁 ===== -->
+  <div class="tab-panel" id="tab-settings">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">系統設定</span>
+        <span class="card-badge">CONFIG</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">記帳人員名稱 <span class="required">*</span></label>
+        <input type="text" class="form-input" id="settingRecorder" placeholder="例如：Angus、小美" maxlength="20"
+          style="font-size:15px;font-weight:600">
+        <div style="font-size:11px;color:var(--text-dim);margin-top:4px">
+          每筆費用會自動標註記帳人員，方便團隊辨識
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Google Apps Script URL</label>
+        <input type="url" class="form-input" id="settingApiUrl" placeholder="https://script.google.com/macros/s/...">
+        <div style="font-size:11px;color:var(--text-dim);margin-top:4px">
+          部署 Apps Script 後取得的 Web App URL
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="saveSettings()" style="flex:1">💾 儲存設定</button>
+        <button class="btn btn-outline" onclick="testConnection()" style="flex:1">🔗 測試連線</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">資料管理</span>
+      </div>
+
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">自動計算稅額</div>
+          <div class="setting-desc">輸入含稅金額時自動計算 5% 營業稅</div>
+        </div>
+        <div class="toggle active" id="toggleAutoTax" onclick="toggleSetting('autoTax')"></div>
+      </div>
+
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">離線快取</div>
+          <div class="setting-desc">斷線時先存到本機，連線後自動同步</div>
+        </div>
+        <div class="toggle active" id="toggleOffline" onclick="toggleSetting('offline')"></div>
+      </div>
+
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">批次記帳模式</div>
+          <div class="setting-desc">送出後保留分類、付款方式，僅清空金額與發票</div>
+        </div>
+        <div class="toggle" id="toggleBatch" onclick="toggleSetting('batchMode')"></div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-outline btn-sm" onclick="syncToCloud()" style="flex:1">☁️ 上傳到雲端</button>
+        <button class="btn btn-outline btn-sm" onclick="pullExpensesFromCloud()" style="flex:1">⬇️ 從雲端匯入</button>
+      </div>
+      <div style="margin-top:8px">
+        <button class="btn btn-danger btn-sm" onclick="confirmClearLocal()" style="width:100%">🗑️ 清除本地快取</button>
+      </div>
+
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05)">
+        <div style="font-size:12px;color:var(--text-dim)">
+          本地紀錄：<span id="localCount">0</span> 筆 ·
+          待同步：<span id="pendingCount">0</span> 筆
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">月度預算設定</span>
+        <span class="card-badge">BUDGET</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">
+        為各大類設定每月預算上限，超支時會在統計頁顯示警示
+      </div>
+      <div id="budgetSettings">
+        <div class="form-row" style="margin-bottom:8px">
+          <div class="form-group" style="margin-bottom:8px">
+            <label class="form-label" style="font-size:12px">🏪 銷售費用</label>
+            <div class="amount-input-wrap">
+              <span class="currency" style="font-size:11px">NTD</span>
+              <input type="number" class="form-input" id="budget_sales" placeholder="不限" style="font-size:14px;padding-left:42px" min="0">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:8px">
+            <label class="form-label" style="font-size:12px">📋 管理費用</label>
+            <div class="amount-input-wrap">
+              <span class="currency" style="font-size:11px">NTD</span>
+              <input type="number" class="form-input" id="budget_admin" placeholder="不限" style="font-size:14px;padding-left:42px" min="0">
+            </div>
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom:8px">
+          <div class="form-group" style="margin-bottom:8px">
+            <label class="form-label" style="font-size:12px">🏢 營業費用</label>
+            <div class="amount-input-wrap">
+              <span class="currency" style="font-size:11px">NTD</span>
+              <input type="number" class="form-input" id="budget_ops" placeholder="不限" style="font-size:14px;padding-left:42px" min="0">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:8px">
+            <label class="form-label" style="font-size:12px">🏛️ 稅務費用</label>
+            <div class="amount-input-wrap">
+              <span class="currency" style="font-size:11px">NTD</span>
+              <input type="number" class="form-input" id="budget_tax" placeholder="不限" style="font-size:14px;padding-left:42px" min="0">
+            </div>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:8px">
+          <label class="form-label" style="font-size:12px">💰 每月總預算</label>
+          <div class="amount-input-wrap">
+            <span class="currency" style="font-size:11px">NTD</span>
+            <input type="number" class="form-input" id="budget_total" placeholder="不限" style="font-size:14px;padding-left:42px" min="0">
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="saveBudgets()" style="width:100%;margin-top:4px">💾 儲存預算設定</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">月報自動寄送</span>
+        <span class="card-badge">EMAIL</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">
+        設定後透過 Apps Script 每月 1 號自動寄出上月費用報表
+      </div>
+      <div class="form-group">
+        <label class="form-label">收件人 Email</label>
+        <input type="email" class="form-input" id="settingReportEmail" placeholder="accountant@example.com" style="font-size:13px">
+      </div>
+      <div class="setting-item" style="border-bottom:none;padding-bottom:0">
+        <div>
+          <div class="setting-label">啟用自動寄送</div>
+          <div class="setting-desc">每月 1 號寄出上月 PDF 報表</div>
+        </div>
+        <div class="toggle" id="toggleAutoReport" onclick="toggleSetting('autoReport')"></div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="setupAutoReport()" style="width:100%;margin-top:8px">⚙️ 部署到 Apps Script</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">常用廠商管理</span>
+        <span class="card-badge">VENDORS</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">
+        新增常用廠商，記帳時可快速搜尋選取。也可從 CSV / XLSX 批次匯入。
+      </div>
+
+      <!-- 新增廠商 -->
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input type="text" class="form-input" id="newVendorName" placeholder="廠商名稱" style="flex:1;font-size:13px;padding:8px 10px">
+        <input type="text" class="form-input" id="newVendorNote" placeholder="備註（選填）" style="flex:1;font-size:13px;padding:8px 10px">
+        <button class="btn btn-secondary btn-sm" onclick="addVendor()">＋ 新增</button>
+      </div>
+
+      <!-- 匯入 & 雲端同步 -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
+        <label class="btn btn-outline btn-sm" style="cursor:pointer;margin:0">
+          📂 匯入 CSV/XLSX
+          <input type="file" id="vendorImportFile" accept=".csv,.xlsx,.xls" style="display:none" onchange="handleVendorImport(event)">
+        </label>
+        <button class="btn btn-outline btn-sm" onclick="syncVendorsToCloud()">☁️ 上傳到雲端</button>
+        <button class="btn btn-outline btn-sm" onclick="pullVendorsFromCloud()">⬇️ 從雲端匯入</button>
+        <span style="font-size:11px;color:var(--text-dim);width:100%">格式：第一欄廠商名稱，第二欄備註（選填）</span>
+      </div>
+
+      <!-- 廠商列表 -->
+      <div id="vendorList" style="font-size:13px;max-height:300px;overflow-y:auto">
+        <!-- 動態載入 -->
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">會計科目管理</span>
+      </div>
+      <div id="categoryList" style="font-size:13px">
+        <!-- 動態載入 -->
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ==================== 詳情 Modal ==================== -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div id="modalContent">
+      <!-- 動態填入 -->
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Toast 容器 ==================== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ==================== jsPDF CDN ==================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+<!-- ==================== Tesseract.js OCR ==================== -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<!-- ==================== SheetJS (XLSX 解析) ==================== -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script>
+// ==================== 全域設定 ====================
+const APP_CONFIG = {
+  STORAGE_KEY: 'outrun_expenses',
+  SETTINGS_KEY: 'outrun_settings',
+  PENDING_KEY: 'outrun_pending_sync',
+  VENDORS_KEY: 'outrun_vendors',
+};
+
+// 預設會計科目
+const DEFAULT_CATEGORIES = [
+  { code: '6201', name: '運費', parent: '銷售費用', desc: '物流配送、包材費用', icon: '🚚' },
+  { code: '6202', name: '廣告行銷費', parent: '銷售費用', desc: '廣告投放、KOL合作', icon: '📣' },
+  { code: '6203', name: '平台手續費', parent: '銷售費用', desc: '蝦皮、Cyberbiz 手續費', icon: '🏪' },
+  { code: '6204', name: '包裝費', parent: '銷售費用', desc: '商品包裝、禮盒材料', icon: '📦' },
+  { code: '6205', name: '展會活動費', parent: '銷售費用', desc: '路跑贊助、展覽攤位', icon: '🏃' },
+  { code: '6301', name: '文具事務用品', parent: '管理費用', desc: '辦公文具、耗材', icon: '📎' },
+  { code: '6302', name: '郵電費', parent: '管理費用', desc: '電話費、網路費', icon: '📞' },
+  { code: '6303', name: '旅費', parent: '管理費用', desc: '出差交通、住宿', icon: '✈️' },
+  { code: '6304', name: '餐費', parent: '管理費用', desc: '業務餐費、會議餐點', icon: '🍱' },
+  { code: '6305', name: '交際費', parent: '管理費用', desc: '客戶招待、伴手禮', icon: '🤝' },
+  { code: '6306', name: '雜費', parent: '管理費用', desc: '零星支出', icon: '📋' },
+  { code: '6307', name: '軟體訂閱費', parent: '管理費用', desc: 'SaaS 工具月費', icon: '💻' },
+  { code: '6308', name: '外包服務費', parent: '管理費用', desc: '設計、攝影外包', icon: '🎨' },
+  { code: '6101', name: '薪資支出', parent: '營業費用', desc: '員工薪資、獎金', icon: '💰' },
+  { code: '6102', name: '租金支出', parent: '營業費用', desc: '辦公室、倉庫租金', icon: '🏢' },
+  { code: '6103', name: '水電瓦斯費', parent: '營業費用', desc: '辦公室水電費', icon: '💡' },
+  { code: '6104', name: '保險費', parent: '營業費用', desc: '勞健保、商業保險', icon: '🛡️' },
+  { code: '6105', name: '修繕費', parent: '營業費用', desc: '設備維修保養', icon: '🔧' },
+  { code: '6401', name: '稅捐', parent: '稅務費用', desc: '營業稅、營所稅', icon: '🏛️' },
+  { code: '6402', name: '規費', parent: '稅務費用', desc: '政府規費、證照費', icon: '📜' },
+];
+
+// 預設常用廠商（初始值，使用者可自行新增/匯入）
+const DEFAULT_VENDORS = [
+  { name: '黑貓宅急便', note: '物流' },
+  { name: '新竹物流', note: '物流' },
+  { name: '7-ELEVEN 交貨便', note: '物流' },
+  { name: '全家店到店', note: '物流' },
+  { name: '蝦皮購物', note: '平台' },
+  { name: 'Cyberbiz', note: '平台' },
+  { name: 'Google', note: '廣告/軟體' },
+  { name: 'Meta (Facebook)', note: '廣告' },
+  { name: 'OpenAI / ChatGPT', note: '軟體' },
+  { name: 'Anthropic / Claude', note: '軟體' },
+];
+
+// ==================== 狀態管理 ====================
+let state = {
+  expenses: [],
+  pendingSync: [],
+  currentMonth: new Date(),
+  statsMonth: new Date(),
+  settings: {
+    apiUrl: '',
+    autoTax: true,
+    offline: true,
+  },
+  selectedPhoto: null,
+  photoBase64: null,
+  ocrResult: null,
+  ocrFields: null,
+  vendors: [],
+};
+
+// ==================== 初始化 ====================
+document.addEventListener('DOMContentLoaded', () => {
+  loadSettings();
+  loadExpenses();
+  loadVendors();
+  initForm();
+  initTabs();
+  initMonthPickers();
+  renderCategorySelect();
+  renderVendorSelect();
+  renderTemplateSelect();
+  renderCategoryList();
+  renderVendorList();
+  loadBudgetUI();
+  updateSyncStatus();
+  refreshAllViews();
+  initClickOutside();
+  // 同步批次模式 toggle 狀態
+  updateToggle('toggleBatchMode', state.settings.batchMode || false);
+  updateToggle('toggleBatch', state.settings.batchMode || false);
+  // 月報 email
+  const emailEl = document.getElementById('settingReportEmail');
+  if (emailEl && state.settings.reportEmail) emailEl.value = state.settings.reportEmail;
+  updateToggle('toggleAutoReport', state.settings.autoReport || false);
+
+  // 首次使用提示設定記帳人員名稱
+  if (!state.settings.recorder) {
+    setTimeout(() => {
+      const name = prompt('歡迎使用堅心記帳！\n\n請輸入你的名稱（用於標註每筆紀錄）：');
+      if (name && name.trim()) {
+        state.settings.recorder = name.trim();
+        document.getElementById('settingRecorder').value = name.trim();
+        localStorage.setItem(APP_CONFIG.SETTINGS_KEY, JSON.stringify(state.settings));
+        showToast(`嗨 ${name.trim()}！記帳人員已設定`, 'success');
+      }
+    }, 500);
+  }
+});
+
+function loadSettings() {
+  const saved = localStorage.getItem(APP_CONFIG.SETTINGS_KEY);
+  if (saved) {
+    state.settings = { ...state.settings, ...JSON.parse(saved) };
+  }
+  document.getElementById('settingRecorder').value = state.settings.recorder || '';
+  document.getElementById('settingApiUrl').value = state.settings.apiUrl || '';
+  updateToggle('toggleAutoTax', state.settings.autoTax);
+  updateToggle('toggleOffline', state.settings.offline);
+}
+
+function loadExpenses() {
+  const saved = localStorage.getItem(APP_CONFIG.STORAGE_KEY);
+  state.expenses = saved ? JSON.parse(saved) : [];
+
+  const pending = localStorage.getItem(APP_CONFIG.PENDING_KEY);
+  state.pendingSync = pending ? JSON.parse(pending) : [];
+
+  updateLocalCount();
+}
+
+function saveExpenses() {
+  localStorage.setItem(APP_CONFIG.STORAGE_KEY, JSON.stringify(state.expenses));
+  updateLocalCount();
+}
+
+function saveSettings() {
+  state.settings.recorder = document.getElementById('settingRecorder').value.trim();
+  state.settings.apiUrl = document.getElementById('settingApiUrl').value.trim();
+  localStorage.setItem(APP_CONFIG.SETTINGS_KEY, JSON.stringify(state.settings));
+  showToast('設定已儲存', 'success');
+  updateSyncStatus();
+}
+
+// ==================== 分頁導覽 ====================
+function initTabs() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  if (tab === 'list') renderExpenseList();
+  if (tab === 'stats') renderStats();
+  if (tab === 'report') initReportPage();
+}
+
+// ==================== 表單初始化 ====================
+function initForm() {
+  // 設定今天日期
+  document.getElementById('expDate').value = formatDate(new Date());
+
+  // 金額自動計算稅額
+  document.getElementById('expAmount').addEventListener('input', (e) => {
+    if (state.settings.autoTax) {
+      const total = Number(e.target.value) || 0;
+      const tax = Math.round(total - total / 1.05);
+      const net = total - tax;
+      document.getElementById('expTax').value = tax || '';
+      document.getElementById('expNet').value = net || '';
+    }
+  });
+
+  // 照片上傳
+  document.getElementById('photoFile').addEventListener('change', handlePhotoSelect);
+
+  // Drag & Drop
+  const dropZone = document.getElementById('photoUpload');
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+
+  // 表單送出
+  document.getElementById('expenseForm').addEventListener('submit', handleSubmit);
+}
+
+// ==================== 自訂下拉選單系統 ====================
+
+// 全域：點擊外部關閉所有下拉
+function initClickOutside() {
+  document.addEventListener('click', (e) => {
+    document.querySelectorAll('.custom-select.open').forEach(sel => {
+      if (!sel.contains(e.target)) {
+        sel.classList.remove('open');
+      }
+    });
+  });
+}
+
+function toggleCustomSelect(id) {
+  const sel = document.getElementById(id);
+  const isOpen = sel.classList.contains('open');
+
+  // 先關閉其他
+  document.querySelectorAll('.custom-select.open').forEach(s => {
+    if (s.id !== id) s.classList.remove('open');
+  });
+
+  sel.classList.toggle('open', !isOpen);
+
+  // 開啟時自動 focus 到搜尋框
+  if (!isOpen) {
+    const searchInput = sel.querySelector('.custom-select-search input');
+    if (searchInput) setTimeout(() => searchInput.focus(), 50);
+  }
+}
+
+// ---- 費用分類選單 ----
+function renderCategorySelect() {
+  const parentIcons = { '銷售費用': '🏪', '管理費用': '📋', '營業費用': '🏢', '稅務費用': '🏛️' };
+
+  const groups = {};
+  DEFAULT_CATEGORIES.forEach(cat => {
+    if (!groups[cat.parent]) groups[cat.parent] = [];
+    groups[cat.parent].push(cat);
+  });
+
+  let html = '';
+  for (const [parent, cats] of Object.entries(groups)) {
+    const icon = parentIcons[parent] || '';
+    html += `<div class="custom-select-group-label">${icon} ${parent}</div>`;
+    cats.forEach(cat => {
+      html += `
+        <div class="custom-select-option" data-value="${cat.code}" data-name="${cat.name}" data-parent="${cat.parent}" data-search="${cat.name}${cat.code}${cat.parent}${cat.desc}" onclick="selectCategory('${cat.code}')">
+          <span class="option-icon">${cat.icon}</span>
+          <span>${cat.name}</span>
+          <span class="option-code">${cat.code}</span>
+        </div>`;
+    });
+  }
+
+  document.getElementById('categoryOptions').innerHTML = html;
+}
+
+function selectCategory(code) {
+  const cat = DEFAULT_CATEGORIES.find(c => c.code === code);
+  if (!cat) return;
+
+  document.getElementById('expCategory').value = code;
+
+  const trigger = document.querySelector('#categorySelect .custom-select-trigger');
+  trigger.innerHTML = `<span class="option-icon">${cat.icon}</span> ${cat.name} <span style="font-family:var(--font-en);font-size:11px;color:var(--text-dim);margin-left:auto">${cat.code}</span>`;
+
+  // 更新選中樣式
+  document.querySelectorAll('#categoryOptions .custom-select-option').forEach(opt => {
+    opt.classList.toggle('selected', opt.dataset.value === code);
+  });
+
+  document.getElementById('categorySelect').classList.remove('open');
+}
+
+function filterCategoryOptions(keyword) {
+  const kw = keyword.toLowerCase().trim();
+  const options = document.querySelectorAll('#categoryOptions .custom-select-option');
+  const groups = document.querySelectorAll('#categoryOptions .custom-select-group-label');
+
+  if (!kw) {
+    options.forEach(o => o.style.display = '');
+    groups.forEach(g => g.style.display = '');
+    return;
+  }
+
+  // 先隱藏所有
+  options.forEach(o => {
+    const match = o.dataset.search.toLowerCase().includes(kw);
+    o.style.display = match ? '' : 'none';
+  });
+
+  // 如果群組下所有選項都隱藏，也隱藏群組標籤
+  groups.forEach(g => {
+    let next = g.nextElementSibling;
+    let hasVisible = false;
+    while (next && !next.classList.contains('custom-select-group-label')) {
+      if (next.style.display !== 'none') hasVisible = true;
+      next = next.nextElementSibling;
+    }
+    g.style.display = hasVisible ? '' : 'none';
+  });
+}
+
+// ---- 廠商選單 ----
+function loadVendors() {
+  const saved = localStorage.getItem(APP_CONFIG.VENDORS_KEY);
+  if (saved) {
+    state.vendors = JSON.parse(saved);
+  } else {
+    state.vendors = [...DEFAULT_VENDORS];
+    saveVendors();
+  }
+}
+
+function saveVendors() {
+  localStorage.setItem(APP_CONFIG.VENDORS_KEY, JSON.stringify(state.vendors));
+}
+
+function renderVendorSelect() {
+  const container = document.getElementById('vendorOptions');
+  if (!container) return;
+
+  if (state.vendors.length === 0) {
+    container.innerHTML = '<div class="custom-select-empty">尚無常用廠商，可在設定頁新增或匯入</div>';
+    return;
+  }
+
+  // 依最近使用排序（如果有 usedAt 欄位），否則依字母
+  const sorted = [...state.vendors].sort((a, b) => {
+    if (a.usedAt && b.usedAt) return new Date(b.usedAt) - new Date(a.usedAt);
+    if (a.usedAt) return -1;
+    if (b.usedAt) return 1;
+    return a.name.localeCompare(b.name, 'zh-TW');
+  });
+
+  container.innerHTML = sorted.map(v => {
+    const safeName = v.name.replace(/'/g, "\\'");
+    return `
+    <div class="custom-select-option vendor-option" data-value="${v.name}" data-search="${v.name}${v.note || ''}">
+      <div class="vendor-option-main" onclick="selectVendor('${safeName}')">
+        <span>${v.name}</span>
+        ${v.note ? `<span class="option-sub">${v.note}</span>` : ''}
+      </div>
+      <div class="vendor-option-actions">
+        <button type="button" class="vendor-action-btn" onclick="event.stopPropagation();editVendorInline('${safeName}')" title="編輯">✏️</button>
+        <button type="button" class="vendor-action-btn vendor-action-del" onclick="event.stopPropagation();removeVendorFromDropdown('${safeName}')" title="刪除">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectVendor(name) {
+  document.getElementById('expVendor').value = name;
+
+  const trigger = document.querySelector('#vendorSelect .custom-select-trigger');
+  trigger.innerHTML = `<span class="vendor-tag">${name}</span>`;
+
+  // 更新最近使用時間
+  const vendor = state.vendors.find(v => v.name === name);
+  if (vendor) {
+    vendor.usedAt = new Date().toISOString();
+    saveVendors();
+  }
+
+  document.querySelectorAll('#vendorOptions .custom-select-option').forEach(opt => {
+    opt.classList.toggle('selected', opt.dataset.value === name);
+  });
+
+  document.getElementById('vendorSelect').classList.remove('open');
+}
+
+function filterVendorOptions(keyword) {
+  const kw = keyword.toLowerCase().trim();
+  const options = document.querySelectorAll('#vendorOptions .custom-select-option');
+
+  if (!kw) {
+    options.forEach(o => o.style.display = '');
+    return;
+  }
+
+  let hasMatch = false;
+  options.forEach(o => {
+    const match = o.dataset.search.toLowerCase().includes(kw);
+    o.style.display = match ? '' : 'none';
+    if (match) hasMatch = true;
+  });
+
+  // 如果沒有匹配，顯示可新增提示（footer 的按鈕會處理）
+}
+
+function addNewVendorFromSearch() {
+  const input = document.getElementById('vendorSearchInput');
+  const name = input.value.trim();
+  if (!name) {
+    showToast('請輸入廠商名稱', 'error');
+    return;
+  }
+
+  // 檢查是否已存在
+  if (state.vendors.some(v => v.name === name)) {
+    selectVendor(name);
+    return;
+  }
+
+  // 新增並選取
+  state.vendors.push({ name, note: '', usedAt: new Date().toISOString(), createdAt: new Date().toISOString() });
+  saveVendors();
+  renderVendorSelect();
+  renderVendorList();
+  selectVendor(name);
+  showToast(`已新增廠商「${name}」`, 'success');
+}
+
+// ---- 廠商行內編輯/刪除（下拉選單內） ----
+function editVendorInline(name) {
+  const vendor = state.vendors.find(v => v.name === name);
+  if (!vendor) return;
+
+  // 找到對應的選項元素替換為編輯表單
+  const options = document.querySelectorAll('#vendorOptions .vendor-option');
+  for (const opt of options) {
+    if (opt.dataset.value === name) {
+      opt.innerHTML = `
+        <div class="vendor-edit-inline">
+          <input type="text" id="editVendorName" value="${vendor.name.replace(/"/g, '&quot;')}" placeholder="廠商名稱">
+          <input type="text" id="editVendorNote" value="${(vendor.note || '').replace(/"/g, '&quot;')}" placeholder="備註" style="max-width:100px">
+          <button class="vendor-edit-save" onclick="saveVendorEdit('${name.replace(/'/g, "\\'")}')">✓</button>
+          <button class="vendor-edit-cancel" onclick="cancelVendorEdit()">✕</button>
+        </div>`;
+      opt.classList.add('editing');
+      setTimeout(() => {
+        const input = document.getElementById('editVendorName');
+        if (input) { input.focus(); input.select(); }
+      }, 50);
+      break;
+    }
+  }
+}
+
+function saveVendorEdit(originalName) {
+  const newName = document.getElementById('editVendorName').value.trim();
+  const newNote = document.getElementById('editVendorNote').value.trim();
+
+  if (!newName) {
+    showToast('廠商名稱不能為空', 'error');
+    return;
+  }
+
+  // 檢查是否與其他廠商重名（排除自己）
+  if (newName !== originalName && state.vendors.some(v => v.name === newName)) {
+    showToast('此廠商名稱已存在', 'error');
+    return;
+  }
+
+  const vendor = state.vendors.find(v => v.name === originalName);
+  if (vendor) {
+    vendor.name = newName;
+    vendor.note = newNote;
+    saveVendors();
+    renderVendorSelect();
+    renderVendorList();
+
+    // 如果目前表單選的就是這個廠商，更新顯示
+    if (document.getElementById('expVendor').value === originalName) {
+      document.getElementById('expVendor').value = newName;
+      const trigger = document.querySelector('#vendorSelect .custom-select-trigger');
+      trigger.innerHTML = `<span class="vendor-tag">${newName}</span>`;
+    }
+
+    showToast(`已更新廠商「${newName}」`, 'success');
+  }
+}
+
+function cancelVendorEdit() {
+  renderVendorSelect();
+}
+
+function removeVendorFromDropdown(name) {
+  if (!confirm(`確定要刪除廠商「${name}」嗎？`)) return;
+
+  state.vendors = state.vendors.filter(v => v.name !== name);
+  saveVendors();
+  renderVendorSelect();
+  renderVendorList();
+
+  // 如果目前表單選的就是這個廠商，清除
+  if (document.getElementById('expVendor').value === name) {
+    document.getElementById('expVendor').value = '';
+    const trigger = document.querySelector('#vendorSelect .custom-select-trigger');
+    trigger.innerHTML = '<span class="placeholder">搜尋或新增廠商...</span>';
+  }
+
+  showToast(`已刪除廠商「${name}」`, 'success');
+}
+
+// ---- 廠商管理（設定頁） ----
+function addVendor() {
+  const nameEl = document.getElementById('newVendorName');
+  const noteEl = document.getElementById('newVendorNote');
+  const name = nameEl.value.trim();
+  const note = noteEl.value.trim();
+
+  if (!name) {
+    showToast('請輸入廠商名稱', 'error');
+    return;
+  }
+
+  if (state.vendors.some(v => v.name === name)) {
+    showToast('此廠商已存在', 'error');
+    return;
+  }
+
+  state.vendors.push({ name, note, createdAt: new Date().toISOString() });
+  saveVendors();
+  renderVendorSelect();
+  renderVendorList();
+
+  nameEl.value = '';
+  noteEl.value = '';
+  showToast(`已新增「${name}」`, 'success');
+}
+
+function removeVendor(name) {
+  if (!confirm(`確定要移除廠商「${name}」嗎？`)) return;
+  state.vendors = state.vendors.filter(v => v.name !== name);
+  saveVendors();
+  renderVendorSelect();
+  renderVendorList();
+
+  // 如果目前表單選的就是這個廠商，清除
+  if (document.getElementById('expVendor').value === name) {
+    document.getElementById('expVendor').value = '';
+    const trigger = document.querySelector('#vendorSelect .custom-select-trigger');
+    trigger.innerHTML = '<span class="placeholder">搜尋或新增廠商...</span>';
+  }
+
+  showToast(`已移除「${name}」`, 'success');
+}
+
+function editVendorInList(name) {
+  const vendor = state.vendors.find(v => v.name === name);
+  if (!vendor) return;
+
+  const newName = prompt('廠商名稱：', vendor.name);
+  if (newName === null) return;  // 取消
+  const trimName = newName.trim();
+  if (!trimName) {
+    showToast('廠商名稱不能為空', 'error');
+    return;
+  }
+  if (trimName !== name && state.vendors.some(v => v.name === trimName)) {
+    showToast('此廠商名稱已存在', 'error');
+    return;
+  }
+
+  const newNote = prompt('備註（選填）：', vendor.note || '');
+  vendor.name = trimName;
+  vendor.note = (newNote || '').trim();
+  saveVendors();
+  renderVendorSelect();
+  renderVendorList();
+
+  // 如果目前表單選的就是這個廠商，更新顯示
+  if (document.getElementById('expVendor').value === name) {
+    document.getElementById('expVendor').value = trimName;
+    const trigger = document.querySelector('#vendorSelect .custom-select-trigger');
+    trigger.innerHTML = `<span class="vendor-tag">${trimName}</span>`;
+  }
+
+  showToast(`已更新廠商「${trimName}」`, 'success');
+}
+
+function renderVendorList() {
+  const container = document.getElementById('vendorList');
+  if (!container) return;
+
+  if (state.vendors.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text-dim)">尚未新增任何廠商</div>';
+    return;
+  }
+
+  container.innerHTML = state.vendors.map(v => {
+    const safeName = v.name.replace(/'/g, "\\'");
+    return `
+    <div class="vendor-list-item" id="vendorListItem_${v.name.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g, '_')}">
+      <div class="vendor-list-view" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03)">
+        <span style="flex:1">${v.name}</span>
+        <span style="font-size:11px;color:var(--text-dim)">${v.note || ''}</span>
+        <button class="btn btn-sm" style="padding:2px 8px;font-size:11px;color:var(--text-secondary);background:none;border:none;cursor:pointer" onclick="editVendorInList('${safeName}')">✏️</button>
+        <button class="btn btn-sm" style="padding:2px 8px;font-size:11px;color:var(--danger);background:none;border:none;cursor:pointer" onclick="removeVendor('${safeName}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ---- 廠商匯入 (CSV/XLSX) ----
+function handleVendorImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  if (ext === 'csv') {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target.result;
+      const rows = parseCSV(text);
+      importVendorRows(rows, file.name);
+    };
+    reader.readAsText(file, 'UTF-8');
+  } else if (['xlsx', 'xls'].includes(ext)) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const wb = XLSX.read(e.target.result, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        importVendorRows(rows, file.name);
+      } catch (err) {
+        showToast('XLSX 解析失敗：' + err.message, 'error');
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    showToast('不支援的檔案格式', 'error');
+  }
+
+  // 清除 input 讓同一檔案可再次選取
+  event.target.value = '';
+}
+
+function parseCSV(text) {
+  return text.split('\n')
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => {
+      // 簡易 CSV 解析（處理引號）
+      const cols = [];
+      let current = '';
+      let inQuotes = false;
+      for (const char of line) {
+        if (char === '"') { inQuotes = !inQuotes; continue; }
+        if (char === ',' && !inQuotes) { cols.push(current.trim()); current = ''; continue; }
+        current += char;
+      }
+      cols.push(current.trim());
+      return cols;
+    });
+}
+
+function importVendorRows(rows, fileName) {
+  let added = 0;
+  let skipped = 0;
+
+  // 跳過標題行（如果第一列看起來像標題）
+  let startIdx = 0;
+  if (rows.length > 0) {
+    const firstCell = String(rows[0][0] || '').toLowerCase();
+    if (['廠商', '名稱', 'vendor', 'name', '公司'].some(k => firstCell.includes(k))) {
+      startIdx = 1;
+    }
+  }
+
+  for (let i = startIdx; i < rows.length; i++) {
+    const row = rows[i];
+    const name = String(row[0] || '').trim();
+    const note = String(row[1] || '').trim();
+
+    if (!name) continue;
+
+    if (state.vendors.some(v => v.name === name)) {
+      skipped++;
+      continue;
+    }
+
+    state.vendors.push({ name, note, createdAt: new Date().toISOString() });
+    added++;
+  }
+
+  saveVendors();
+  renderVendorSelect();
+  renderVendorList();
+
+  showToast(`已從「${fileName}」匯入 ${added} 筆${skipped > 0 ? `（跳過 ${skipped} 筆重複）` : ''}`, 'success');
+}
+
+// ==================== 照片處理 ====================
+function handlePhotoSelect(e) {
+  if (e.target.files.length) handleFile(e.target.files[0]);
+}
+
+function handleFile(file) {
+  if (!file.type.startsWith('image/')) {
+    showToast('請選擇圖片檔案', 'error');
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('檔案太大，請控制在 5MB 以內', 'error');
+    return;
+  }
+
+  state.selectedPhoto = file;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    state.photoBase64 = e.target.result;
+    document.getElementById('previewImg').src = e.target.result;
+    document.getElementById('photoPreview').style.display = 'block';
+    document.getElementById('photoUpload').style.display = 'none';
+
+    // 自動啟動 OCR 辨識
+    runOcr(e.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePhoto() {
+  state.selectedPhoto = null;
+  state.photoBase64 = null;
+  state.ocrResult = null;
+  document.getElementById('photoFile').value = '';
+  document.getElementById('photoPreview').style.display = 'none';
+  document.getElementById('photoUpload').style.display = 'block';
+  hideOcrResult();
+}
+
+// ==================== OCR 發票辨識 ====================
+let ocrWorker = null;
+
+async function runOcr(imageDataUrl) {
+  const statusEl = document.getElementById('ocrStatus');
+  const statusText = document.getElementById('ocrStatusText');
+  const progressBar = document.getElementById('ocrProgressBar');
+
+  // 顯示辨識中狀態
+  statusEl.style.display = 'flex';
+  statusText.textContent = '正在載入辨識引擎...';
+  progressBar.style.width = '5%';
+
+  try {
+    // 使用 Tesseract.js v5 recognize API
+    const result = await Tesseract.recognize(
+      imageDataUrl,
+      'chi_tra+eng',  // 繁體中文 + 英文
+      {
+        logger: (m) => {
+          if (m.status === 'loading tesseract core') {
+            statusText.textContent = '載入辨識核心...';
+            progressBar.style.width = '10%';
+          } else if (m.status === 'initializing tesseract') {
+            statusText.textContent = '初始化辨識引擎...';
+            progressBar.style.width = '15%';
+          } else if (m.status === 'loading language traineddata') {
+            statusText.textContent = '載入中文語言包...';
+            progressBar.style.width = '25%';
+          } else if (m.status === 'initializing api') {
+            statusText.textContent = '準備辨識...';
+            progressBar.style.width = '35%';
+          } else if (m.status === 'recognizing text') {
+            const pct = Math.round(35 + (m.progress || 0) * 60);
+            statusText.textContent = `辨識中 ${Math.round((m.progress || 0) * 100)}%`;
+            progressBar.style.width = pct + '%';
+          }
+        },
+      }
+    );
+
+    progressBar.style.width = '100%';
+    statusText.textContent = '辨識完成！正在解析...';
+
+    const ocrText = result.data.text;
+    console.log('OCR 辨識原文：', ocrText);
+
+    // 解析發票資訊
+    const parsed = parseInvoiceText(ocrText);
+    state.ocrResult = parsed;
+
+    // 短暫延遲後隱藏狀態列，顯示結果
+    setTimeout(() => {
+      statusEl.style.display = 'none';
+      if (parsed && Object.keys(parsed).some(k => parsed[k])) {
+        showOcrResult(parsed, ocrText);
+      } else {
+        showToast('未能辨識出發票資訊，請手動填入', 'info');
+      }
+    }, 500);
+
+  } catch (err) {
+    console.error('OCR 辨識失敗：', err);
+    statusEl.style.display = 'none';
+    showToast('發票辨識失敗，請手動填入', 'error');
+  }
+}
+
+/**
+ * 解析 OCR 辨識文字，提取發票關鍵資訊
+ */
+function parseInvoiceText(text) {
+  const result = {
+    invoiceNumber: null,  // 發票號碼
+    date: null,           // 日期
+    amount: null,         // 總金額
+    taxAmount: null,      // 稅額
+    netAmount: null,      // 未稅金額
+    vendor: null,         // 廠商名稱
+  };
+
+  // 統一文字處理：全形轉半形、去多餘空白
+  const normalized = text
+    .replace(/[Ａ-Ｚ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
+    .replace(/[ａ-ｚ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
+    .replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
+    .replace(/，/g, ',')
+    .replace(/：/g, ':')
+    .replace(/（/g, '(').replace(/）/g, ')')
+    .replace(/\r\n/g, '\n');
+
+  const lines = normalized.split('\n').map(l => l.trim()).filter(Boolean);
+
+  // 1. 發票號碼：格式為 XX-12345678 (兩字母-八數字)
+  const invoicePatterns = [
+    /([A-Z]{2})\s*[-–—]\s*(\d{8})/i,
+    /([A-Z]{2})\s*(\d{8})/i,
+    /發票.*?([A-Z]{2})\s*[-–—]?\s*(\d{8})/i,
+    /號碼.*?([A-Z]{2})\s*[-–—]?\s*(\d{8})/i,
+  ];
+  for (const pattern of invoicePatterns) {
+    const match = normalized.match(pattern);
+    if (match) {
+      result.invoiceNumber = match[1].toUpperCase() + '-' + match[2];
+      break;
+    }
+  }
+
+  // 2. 日期：支援多種格式
+  const datePatterns = [
+    // 民國年：113/01/15 或 113-01-15 或 113.01.15
+    /(\d{2,3})\s*[/\-.年]\s*(\d{1,2})\s*[/\-.月]\s*(\d{1,2})/,
+    // 西元年：2024/01/15 或 2024-01-15
+    /(20\d{2})\s*[/\-.年]\s*(\d{1,2})\s*[/\-.月]\s*(\d{1,2})/,
+  ];
+  for (const pattern of datePatterns) {
+    const match = normalized.match(pattern);
+    if (match) {
+      let year = parseInt(match[1]);
+      const month = parseInt(match[2]);
+      const day = parseInt(match[3]);
+      // 民國年轉西元年
+      if (year < 200) year += 1911;
+      if (year >= 2020 && year <= 2030 && month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+        result.date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        break;
+      }
+    }
+  }
+
+  // 3. 金額：找出總計/合計/金額 相關數字
+  const amountPatterns = [
+    /(?:總[計金額]|合[計金額]|TOTAL|total|Total)\s*[:：]?\s*\$?\s*([\d,]+)/i,
+    /(?:應付|實付|共計|小計)\s*[:：]?\s*\$?\s*([\d,]+)/i,
+    /\$\s*([\d,]+(?:\.\d{1,2})?)/,
+    /(?:金額|AMOUNT)\s*[:：]?\s*\$?\s*([\d,]+)/i,
+  ];
+  for (const pattern of amountPatterns) {
+    const match = normalized.match(pattern);
+    if (match) {
+      const val = parseInt(match[1].replace(/,/g, ''));
+      if (val > 0 && val < 10000000) {
+        result.amount = val;
+        break;
+      }
+    }
+  }
+
+  // 如果上面沒找到金額，嘗試找最大的數字（排除發票號碼和日期中的數字）
+  if (!result.amount) {
+    const allNumbers = [];
+    const cleanText = normalized
+      .replace(/[A-Z]{2}\s*[-–—]?\s*\d{8}/gi, '')  // 移除發票號碼
+      .replace(/\d{2,4}[/\-.]\d{1,2}[/\-.]\d{1,2}/g, '');  // 移除日期
+
+    const numMatches = cleanText.matchAll(/([\d,]+(?:\.\d{1,2})?)/g);
+    for (const m of numMatches) {
+      const val = parseInt(m[1].replace(/,/g, ''));
+      if (val >= 10 && val < 10000000) {
+        allNumbers.push(val);
+      }
+    }
+    if (allNumbers.length > 0) {
+      result.amount = Math.max(...allNumbers);
+    }
+  }
+
+  // 4. 稅額
+  const taxPatterns = [
+    /(?:稅額|營業稅|TAX)\s*[:：]?\s*\$?\s*([\d,]+)/i,
+    /(?:稅)\s*[:：]?\s*\$?\s*([\d,]+)/,
+  ];
+  for (const pattern of taxPatterns) {
+    const match = normalized.match(pattern);
+    if (match) {
+      const val = parseInt(match[1].replace(/,/g, ''));
+      if (val > 0 && val < result.amount) {
+        result.taxAmount = val;
+        break;
+      }
+    }
+  }
+
+  // 5. 未稅金額
+  const netPatterns = [
+    /(?:未稅|銷售額|課稅別)\s*[:：]?\s*\$?\s*([\d,]+)/i,
+  ];
+  for (const pattern of netPatterns) {
+    const match = normalized.match(pattern);
+    if (match) {
+      const val = parseInt(match[1].replace(/,/g, ''));
+      if (val > 0) {
+        result.netAmount = val;
+        break;
+      }
+    }
+  }
+
+  // 如果有總金額但沒有稅額，自動計算 5%
+  if (result.amount && !result.taxAmount) {
+    result.taxAmount = Math.round(result.amount - result.amount / 1.05);
+    result.netAmount = result.amount - result.taxAmount;
+  }
+
+  // 6. 廠商名稱：通常在發票最上方幾行
+  const vendorPatterns = [
+    /(?:賣方|店名|公司)\s*[:：]?\s*(.{2,20})/,
+  ];
+  for (const pattern of vendorPatterns) {
+    const match = normalized.match(pattern);
+    if (match) {
+      result.vendor = match[1].trim().replace(/[,，。.]$/, '');
+      break;
+    }
+  }
+
+  // 如果沒找到廠商，嘗試取前幾行中包含「公司」「行」「店」的
+  if (!result.vendor) {
+    for (let i = 0; i < Math.min(5, lines.length); i++) {
+      const line = lines[i];
+      if (/(公司|企業|商行|行$|店$|有限|股份)/.test(line) && line.length >= 3 && line.length <= 30) {
+        result.vendor = line.replace(/統一編號.*$/, '').replace(/地址.*$/, '').trim();
+        break;
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * 顯示 OCR 辨識結果面板
+ */
+function showOcrResult(parsed, rawText) {
+  const container = document.getElementById('ocrResult');
+  const fieldsEl = document.getElementById('ocrFields');
+
+  const fields = [];
+
+  if (parsed.invoiceNumber) {
+    fields.push({
+      key: 'invoiceNumber',
+      label: '發票號碼',
+      value: parsed.invoiceNumber,
+      target: 'expInvoice',
+      display: parsed.invoiceNumber,
+    });
+  }
+
+  if (parsed.date) {
+    fields.push({
+      key: 'date',
+      label: '日期',
+      value: parsed.date,
+      target: 'expDate',
+      display: parsed.date,
+    });
+  }
+
+  if (parsed.amount) {
+    fields.push({
+      key: 'amount',
+      label: '金額（含稅）',
+      value: parsed.amount,
+      target: 'expAmount',
+      display: `$${numberFormat(parsed.amount)}`,
+      isAmount: true,
+    });
+  }
+
+  if (parsed.taxAmount) {
+    fields.push({
+      key: 'taxAmount',
+      label: '稅額',
+      value: parsed.taxAmount,
+      target: 'expTax',
+      display: `$${numberFormat(parsed.taxAmount)}`,
+      isAmount: true,
+    });
+  }
+
+  if (parsed.netAmount) {
+    fields.push({
+      key: 'netAmount',
+      label: '未稅金額',
+      value: parsed.netAmount,
+      target: 'expNet',
+      display: `$${numberFormat(parsed.netAmount)}`,
+      isAmount: true,
+    });
+  }
+
+  if (parsed.vendor) {
+    fields.push({
+      key: 'vendor',
+      label: '廠商',
+      value: parsed.vendor,
+      target: 'expVendor',
+      display: parsed.vendor,
+    });
+  }
+
+  if (fields.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+
+  fieldsEl.innerHTML = fields.map((f, i) => `
+    <div class="ocr-field" data-index="${i}">
+      <span class="ocr-field-label">${f.label}</span>
+      <span class="ocr-field-value${f.isAmount ? ' amount' : ''}">${f.display}</span>
+      <button type="button" class="ocr-field-btn" onclick="applySingleOcrField(${i})" data-field-index="${i}">帶入</button>
+    </div>
+  `).join('');
+
+  // 儲存到 state 以供 applyOcrResult 使用
+  state.ocrFields = fields;
+
+  container.style.display = 'block';
+}
+
+/**
+ * 帶入單一 OCR 辨識欄位
+ */
+function applySingleOcrField(index) {
+  const field = state.ocrFields[index];
+  if (!field) return;
+
+  applyOcrFieldValue(field);
+
+  // 標記為已帶入
+  const btn = document.querySelector(`[data-field-index="${index}"]`);
+  if (btn) {
+    btn.textContent = '✓ 已帶入';
+    btn.classList.add('applied');
+  }
+
+  showToast(`已帶入${field.label}`, 'success');
+}
+
+/**
+ * 套用全部 OCR 結果
+ */
+function applyOcrResult() {
+  if (!state.ocrFields || state.ocrFields.length === 0) return;
+
+  state.ocrFields.forEach((field, index) => {
+    applyOcrFieldValue(field);
+
+    const btn = document.querySelector(`[data-field-index="${index}"]`);
+    if (btn) {
+      btn.textContent = '✓ 已帶入';
+      btn.classList.add('applied');
+    }
+  });
+
+  showToast(`已套用 ${state.ocrFields.length} 個欄位`, 'success');
+}
+
+/**
+ * 將 OCR 辨識欄位值寫入對應表單控件
+ */
+function applyOcrFieldValue(field) {
+  // 廠商欄位使用自訂選單
+  if (field.target === 'expVendor') {
+    document.getElementById('expVendor').value = field.value;
+    const trigger = document.querySelector('#vendorSelect .custom-select-trigger');
+    trigger.innerHTML = `<span class="vendor-tag">${field.value}</span>`;
+    return;
+  }
+
+  const el = document.getElementById(field.target);
+  if (el) {
+    el.value = field.value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+}
+
+/**
+ * 隱藏 OCR 結果面板
+ */
+function hideOcrResult() {
+  const container = document.getElementById('ocrResult');
+  if (container) container.style.display = 'none';
+  const status = document.getElementById('ocrStatus');
+  if (status) status.style.display = 'none';
+  state.ocrFields = null;
+  state.ocrResult = null;
+}
+
+// ==================== 表單送出 ====================
+async function handleSubmit(e) {
+  e.preventDefault();
+
+  const catCode = document.getElementById('expCategory').value;
+  const cat = DEFAULT_CATEGORIES.find(c => c.code === catCode);
+
+  if (!cat) {
+    showToast('請選擇費用分類', 'error');
+    return;
+  }
+
+  // 重複發票號碼檢查
+  const invoiceVal = document.getElementById('expInvoice').value.trim();
+  if (invoiceVal) {
+    const duplicate = state.expenses.find(e =>
+      e.status !== '作廢' && e.invoiceNumber === invoiceVal
+    );
+    if (duplicate) {
+      const dupDate = duplicate.date;
+      const dupVendor = duplicate.vendor || '無廠商';
+      const dupAmount = numberFormat(duplicate.amount);
+      if (!confirm(`發票號碼 ${invoiceVal} 已存在！\n\n既有紀錄：${dupDate} / ${dupVendor} / $${dupAmount}\n\n確定要重複記錄嗎？`)) {
+        return;
+      }
+    }
+  }
+
+  const expense = {
+    id: 'EXP-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+    date: document.getElementById('expDate').value,
+    categoryCode: cat.code,
+    categoryName: cat.name,
+    parentCategory: cat.parent,
+    amount: Number(document.getElementById('expAmount').value),
+    taxAmount: Number(document.getElementById('expTax').value) || 0,
+    netAmount: Number(document.getElementById('expNet').value) || 0,
+    invoiceNumber: invoiceVal,
+    invoiceType: document.getElementById('expInvoiceType').value,
+    paymentMethod: document.getElementById('expPayment').value,
+    vendor: document.getElementById('expVendor').value.trim(),
+    note: document.getElementById('expNote').value.trim(),
+    imageUrl: '',
+    imageDriveId: '',
+    imageLocal: state.photoBase64 || '',
+    recorder: state.settings.recorder || '未設定',
+    createdAt: new Date().toISOString(),
+    status: '正常',
+    synced: false,
+  };
+
+  // 儲存到本地
+  state.expenses.unshift(expense);
+  saveExpenses();
+
+  // 加入待同步佇列
+  state.pendingSync.push(expense);
+  localStorage.setItem(APP_CONFIG.PENDING_KEY, JSON.stringify(state.pendingSync));
+
+  showToast(`已儲存 $${numberFormat(expense.amount)} — ${cat.name}`, 'success');
+
+  // 嘗試同步到雲端
+  if (state.settings.apiUrl) {
+    syncExpense(expense);
+  }
+
+  // 重置表單
+  resetForm();
+  refreshAllViews();
+}
+
+function resetForm() {
+  document.getElementById('expenseForm').reset();
+  document.getElementById('expDate').value = formatDate(new Date());
+  document.getElementById('expTax').value = '';
+  document.getElementById('expNet').value = '';
+  // 重置自訂分類選單
+  document.getElementById('expCategory').value = '';
+  document.querySelector('#categorySelect .custom-select-trigger').innerHTML = '<span class="placeholder">選擇費用科目...</span>';
+  document.querySelectorAll('#categoryOptions .custom-select-option').forEach(o => o.classList.remove('selected'));
+  // 重置自訂廠商選單
+  document.getElementById('expVendor').value = '';
+  document.querySelector('#vendorSelect .custom-select-trigger').innerHTML = '<span class="placeholder">搜尋或新增廠商...</span>';
+  document.querySelectorAll('#vendorOptions .custom-select-option').forEach(o => o.classList.remove('selected'));
+  removePhoto();
+  hideOcrResult();
+}
+
+// ==================== 雲端同步 ====================
+async function syncExpense(expense) {
+  if (!state.settings.apiUrl) return;
+
+  try {
+    // 如果有照片，先上傳
+    if (expense.imageLocal) {
+      const base64Data = expense.imageLocal.split(',')[1];
+      const mimeType = expense.imageLocal.split(';')[0].split(':')[1];
+      const fileName = `invoice_${expense.date}_${expense.id}.jpg`;
+
+      const imgRes = await callApi('POST', {
+        action: 'uploadImage',
+        fileName: fileName,
+        fileData: base64Data,
+        mimeType: mimeType,
+      });
+
+      if (imgRes.success) {
+        expense.imageUrl = imgRes.data.directUrl;
+        expense.imageDriveId = imgRes.data.fileId;
+      }
+    }
+
+    // 上傳費用紀錄
+    const expenseData = { ...expense };
+    delete expenseData.imageLocal; // 不傳本地圖片資料
+
+    const res = await callApi('POST', {
+      action: 'addExpense',
+      expense: expenseData,
+    });
+
+    if (res.success) {
+      expense.synced = true;
+      // 移除待同步佇列
+      state.pendingSync = state.pendingSync.filter(p => p.id !== expense.id);
+      localStorage.setItem(APP_CONFIG.PENDING_KEY, JSON.stringify(state.pendingSync));
+      saveExpenses();
+      updateSyncStatus();
+      updateLocalCount();
+    }
+  } catch (err) {
+    console.warn('同步失敗，資料已保存在本地:', err);
+  }
+}
+
+async function syncToCloud() {
+  if (!state.settings.apiUrl) {
+    showToast('請先設定 Apps Script URL', 'error');
+    return;
+  }
+
+  if (state.pendingSync.length === 0) {
+    showToast('沒有需要同步的資料', 'info');
+    return;
+  }
+
+  const total = state.pendingSync.length;
+  showToast(`正在同步 ${total} 筆...`, 'info');
+
+  // 將待同步的費用分為需上傳圖片和不需上傳圖片的
+  const withImage = state.pendingSync.filter(e => e.imageLocal);
+  const withoutImage = state.pendingSync.filter(e => !e.imageLocal);
+
+  // 有圖片的逐筆處理（因為需要先上傳圖片）
+  for (const expense of [...withImage]) {
+    await syncExpense(expense);
+  }
+
+  // 無圖片的使用 batchAdd 一次送出
+  if (withoutImage.length > 0) {
+    try {
+      const expenses = withoutImage.map(e => {
+        const data = { ...e };
+        delete data.imageLocal;
+        return data;
+      });
+
+      const res = await callApi('POST', {
+        action: 'batchAdd',
+        expenses: expenses,
+      });
+
+      if (res.success) {
+        // 標記為已同步
+        withoutImage.forEach(expense => {
+          expense.synced = true;
+          state.pendingSync = state.pendingSync.filter(p => p.id !== expense.id);
+        });
+        localStorage.setItem(APP_CONFIG.PENDING_KEY, JSON.stringify(state.pendingSync));
+        saveExpenses();
+        updateSyncStatus();
+        updateLocalCount();
+      }
+    } catch (err) {
+      // 批次失敗就退回逐筆同步
+      console.warn('批次同步失敗，改用逐筆同步:', err);
+      for (const expense of [...withoutImage]) {
+        await syncExpense(expense);
+      }
+    }
+  }
+
+  showToast(`同步完成！共 ${total} 筆`, 'success');
+}
+
+/**
+ * 從雲端拉回費用資料到本地
+ * 合併策略：以雲端為主，本地不存在的會新增，已存在的以雲端為準更新
+ */
+async function pullExpensesFromCloud() {
+  if (!state.settings.apiUrl) {
+    showToast('請先設定 Apps Script URL', 'error');
+    return;
+  }
+
+  // 取得目前顯示的年月
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+
+  try {
+    showToast('正在從雲端讀取資料...', 'info');
+
+    const res = await callApi('GET', {
+      action: 'getExpenses',
+      year: year,
+      month: month,
+    });
+
+    if (!res.success || !Array.isArray(res.data)) {
+      showToast('讀取失敗：' + (res.error || '未知錯誤'), 'error');
+      return;
+    }
+
+    const cloudExpenses = res.data;
+    if (cloudExpenses.length === 0) {
+      showToast(`雲端 ${year}/${month} 月無費用紀錄`, 'info');
+      return;
+    }
+
+    let added = 0;
+    let updated = 0;
+
+    cloudExpenses.forEach(ce => {
+      // 嘗試用 id 匹配（ROW-N 格式）
+      const existing = state.expenses.find(e => e.id === ce.id);
+
+      if (existing) {
+        // 更新已存在的紀錄（以雲端為準）
+        Object.assign(existing, {
+          date: ce.date,
+          categoryName: ce.categoryName,
+          amount: ce.amount,
+          paymentMethod: ce.paymentMethod,
+          vendor: ce.vendor,
+          note: ce.note,
+          categoryCode: ce.categoryCode,
+          parentCategory: ce.parentCategory,
+          taxAmount: ce.taxAmount,
+          netAmount: ce.netAmount,
+          invoiceNumber: ce.invoiceNumber,
+          invoiceType: ce.invoiceType,
+          imageUrl: ce.imageUrl,
+          status: ce.status,
+          synced: true,
+        });
+        updated++;
+      } else {
+        // 新增不存在的紀錄
+        state.expenses.push({
+          ...ce,
+          synced: true,
+        });
+        added++;
+      }
+    });
+
+    saveExpenses();
+    refreshAllViews();
+    updateSyncStatus();
+    updateLocalCount();
+
+    showToast(`已從雲端匯入 ${year}/${month} 月資料：新增 ${added} 筆，更新 ${updated} 筆`, 'success');
+  } catch (err) {
+    showToast('從雲端匯入失敗：' + err.message, 'error');
+  }
+}
+
+async function callApi(method, data) {
+  const url = state.settings.apiUrl;
+  if (!url) throw new Error('未設定 API URL');
+
+  if (method === 'GET') {
+    const params = new URLSearchParams(data).toString();
+    const res = await fetch(`${url}?${params}`);
+    return await res.json();
+  } else {
+    const res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    return await res.json();
+  }
+}
+
+async function testConnection() {
+  const url = document.getElementById('settingApiUrl').value.trim();
+  if (!url) {
+    showToast('請先輸入 Apps Script URL', 'error');
+    return;
+  }
+
+  try {
+    showToast('正在測試連線...', 'info');
+    const res = await fetch(`${url}?action=getCategories`);
+    const json = await res.json();
+    if (json.success) {
+      showToast('連線成功！', 'success');
+      document.getElementById('syncDot').className = 'sync-dot';
+      document.getElementById('syncText').textContent = '已連線';
+    } else {
+      showToast('連線失敗：' + (json.error || '未知錯誤'), 'error');
+    }
+  } catch (err) {
+    showToast('連線失敗：' + err.message, 'error');
+  }
+}
+
+function updateSyncStatus() {
+  const dot = document.getElementById('syncDot');
+  const text = document.getElementById('syncText');
+  if (state.settings.apiUrl) {
+    if (state.pendingSync.length > 0) {
+      dot.className = 'sync-dot offline';
+      text.textContent = `待同步 ${state.pendingSync.length} 筆`;
+    } else {
+      dot.className = 'sync-dot';
+      text.textContent = '已同步';
+    }
+  } else {
+    dot.className = 'sync-dot offline';
+    text.textContent = '本地模式';
+  }
+}
+
+function updateLocalCount() {
+  document.getElementById('localCount').textContent = state.expenses.length;
+  document.getElementById('pendingCount').textContent = state.pendingSync.length;
+}
+
+// ==================== 月份選擇器 ====================
+function initMonthPickers() {
+  updateMonthDisplay();
+  initReportPage();
+}
+
+function changeMonth(delta) {
+  state.currentMonth.setMonth(state.currentMonth.getMonth() + delta);
+  updateMonthDisplay();
+  renderExpenseList();
+}
+
+function changeStatsMonth(delta) {
+  state.statsMonth.setMonth(state.statsMonth.getMonth() + delta);
+  document.getElementById('statsMonth').textContent =
+    `${state.statsMonth.getFullYear()}/${String(state.statsMonth.getMonth() + 1).padStart(2, '0')}`;
+  renderStats();
+}
+
+function updateMonthDisplay() {
+  const y = state.currentMonth.getFullYear();
+  const m = String(state.currentMonth.getMonth() + 1).padStart(2, '0');
+  document.getElementById('listMonth').textContent = `${y}/${m}`;
+
+  const sy = state.statsMonth.getFullYear();
+  const sm = String(state.statsMonth.getMonth() + 1).padStart(2, '0');
+  document.getElementById('statsMonth').textContent = `${sy}/${sm}`;
+}
+
+// ==================== 費用明細列表 ====================
+function renderExpenseList() {
+  const y = state.currentMonth.getFullYear();
+  const m = state.currentMonth.getMonth() + 1;
+
+  // 搜尋與篩選
+  const keyword = (document.getElementById('listSearch')?.value || '').trim().toLowerCase();
+  const payFilter = document.getElementById('listFilterPayment')?.value || '';
+
+  const filtered = state.expenses.filter(exp => {
+    if (exp.status === '作廢') return false;
+    const d = new Date(exp.date);
+    if (d.getFullYear() !== y || (d.getMonth() + 1) !== m) return false;
+    if (payFilter && exp.paymentMethod !== payFilter) return false;
+    if (keyword) {
+      const haystack = [exp.categoryName, exp.vendor, exp.note, exp.invoiceNumber, exp.parentCategory, exp.recorder].join(' ').toLowerCase();
+      if (!haystack.includes(keyword)) return false;
+    }
+    return true;
+  }).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  const list = document.getElementById('expenseList');
+  const empty = document.getElementById('listEmpty');
+  const countEl = document.getElementById('listCount');
+
+  if (filtered.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    countEl.textContent = keyword || payFilter ? '無符合條件的紀錄' : '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  const total = filtered.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  countEl.textContent = `${filtered.length} 筆 · $${numberFormat(total)}`;
+
+  list.innerHTML = filtered.map(exp => {
+    const cat = DEFAULT_CATEGORIES.find(c => c.code === exp.categoryCode);
+    const iconClass = getParentClass(exp.parentCategory);
+    return `
+      <li class="expense-item" onclick="showDetail('${exp.id}')">
+        <div class="expense-icon ${iconClass}">${cat ? cat.icon : '📋'}</div>
+        <div class="expense-info">
+          <div class="expense-name">${exp.categoryName}${exp.vendor ? ' · ' + exp.vendor : ''}</div>
+          <div class="expense-meta">${exp.date} · ${exp.paymentMethod}${exp.recorder ? ' · ' + exp.recorder : ''}${exp.invoiceNumber ? ' · ' + exp.invoiceNumber : ''}</div>
+        </div>
+        ${(exp.imageLocal || exp.imageUrl) ? '<div class="has-photo" title="有發票照片"></div>' : ''}
+        <div class="expense-amount"><span class="currency-sign">$</span>${numberFormat(exp.amount)}</div>
+      </li>
+    `;
+  }).join('');
+}
+
+function getParentClass(parent) {
+  const map = { '銷售費用': 'cat-sales', '管理費用': 'cat-admin', '營業費用': 'cat-ops', '稅務費用': 'cat-tax' };
+  return map[parent] || 'cat-admin';
+}
+
+// ==================== 統計頁 ====================
+function renderStats() {
+  const y = state.statsMonth.getFullYear();
+  const m = state.statsMonth.getMonth() + 1;
+
+  const filtered = state.expenses.filter(exp => {
+    if (exp.status === '作廢') return false;
+    const d = new Date(exp.date);
+    return d.getFullYear() === y && (d.getMonth() + 1) === m;
+  });
+
+  const total = filtered.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  const count = filtered.length;
+  const avg = count > 0 ? Math.round(total / count) : 0;
+
+  document.getElementById('statTotal').innerHTML = `$${numberFormat(total)} <span class="unit">NTD</span>`;
+  document.getElementById('statCount').innerHTML = `${count} <span class="unit">筆</span>`;
+  document.getElementById('statAvg').innerHTML = `$${numberFormat(avg)} <span class="unit">NTD</span>`;
+
+  // 預算進度
+  renderBudgetProgress(filtered);
+
+  // 分類長條圖
+  const byParent = {};
+  filtered.forEach(exp => {
+    if (!byParent[exp.parentCategory]) byParent[exp.parentCategory] = 0;
+    byParent[exp.parentCategory] += Number(exp.amount) || 0;
+  });
+
+  const maxVal = Math.max(...Object.values(byParent), 1);
+  const barColors = { '銷售費用': 'sales', '管理費用': 'admin', '營業費用': 'ops', '稅務費用': 'tax' };
+
+  document.getElementById('categoryChart').innerHTML = Object.entries(byParent)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, amount]) => `
+      <div class="bar-row">
+        <div class="bar-label">${name}</div>
+        <div class="bar-track">
+          <div class="bar-fill ${barColors[name] || 'sales'}" style="width:${(amount / maxVal * 100)}%">
+            $${numberFormat(amount)}
+          </div>
+        </div>
+      </div>
+    `).join('') || '<div style="text-align:center;color:var(--text-dim);padding:20px">尚無資料</div>';
+
+  // 付款方式
+  const byPayment = {};
+  filtered.forEach(exp => {
+    if (!byPayment[exp.paymentMethod]) byPayment[exp.paymentMethod] = 0;
+    byPayment[exp.paymentMethod] += Number(exp.amount) || 0;
+  });
+
+  const maxPay = Math.max(...Object.values(byPayment), 1);
+  document.getElementById('paymentChart').innerHTML = Object.entries(byPayment)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, amount]) => `
+      <div class="bar-row">
+        <div class="bar-label">${name}</div>
+        <div class="bar-track">
+          <div class="bar-fill admin" style="width:${(amount / maxPay * 100)}%">
+            $${numberFormat(amount)}
+          </div>
+        </div>
+      </div>
+    `).join('') || '<div style="text-align:center;color:var(--text-dim);padding:20px">尚無資料</div>';
+
+  // 年度月趨勢圖
+  renderTrendChart(y);
+}
+
+function renderTrendChart(year) {
+  const monthlyData = [];
+  for (let m = 1; m <= 12; m++) {
+    const monthExpenses = state.expenses.filter(e => {
+      if (e.status === '作廢') return false;
+      const d = new Date(e.date);
+      return d.getFullYear() === year && (d.getMonth() + 1) === m;
+    });
+    monthlyData.push({
+      month: m,
+      total: monthExpenses.reduce((s, e) => s + (Number(e.amount) || 0), 0),
+      count: monthExpenses.length,
+    });
+  }
+
+  const maxTotal = Math.max(...monthlyData.map(d => d.total), 1);
+  const yearTotal = monthlyData.reduce((s, d) => s + d.total, 0);
+  const activeMonths = monthlyData.filter(d => d.total > 0).length;
+  const avgMonthly = activeMonths > 0 ? Math.round(yearTotal / activeMonths) : 0;
+
+  document.getElementById('trendYear').textContent = year;
+  document.getElementById('trendChart').innerHTML = monthlyData.map(d => `
+    <div class="trend-bar-wrap">
+      <div class="trend-value">${d.total > 0 ? (d.total >= 10000 ? Math.round(d.total / 1000) + 'K' : numberFormat(d.total)) : ''}</div>
+      <div style="flex:1;display:flex;align-items:flex-end;width:100%">
+        <div class="trend-bar" style="height:${d.total > 0 ? Math.max(d.total / maxTotal * 100, 3) : 0}%;width:100%;max-width:28px;margin:0 auto"></div>
+      </div>
+      <div class="trend-label">${d.month}月</div>
+    </div>
+  `).join('');
+
+  document.getElementById('trendSummary').innerHTML = `
+    <span>年度合計 <strong>$${numberFormat(yearTotal)}</strong></span>
+    <span>月平均 <strong>$${numberFormat(avgMonthly)}</strong></span>
+    <span>共 <strong>${activeMonths}</strong> 個月有紀錄</span>
+  `;
+}
+
+// ==================== 報表頁 ====================
+function initReportPage() {
+  const yearSelect = document.getElementById('reportYear');
+  const now = new Date();
+  yearSelect.innerHTML = '';
+  for (let y = now.getFullYear(); y >= now.getFullYear() - 3; y--) {
+    yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+  }
+  document.getElementById('reportMonth').value = now.getMonth() + 1;
+}
+
+function getReportData() {
+  const year = Number(document.getElementById('reportYear').value);
+  const month = Number(document.getElementById('reportMonth').value);
+
+  return state.expenses.filter(exp => {
+    if (exp.status === '作廢') return false;
+    const d = new Date(exp.date);
+    return d.getFullYear() === year && (d.getMonth() + 1) === month;
+  }).sort((a, b) => new Date(a.date) - new Date(b.date));
+}
+
+function generatePDF() {
+  const data = getReportData();
+  const year = document.getElementById('reportYear').value;
+  const month = document.getElementById('reportMonth').value;
+
+  if (data.length === 0) {
+    showToast('該月份沒有資料', 'error');
+    return;
+  }
+
+  // 先顯示預覽
+  showReportPreview(data, year, month);
+
+  // 產生 PDF
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+
+  // 標題
+  doc.setFontSize(18);
+  doc.text(`Outrun Nutrition`, 14, 20);
+  doc.setFontSize(11);
+  doc.text(`Monthly Expense Report - ${year}/${String(month).padStart(2, '0')}`, 14, 28);
+  doc.setFontSize(9);
+  doc.text(`Generated: ${formatDate(new Date())}`, 14, 34);
+
+  // 彙總
+  const total = data.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  const totalTax = data.reduce((s, e) => s + (Number(e.taxAmount) || 0), 0);
+
+  doc.setFontSize(10);
+  doc.text(`Total: NTD ${numberFormat(total)}  |  Tax: NTD ${numberFormat(totalTax)}  |  Entries: ${data.length}`, 14, 42);
+
+  doc.line(14, 45, 196, 45);
+
+  // 分類彙總表
+  const byParent = {};
+  data.forEach(exp => {
+    if (!byParent[exp.parentCategory]) byParent[exp.parentCategory] = { amount: 0, count: 0 };
+    byParent[exp.parentCategory].amount += Number(exp.amount) || 0;
+    byParent[exp.parentCategory].count++;
+  });
+
+  const catRows = Object.entries(byParent).map(([name, v]) => [
+    name,
+    v.count.toString(),
+    `NTD ${numberFormat(v.amount)}`,
+    (v.amount / total * 100).toFixed(1) + '%',
+  ]);
+  catRows.push(['Total', data.length.toString(), `NTD ${numberFormat(total)}`, '100%']);
+
+  doc.autoTable({
+    startY: 50,
+    head: [['Category', 'Count', 'Amount', '%']],
+    body: catRows,
+    theme: 'grid',
+    headStyles: { fillColor: [237, 93, 43], fontSize: 9 },
+    bodyStyles: { fontSize: 8 },
+    footStyles: { fillColor: [47, 47, 47], textColor: [237, 93, 43] },
+    columnStyles: {
+      2: { halign: 'right' },
+      3: { halign: 'right' },
+    },
+  });
+
+  // 明細表
+  const detailRows = data.map(exp => [
+    exp.date,
+    `${exp.categoryCode} ${exp.categoryName}`,
+    exp.vendor || '-',
+    exp.invoiceNumber || '-',
+    exp.paymentMethod,
+    `NTD ${numberFormat(exp.amount)}`,
+  ]);
+
+  doc.autoTable({
+    startY: doc.lastAutoTable.finalY + 12,
+    head: [['Date', 'Category', 'Vendor', 'Invoice #', 'Payment', 'Amount']],
+    body: detailRows,
+    theme: 'striped',
+    headStyles: { fillColor: [20, 93, 221], fontSize: 8 },
+    bodyStyles: { fontSize: 7 },
+    columnStyles: {
+      5: { halign: 'right' },
+    },
+  });
+
+  // 頁尾
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(7);
+    doc.setTextColor(150);
+    doc.text(`Outrun Nutrition Expense Report | Page ${i}/${pageCount}`, 14, 290);
+  }
+
+  doc.save(`Outrun_Expense_${year}${String(month).padStart(2, '0')}.pdf`);
+  showToast('PDF 已下載！', 'success');
+}
+
+function showReportPreview(data, year, month) {
+  const preview = document.getElementById('reportPreview');
+  preview.style.display = 'block';
+
+  const total = data.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  const totalTax = data.reduce((s, e) => s + (Number(e.taxAmount) || 0), 0);
+
+  document.getElementById('rptTotal').textContent = `$${numberFormat(total)}`;
+  document.getElementById('rptTax').textContent = `$${numberFormat(totalTax)}`;
+
+  // 分類表
+  const byParent = {};
+  data.forEach(exp => {
+    if (!byParent[exp.parentCategory]) byParent[exp.parentCategory] = { amount: 0, count: 0 };
+    byParent[exp.parentCategory].amount += Number(exp.amount) || 0;
+    byParent[exp.parentCategory].count++;
+  });
+
+  const catBody = document.querySelector('#rptCatTable tbody');
+  catBody.innerHTML = Object.entries(byParent).map(([name, v]) =>
+    `<tr><td>${name}</td><td>${v.count}</td><td>$${numberFormat(v.amount)}</td></tr>`
+  ).join('') + `<tr class="total-row"><td>合計</td><td>${data.length}</td><td>$${numberFormat(total)}</td></tr>`;
+
+  // 明細表
+  const detailBody = document.querySelector('#rptDetailTable tbody');
+  detailBody.innerHTML = data.map(exp =>
+    `<tr><td>${exp.date}</td><td>${exp.categoryName}</td><td>${exp.vendor || '-'}</td><td>$${numberFormat(exp.amount)}</td></tr>`
+  ).join('') + `<tr class="total-row"><td colspan="3">合計</td><td>$${numberFormat(total)}</td></tr>`;
+}
+
+// ==================== CSV 匯出 ====================
+function exportCSV() {
+  const data = getReportData();
+  const year = document.getElementById('reportYear').value;
+  const month = document.getElementById('reportMonth').value;
+
+  if (data.length === 0) {
+    showToast('該月份沒有資料', 'error');
+    return;
+  }
+
+  const headers = ['日期', '科目代碼', '科目名稱', '上層分類', '金額（含稅）', '稅額', '未稅金額', '發票號碼', '發票類型', '付款方式', '廠商', '記帳人員', '備註'];
+  const rows = data.map(exp => [
+    exp.date, exp.categoryCode, exp.categoryName, exp.parentCategory,
+    exp.amount, exp.taxAmount, exp.netAmount, exp.invoiceNumber,
+    exp.invoiceType, exp.paymentMethod, exp.vendor, exp.recorder || '', exp.note,
+  ]);
+
+  // 加入 BOM 讓 Excel 正確顯示中文
+  let csv = '\uFEFF' + headers.join(',') + '\n';
+  rows.forEach(row => {
+    csv += row.map(cell => {
+      const str = String(cell || '');
+      return str.includes(',') || str.includes('"') ? `"${str.replace(/"/g, '""')}"` : str;
+    }).join(',') + '\n';
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Outrun_Expense_${year}${String(month).padStart(2, '0')}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  showToast('CSV 已下載！', 'success');
+}
+
+// ==================== 會計傳票格式匯出 ====================
+function exportAccountingCSV() {
+  const data = getReportData();
+  const year = document.getElementById('reportYear').value;
+  const month = document.getElementById('reportMonth').value;
+
+  if (data.length === 0) {
+    showToast('該月份沒有資料', 'error');
+    return;
+  }
+
+  const headers = ['傳票日期', '傳票號碼', '摘要', '科目代碼', '科目名稱', '借方金額', '貸方金額', '稅額', '發票號碼', '廠商'];
+  const rows = [];
+  let voucherSeq = 1;
+
+  data.forEach(exp => {
+    const voucherNo = `${year}${String(month).padStart(2, '0')}-${String(voucherSeq).padStart(4, '0')}`;
+    const summary = `${exp.categoryName}${exp.vendor ? ' / ' + exp.vendor : ''}${exp.note ? ' / ' + exp.note : ''}`;
+
+    // 借方：費用科目
+    rows.push([
+      exp.date, voucherNo, summary,
+      exp.categoryCode, exp.categoryName,
+      exp.netAmount || exp.amount, '', exp.taxAmount || 0,
+      exp.invoiceNumber || '', exp.vendor || '',
+    ]);
+
+    // 若有稅額，獨立一行進項稅額
+    if (exp.taxAmount && exp.taxAmount > 0) {
+      rows.push([
+        exp.date, voucherNo, '進項稅額',
+        '1171', '留抵稅額',
+        exp.taxAmount, '', '',
+        exp.invoiceNumber || '', exp.vendor || '',
+      ]);
+    }
+
+    // 貸方：付款方式對應科目
+    const paymentAccount = {
+      '現金': { code: '1001', name: '庫存現金' },
+      '匯款': { code: '1102', name: '銀行存款' },
+      '信用卡': { code: '2121', name: '應付帳款-信用卡' },
+      '電子支付': { code: '1102', name: '銀行存款' },
+    };
+    const pay = paymentAccount[exp.paymentMethod] || { code: '1001', name: '庫存現金' };
+
+    rows.push([
+      exp.date, voucherNo, `付款 - ${exp.paymentMethod}`,
+      pay.code, pay.name,
+      '', exp.amount, '',
+      '', '',
+    ]);
+
+    voucherSeq++;
+  });
+
+  let csv = '\uFEFF' + headers.join(',') + '\n';
+  rows.forEach(row => {
+    csv += row.map(cell => {
+      const str = String(cell ?? '');
+      return str.includes(',') || str.includes('"') ? `"${str.replace(/"/g, '""')}"` : str;
+    }).join(',') + '\n';
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Outrun_會計傳票_${year}${String(month).padStart(2, '0')}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  showToast('會計傳票 CSV 已下載！', 'success');
+}
+
+// ==================== 詳情彈窗 ====================
+function showDetail(id) {
+  const exp = state.expenses.find(e => e.id === id);
+  if (!exp) return;
+
+  const cat = DEFAULT_CATEGORIES.find(c => c.code === exp.categoryCode);
+  const modal = document.getElementById('detailModal');
+  const content = document.getElementById('modalContent');
+
+  content.innerHTML = `
+    <h3 style="font-size:18px;margin-bottom:16px">${cat ? cat.icon : '📋'} ${exp.categoryName}</h3>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div>
+        <div style="font-size:11px;color:var(--text-secondary)">金額</div>
+        <div style="font-family:var(--font-en);font-size:22px;font-weight:700;color:var(--orange)">$${numberFormat(exp.amount)}</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--text-secondary)">日期</div>
+        <div style="font-size:15px;font-weight:500">${exp.date}</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px">
+      <div><span style="color:var(--text-secondary)">科目代碼：</span>${exp.categoryCode}</div>
+      <div><span style="color:var(--text-secondary)">上層分類：</span>${exp.parentCategory}</div>
+      <div><span style="color:var(--text-secondary)">付款方式：</span>${exp.paymentMethod}</div>
+      <div><span style="color:var(--text-secondary)">發票類型：</span>${exp.invoiceType || '無'}</div>
+      ${exp.invoiceNumber ? `<div><span style="color:var(--text-secondary)">發票號碼：</span><span style="font-family:var(--font-en)">${exp.invoiceNumber}</span></div>` : ''}
+      ${exp.vendor ? `<div><span style="color:var(--text-secondary)">廠商：</span>${exp.vendor}</div>` : ''}
+      ${exp.taxAmount ? `<div><span style="color:var(--text-secondary)">稅額：</span>$${numberFormat(exp.taxAmount)}</div>` : ''}
+      ${exp.netAmount ? `<div><span style="color:var(--text-secondary)">未稅：</span>$${numberFormat(exp.netAmount)}</div>` : ''}
+      ${exp.recorder ? `<div><span style="color:var(--text-secondary)">記帳人員：</span>${exp.recorder}</div>` : ''}
+    </div>
+
+    ${exp.note ? `<div style="margin-top:12px;padding:10px;background:rgba(255,255,255,0.03);border-radius:6px;font-size:13px;color:var(--text-secondary)">${exp.note}</div>` : ''}
+
+    ${(exp.imageLocal || exp.imageUrl) ? `
+      <div style="margin-top:16px">
+        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:8px">發票照片</div>
+        <img src="${exp.imageLocal || exp.imageUrl}" style="width:100%;border-radius:8px;max-height:300px;object-fit:cover">
+      </div>
+    ` : ''}
+
+    <div style="margin-top:12px;font-size:11px;color:var(--text-dim)">
+      ID: ${exp.id} · ${exp.synced ? '✅ 已同步' : '⏳ 待同步'}
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn-outline btn-sm" onclick="createTemplateFromExpense('${exp.id}')" style="flex:1">⭐ 存為範本</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteExpense('${exp.id}')" style="flex:1">🗑️ 刪除</button>
+      <button class="btn btn-secondary btn-sm" onclick="closeModal()" style="flex:1">關閉</button>
+    </div>
+  `;
+
+  modal.classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('detailModal').classList.remove('active');
+}
+
+// 點擊背景關閉
+document.getElementById('detailModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+async function deleteExpense(id) {
+  if (!confirm('確定要刪除這筆紀錄嗎？')) return;
+
+  const idx = state.expenses.findIndex(e => e.id === id);
+  if (idx !== -1) {
+    state.expenses[idx].status = '作廢';
+    saveExpenses();
+    closeModal();
+    refreshAllViews();
+    showToast('已刪除', 'success');
+
+    // 同步刪除到雲端（如果已同步過且有 API URL）
+    if (state.expenses[idx].synced && state.settings.apiUrl) {
+      try {
+        await callApi('POST', { action: 'deleteExpense', id: id });
+      } catch (err) {
+        console.warn('雲端刪除同步失敗，下次同步時再處理:', err);
+      }
+    }
+  }
+}
+
+// ==================== 設定頁 ====================
+function toggleSetting(key) {
+  state.settings[key] = !state.settings[key];
+  // 映射 setting key 到 toggle element ID
+  const toggleMap = {
+    autoTax: 'toggleAutoTax',
+    offline: 'toggleOffline',
+    batchMode: 'toggleBatch',
+    autoReport: 'toggleAutoReport',
+  };
+  const toggleId = toggleMap[key];
+  if (toggleId) updateToggle(toggleId, state.settings[key]);
+  // 同步記帳頁的批次模式 toggle
+  if (key === 'batchMode') updateToggle('toggleBatchMode', state.settings[key]);
+  localStorage.setItem(APP_CONFIG.SETTINGS_KEY, JSON.stringify(state.settings));
+}
+
+function updateToggle(id, active) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('active', active);
+}
+
+function confirmClearLocal() {
+  if (confirm('確定清除所有本地快取資料嗎？\n（此操作無法復原）')) {
+    state.expenses = [];
+    state.pendingSync = [];
+    localStorage.removeItem(APP_CONFIG.STORAGE_KEY);
+    localStorage.removeItem(APP_CONFIG.PENDING_KEY);
+    refreshAllViews();
+    updateLocalCount();
+    showToast('本地快取已清除', 'success');
+  }
+}
+
+function renderCategoryList() {
+  const groups = {};
+  DEFAULT_CATEGORIES.forEach(cat => {
+    if (!groups[cat.parent]) groups[cat.parent] = [];
+    groups[cat.parent].push(cat);
+  });
+
+  const container = document.getElementById('categoryList');
+  container.innerHTML = Object.entries(groups).map(([parent, cats]) => `
+    <div style="margin-bottom:16px">
+      <div style="font-size:12px;font-weight:600;color:var(--orange);margin-bottom:8px;font-family:var(--font-en);text-transform:uppercase;letter-spacing:0.08em">${parent}</div>
+      ${cats.map(c => `
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.03)">
+          <span>${c.icon}</span>
+          <span style="font-family:var(--font-en);font-size:12px;color:var(--text-dim);width:40px">${c.code}</span>
+          <span style="flex:1">${c.name}</span>
+          <span style="font-size:11px;color:var(--text-dim)">${c.desc}</span>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+// ==================== 工具函式 ====================
+function formatDate(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function numberFormat(n) {
+  return Number(n || 0).toLocaleString('en-US');
+}
+
+function updateAmountPreview() {
+  const val = Number(document.getElementById('expAmount').value) || 0;
+  const el = document.getElementById('amountPreview');
+  el.textContent = val >= 1000 ? `NTD ${numberFormat(val)}` : '';
+}
+
+function refreshAllViews() {
+  renderExpenseList();
+  renderStats();
+  updateLocalCount();
+  updateSyncStatus();
+}
+
+// ==================== Toast 通知 ====================
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ==================== 從既有費用建立範本 ====================
+function createTemplateFromExpense(id) {
+  const exp = state.expenses.find(e => e.id === id);
+  if (!exp) return;
+
+  const name = prompt('範本名稱：', `${exp.categoryName}${exp.vendor ? ' — ' + exp.vendor : ''}`);
+  if (!name) return;
+
+  const templates = loadTemplates();
+  templates.unshift({
+    name,
+    categoryCode: exp.categoryCode,
+    amount: exp.amount || 0,
+    vendor: exp.vendor || '',
+    paymentMethod: exp.paymentMethod || '轉帳',
+    invoiceType: exp.invoiceType || '電子發票',
+    note: exp.note || '',
+  });
+
+  if (templates.length > 20) templates.length = 20;
+  saveTemplates(templates);
+  renderTemplateSelect();
+  closeModal();
+  showToast(`已儲存範本「${name}」`, 'success');
+}
+
+// ==================== ① 常用範本系統 ====================
+const TEMPLATES_KEY = 'outrun_templates';
+
+function loadTemplates() {
+  const saved = localStorage.getItem(TEMPLATES_KEY);
+  return saved ? JSON.parse(saved) : [];
+}
+
+function saveTemplates(templates) {
+  localStorage.setItem(TEMPLATES_KEY, JSON.stringify(templates));
+}
+
+function renderTemplateSelect() {
+  const templates = loadTemplates();
+  const container = document.getElementById('templateOptions');
+  const emptyEl = document.getElementById('templateEmpty');
+
+  if (templates.length === 0) {
+    container.innerHTML = '';
+    emptyEl.style.display = 'block';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  container.innerHTML = templates.map((t, i) => {
+    const cat = DEFAULT_CATEGORIES.find(c => c.code === t.categoryCode);
+    return `
+      <div class="custom-select-option" style="justify-content:space-between" onclick="applyTemplate(${i})">
+        <span style="display:flex;align-items:center;gap:6px">
+          <span class="option-icon">${cat ? cat.icon : '📋'}</span>
+          <span>${t.name}</span>
+        </span>
+        <span style="display:flex;align-items:center;gap:6px">
+          <span style="font-family:var(--font-en);font-size:12px;color:var(--text-dim)">$${numberFormat(t.amount)}</span>
+          <button type="button" onclick="event.stopPropagation();removeTemplate(${i})" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:14px;padding:0 2px">✕</button>
+        </span>
+      </div>`;
+  }).join('');
+}
+
+function saveAsTemplate() {
+  const catCode = document.getElementById('expCategory').value;
+  const cat = DEFAULT_CATEGORIES.find(c => c.code === catCode);
+  const amount = Number(document.getElementById('expAmount').value);
+
+  if (!cat) {
+    showToast('請先填寫分類再儲存範本', 'error');
+    return;
+  }
+
+  const vendor = document.getElementById('expVendor').value.trim();
+  const name = prompt('範本名稱：', `${cat.name}${vendor ? ' — ' + vendor : ''}`);
+  if (!name) return;
+
+  const templates = loadTemplates();
+  templates.unshift({
+    name,
+    categoryCode: catCode,
+    amount: amount || 0,
+    vendor,
+    paymentMethod: document.getElementById('expPayment').value,
+    invoiceType: document.getElementById('expInvoiceType').value,
+    note: document.getElementById('expNote').value.trim(),
+  });
+
+  // 最多保存 20 個範本
+  if (templates.length > 20) templates.length = 20;
+
+  saveTemplates(templates);
+  renderTemplateSelect();
+  showToast(`已儲存範本「${name}」`, 'success');
+}
+
+function applyTemplate(index) {
+  const templates = loadTemplates();
+  const t = templates[index];
+  if (!t) return;
+
+  // 帶入各欄位
+  if (t.categoryCode) selectCategory(t.categoryCode);
+  if (t.amount) document.getElementById('expAmount').value = t.amount;
+  if (t.vendor) {
+    document.getElementById('expVendor').value = t.vendor;
+    document.querySelector('#vendorSelect .custom-select-trigger').innerHTML =
+      `<span class="vendor-tag">${t.vendor}</span>`;
+  }
+  if (t.paymentMethod) document.getElementById('expPayment').value = t.paymentMethod;
+  if (t.invoiceType) document.getElementById('expInvoiceType').value = t.invoiceType;
+  if (t.note) document.getElementById('expNote').value = t.note;
+
+  // 觸發稅額計算
+  document.getElementById('expAmount').dispatchEvent(new Event('input', { bubbles: true }));
+
+  document.getElementById('templateSelect').classList.remove('open');
+  showToast(`已套用範本「${t.name}」`, 'success');
+}
+
+function removeTemplate(index) {
+  const templates = loadTemplates();
+  const name = templates[index]?.name;
+  templates.splice(index, 1);
+  saveTemplates(templates);
+  renderTemplateSelect();
+  showToast(`已移除範本「${name}」`, 'success');
+}
+
+// ==================== ② 批次記帳模式 ====================
+function toggleBatchMode() {
+  state.settings.batchMode = !state.settings.batchMode;
+  updateToggle('toggleBatchMode', state.settings.batchMode);
+  updateToggle('toggleBatch', state.settings.batchMode);
+  localStorage.setItem(APP_CONFIG.SETTINGS_KEY, JSON.stringify(state.settings));
+  showToast(state.settings.batchMode ? '批次模式：ON — 送出後保留分類與付款' : '批次模式：OFF', 'info');
+}
+
+// 覆寫 resetForm，支援批次模式
+const _originalResetForm = resetForm;
+resetForm = function() {
+  if (state.settings.batchMode) {
+    // 批次模式：只清空金額、發票、備註，保留分類、廠商、付款方式
+    document.getElementById('expAmount').value = '';
+    document.getElementById('expTax').value = '';
+    document.getElementById('expNet').value = '';
+    document.getElementById('expInvoice').value = '';
+    document.getElementById('expNote').value = '';
+    removePhoto();
+    hideOcrResult();
+    // 聚焦到金額
+    setTimeout(() => document.getElementById('expAmount').focus(), 100);
+  } else {
+    _originalResetForm();
+  }
+};
+
+// ==================== ③ 發票號碼格式化 & 驗證 ====================
+function formatInvoiceNumber(input) {
+  let val = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+  // 自動插入短橫
+  if (val.length > 2) {
+    val = val.slice(0, 2) + '-' + val.slice(2);
+  }
+
+  // 限制長度：XX-12345678（共 11 字元含短橫）
+  if (val.length > 11) val = val.slice(0, 11);
+
+  input.value = val;
+}
+
+function validateInvoiceNumber(input) {
+  const val = input.value.trim();
+  if (!val) return; // 允許空白
+
+  const pattern = /^[A-Z]{2}-\d{8}$/;
+  if (!pattern.test(val)) {
+    input.style.borderColor = 'var(--danger)';
+    showToast('發票號碼格式不正確，應為：XX-12345678', 'error');
+  } else {
+    input.style.borderColor = '';
+  }
+}
+
+// ==================== ④ 預算管理 & 超支警示 ====================
+const BUDGET_KEY = 'outrun_budgets';
+
+function loadBudgets() {
+  const saved = localStorage.getItem(BUDGET_KEY);
+  return saved ? JSON.parse(saved) : {};
+}
+
+function saveBudgets() {
+  const budgets = {
+    '銷售費用': Number(document.getElementById('budget_sales').value) || 0,
+    '管理費用': Number(document.getElementById('budget_admin').value) || 0,
+    '營業費用': Number(document.getElementById('budget_ops').value) || 0,
+    '稅務費用': Number(document.getElementById('budget_tax').value) || 0,
+    total: Number(document.getElementById('budget_total').value) || 0,
+  };
+
+  localStorage.setItem(BUDGET_KEY, JSON.stringify(budgets));
+  showToast('預算設定已儲存', 'success');
+  renderStats(); // 重新渲染統計
+}
+
+function loadBudgetUI() {
+  const budgets = loadBudgets();
+  const fields = {
+    '銷售費用': 'budget_sales',
+    '管理費用': 'budget_admin',
+    '營業費用': 'budget_ops',
+    '稅務費用': 'budget_tax',
+  };
+
+  for (const [cat, fieldId] of Object.entries(fields)) {
+    const el = document.getElementById(fieldId);
+    if (el && budgets[cat]) el.value = budgets[cat];
+  }
+
+  if (budgets.total) {
+    document.getElementById('budget_total').value = budgets.total;
+  }
+}
+
+function renderBudgetProgress(filtered) {
+  const budgets = loadBudgets();
+  const hasBudget = Object.values(budgets).some(v => v > 0);
+  const card = document.getElementById('budgetCard');
+
+  if (!hasBudget) {
+    card.style.display = 'none';
+    return;
+  }
+
+  card.style.display = 'block';
+
+  const byParent = {};
+  filtered.forEach(exp => {
+    if (!byParent[exp.parentCategory]) byParent[exp.parentCategory] = 0;
+    byParent[exp.parentCategory] += Number(exp.amount) || 0;
+  });
+
+  const totalSpent = filtered.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  let anyOver = false;
+
+  const cats = [
+    { key: '銷售費用', icon: '🏪' },
+    { key: '管理費用', icon: '📋' },
+    { key: '營業費用', icon: '🏢' },
+    { key: '稅務費用', icon: '🏛️' },
+  ];
+
+  let html = '';
+
+  // 各分類預算
+  cats.forEach(({ key, icon }) => {
+    const budget = budgets[key];
+    if (!budget) return;
+
+    const spent = byParent[key] || 0;
+    const pct = Math.min(spent / budget * 100, 100);
+    const status = pct >= 100 ? 'over' : pct >= 80 ? 'warn' : 'ok';
+    if (status === 'over') anyOver = true;
+
+    html += `
+      <div class="budget-row">
+        <div class="budget-row-header">
+          <span class="budget-row-label">${icon} ${key}</span>
+          <span class="budget-row-amount ${status}">
+            $${numberFormat(spent)} / $${numberFormat(budget)}
+            ${status === 'over' ? '<span class="budget-over-tag">超支</span>' : ''}
+          </span>
+        </div>
+        <div class="budget-bar">
+          <div class="budget-bar-fill ${status}" style="width:${pct}%"></div>
+        </div>
+      </div>`;
+  });
+
+  // 總預算
+  if (budgets.total) {
+    const pct = Math.min(totalSpent / budgets.total * 100, 100);
+    const status = pct >= 100 ? 'over' : pct >= 80 ? 'warn' : 'ok';
+    if (status === 'over') anyOver = true;
+
+    html += `
+      <div class="budget-row" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08)">
+        <div class="budget-row-header">
+          <span class="budget-row-label" style="font-weight:600">💰 總預算</span>
+          <span class="budget-row-amount ${status}" style="font-size:13px">
+            $${numberFormat(totalSpent)} / $${numberFormat(budgets.total)}
+            ${status === 'over' ? '<span class="budget-over-tag">超支</span>' : ''}
+          </span>
+        </div>
+        <div class="budget-bar" style="height:10px">
+          <div class="budget-bar-fill ${status}" style="width:${pct}%"></div>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('budgetBars').innerHTML = html;
+
+  // 更新 badge
+  const badge = document.getElementById('budgetBadge');
+  if (anyOver) {
+    badge.textContent = 'OVER BUDGET';
+    badge.style.background = 'rgba(229, 57, 53, 0.15)';
+    badge.style.color = 'var(--danger)';
+  } else {
+    badge.textContent = 'ON TRACK';
+    badge.style.background = 'rgba(67, 160, 71, 0.15)';
+    badge.style.color = 'var(--success)';
+  }
+}
+
+// ==================== ⑤ 月報自動寄送 ====================
+function setupAutoReport() {
+  const email = document.getElementById('settingReportEmail').value.trim();
+  if (!email) {
+    showToast('請輸入收件人 Email', 'error');
+    return;
+  }
+
+  if (!state.settings.apiUrl) {
+    showToast('請先設定 Apps Script URL', 'error');
+    return;
+  }
+
+  // 儲存 email
+  state.settings.reportEmail = email;
+  localStorage.setItem(APP_CONFIG.SETTINGS_KEY, JSON.stringify(state.settings));
+
+  // 呼叫 Apps Script 設定 Time Trigger
+  callApi('POST', {
+    action: 'setupAutoReport',
+    email: email,
+  }).then(res => {
+    if (res.success) {
+      showToast('自動寄送已設定！每月 1 號會自動寄出報表', 'success');
+    } else {
+      showToast('設定失敗：' + (res.error || '未知錯誤'), 'error');
+      showAutoReportScript(email);
+    }
+  }).catch(() => {
+    // API 尚未支援，提供手動部署指引
+    showAutoReportScript(email);
+  });
+}
+
+function showAutoReportScript(email) {
+  // 顯示詳細的圖文步驟指引
+  const modal = document.getElementById('detailModal');
+  const content = document.getElementById('modalContent');
+  content.innerHTML = `
+    <h3 style="font-size:16px;margin-bottom:16px">📧 月報自動寄送 — 設定教學</h3>
+
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;line-height:1.7">
+      設定完成後，系統會在<strong style="color:var(--orange)">每月 1 號上午 8 點</strong>自動寄出上月的費用彙總報表到 <strong style="color:var(--orange)">${email}</strong>。
+    </div>
+
+    <div style="font-size:13px;line-height:1.8">
+
+      <div style="background:rgba(237,93,43,0.08);border-left:3px solid var(--orange);padding:12px 14px;border-radius:0 6px 6px 0;margin-bottom:14px">
+        <div style="font-weight:700;color:var(--orange);margin-bottom:6px">好消息！如果你已經更新了 Apps Script</div>
+        <div style="color:var(--text-secondary);font-size:12px">
+          如果你已經用最新版的 <code style="background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:3px;font-size:11px">expense-tracker-apps-script.js</code> 替換了 Apps Script 的程式碼並重新部署，那月報功能其實<strong>已經內建了</strong>！<br>
+          只要再做下面的「步驟四」就好。
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-weight:700;color:var(--text-primary);margin-bottom:6px">📌 步驟一：打開 ERP 試算表的 Apps Script 編輯器</div>
+        <ol style="padding-left:20px;color:var(--text-secondary);font-size:12px;line-height:2">
+          <li>打開你的 ERP Google Sheets 試算表</li>
+          <li>點上方選單「<strong style="color:var(--text-primary)">擴充功能</strong>」→「<strong style="color:var(--text-primary)">Apps Script</strong>」</li>
+          <li>會開啟一個新分頁，這就是 Apps Script 編輯器</li>
+        </ol>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-weight:700;color:var(--text-primary);margin-bottom:6px">📌 步驟二：確認程式碼已包含月報功能</div>
+        <ol style="padding-left:20px;color:var(--text-secondary);font-size:12px;line-height:2">
+          <li>在 Apps Script 編輯器中，按 <strong style="color:var(--text-primary)">Ctrl+F</strong>（Mac 按 Cmd+F）搜尋</li>
+          <li>輸入 <code style="background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:3px;font-size:11px">sendMonthlyReport</code></li>
+          <li>如果找到了 → 表示月報功能已內建，直接跳到<strong>步驟四</strong></li>
+          <li>如果找不到 → 代表需要更新程式碼，進入<strong>步驟三</strong></li>
+        </ol>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-weight:700;color:var(--text-primary);margin-bottom:6px">📌 步驟三：更新 Apps Script 程式碼（如果需要）</div>
+        <ol style="padding-left:20px;color:var(--text-secondary);font-size:12px;line-height:2">
+          <li>將 <code style="background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:3px;font-size:11px">expense-tracker-apps-script.js</code> 檔案的完整內容複製</li>
+          <li>在 Apps Script 編輯器中，<strong style="color:var(--text-primary)">全選</strong>現有的程式碼（Ctrl+A / Cmd+A）</li>
+          <li><strong style="color:var(--text-primary)">貼上</strong>新的程式碼（Ctrl+V / Cmd+V）覆蓋</li>
+          <li>點左上方的 💾 <strong style="color:var(--text-primary)">儲存</strong>（或按 Ctrl+S）</li>
+          <li>重新部署：點「<strong style="color:var(--text-primary)">部署</strong>」→「<strong style="color:var(--text-primary)">管理部署</strong>」→ 右上角鉛筆 ✏️ →「版本」選「<strong style="color:var(--text-primary)">建立新版本</strong>」→「<strong style="color:var(--text-primary)">部署</strong>」</li>
+        </ol>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-weight:700;color:var(--text-primary);margin-bottom:6px">📌 步驟四：建立每月自動觸發器（最關鍵的一步！）</div>
+        <ol style="padding-left:20px;color:var(--text-secondary);font-size:12px;line-height:2">
+          <li>在 Apps Script 編輯器左側，點選 ⏰「<strong style="color:var(--text-primary)">觸發條件</strong>」（時鐘圖示）</li>
+          <li>點右下角「<strong style="color:var(--text-primary)">+ 新增觸發條件</strong>」</li>
+          <li>設定如下：
+            <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:10px 12px;margin:6px 0;font-size:11px;line-height:1.8">
+              <div>・選擇要執行的功能：<strong style="color:var(--orange)">sendMonthlyReport</strong></div>
+              <div>・選取事件來源：<strong style="color:var(--orange)">時間驅動</strong></div>
+              <div>・選取時間型觸發條件的類型：<strong style="color:var(--orange)">月計時器</strong></div>
+              <div>・選取月份中的日期：<strong style="color:var(--orange)">1</strong>（每月 1 號）</div>
+              <div>・選取時段：<strong style="color:var(--orange)">上午 8 點到 9 點</strong></div>
+            </div>
+          </li>
+          <li>點「<strong style="color:var(--text-primary)">儲存</strong>」</li>
+          <li>第一次可能會要求授權 → 點「<strong style="color:var(--text-primary)">審查權限</strong>」→ 選你的 Google 帳號 → 如果出現「這個應用程式未經驗證」→ 點「<strong style="color:var(--text-primary)">進階</strong>」→「<strong style="color:var(--text-primary)">前往（不安全）</strong>」→「<strong style="color:var(--text-primary)">允許</strong>」</li>
+        </ol>
+      </div>
+
+      <div style="background:rgba(67,160,71,0.1);border-left:3px solid var(--success);padding:10px 14px;border-radius:0 6px 6px 0;margin-bottom:12px">
+        <div style="font-weight:700;color:var(--success);margin-bottom:4px">✅ 完成！</div>
+        <div style="color:var(--text-secondary);font-size:12px">
+          設定好之後，每月 1 號上午 8~9 點，系統會自動篩選上個月的所有費用紀錄，彙總後寄到 ${email}。信件內容包含：費用筆數、總額、稅額、各分類金額明細、付款方式明細，以及 Google Sheets 連結。
+        </div>
+      </div>
+
+      <div style="font-size:11px;color:var(--text-dim);line-height:1.6">
+        💡 小提醒：如果想馬上測試看看有沒有設定成功，可以在 Apps Script 編輯器的程式碼中找到 <code style="background:rgba(0,0,0,0.3);padding:1px 4px;border-radius:3px">testSendMonthlyReport</code> 函數，選它並按 ▶ 執行，就會立即寄出一封測試報表。
+      </div>
+
+    </div>
+
+    <div class="btn-group" style="margin-top:16px">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal()" style="flex:1">我知道了</button>
+    </div>
+  `;
+  modal.classList.add('active');
+}
+
+// ==================== ⑥ 廠商雲端同步 ====================
+
+/**
+ * 將本地廠商名單上傳到 Google Sheets（07_廠商名單）
+ */
+async function syncVendorsToCloud() {
+  if (!state.settings.apiUrl) {
+    showToast('請先設定 Apps Script URL', 'error');
+    return;
+  }
+
+  try {
+    showToast('正在上傳廠商名單...', 'info');
+    const res = await callApi('POST', {
+      action: 'syncVendors',
+      vendors: state.vendors,
+    });
+
+    if (res.success) {
+      showToast(`已同步 ${state.vendors.length} 筆廠商到雲端`, 'success');
+    } else {
+      showToast('同步失敗：' + (res.error || '未知錯誤'), 'error');
+    }
+  } catch (err) {
+    showToast('廠商同步功能需要更新 Apps Script 後端', 'info');
+  }
+}
+
+/**
+ * 從 Google Sheets（07_廠商名單）匯入廠商名單到本地
+ */
+async function pullVendorsFromCloud() {
+  if (!state.settings.apiUrl) {
+    showToast('請先設定 Apps Script URL', 'error');
+    return;
+  }
+
+  try {
+    showToast('正在從雲端匯入廠商名單...', 'info');
+    const res = await callApi('GET', { action: 'getVendors' });
+
+    if (res.success && Array.isArray(res.data)) {
+      const cloudVendors = res.data;
+      if (cloudVendors.length === 0) {
+        showToast('雲端尚無廠商資料', 'info');
+        return;
+      }
+
+      // 合併策略：雲端有但本地沒有的 → 新增
+      let added = 0;
+      cloudVendors.forEach(cv => {
+        if (!cv.name) return;
+        if (!state.vendors.some(v => v.name === cv.name)) {
+          state.vendors.push({
+            name: cv.name,
+            note: cv.note || '',
+            usedAt: cv.usedAt || '',
+            createdAt: cv.createdAt || new Date().toISOString(),
+          });
+          added++;
+        }
+      });
+
+      saveVendors();
+      renderVendorSelect();
+      renderVendorList();
+
+      if (added > 0) {
+        showToast(`從雲端匯入 ${added} 筆新廠商（共 ${cloudVendors.length} 筆）`, 'success');
+      } else {
+        showToast(`雲端 ${cloudVendors.length} 筆廠商皆已存在本地`, 'info');
+      }
+    } else {
+      showToast('匯入失敗：' + (res.error || '未知錯誤'), 'error');
+    }
+  } catch (err) {
+    showToast('從雲端匯入廠商需要更新 Apps Script 後端', 'info');
+  }
+}
+
+// ==================== PWA 離線安裝 ====================
+(function initPWA() {
+  // 動態產生 Web App Manifest
+  const manifest = {
+    name: '堅心記帳 — Outrun Nutrition',
+    short_name: '堅心記帳',
+    description: 'Outrun Nutrition 營運記帳系統',
+    start_url: location.href.split('?')[0],
+    display: 'standalone',
+    background_color: '#2F2F2F',
+    theme_color: '#2F2F2F',
+    icons: [
+      {
+        src: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="32" fill="#2F2F2F"/><text x="96" y="130" text-anchor="middle" font-size="110">🥜</text></svg>'),
+        sizes: '192x192',
+        type: 'image/svg+xml',
+      },
+      {
+        src: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="64" fill="#2F2F2F"/><text x="256" y="340" text-anchor="middle" font-size="280">🥜</text></svg>'),
+        sizes: '512x512',
+        type: 'image/svg+xml',
+      },
+    ],
+  };
+  const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const manifestUrl = URL.createObjectURL(manifestBlob);
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = manifestUrl;
+  document.head.appendChild(link);
+
+  // PWA 安裝提示
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    showInstallBanner();
+  });
+
+  window.showInstallBanner = function() {
+    if (!deferredPrompt) return;
+    const existing = document.getElementById('pwaInstallBanner');
+    if (existing) existing.remove();
+
+    const banner = document.createElement('div');
+    banner.id = 'pwaInstallBanner';
+    banner.style.cssText = 'position:fixed;bottom:70px;left:12px;right:12px;background:var(--dark-gray);border:1px solid var(--orange);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.5)';
+    banner.innerHTML = `
+      <div style="font-size:28px">📲</div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:14px">加到主畫面</div>
+        <div style="font-size:11px;color:var(--text-secondary)">安裝堅心記帳 App，離線也能使用</div>
+      </div>
+      <button onclick="installPWA()" style="background:var(--orange);color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer">安裝</button>
+      <button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:18px;padding:4px">✕</button>
+    `;
+    document.body.appendChild(banner);
+  };
+
+  window.installPWA = async function() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const result = await deferredPrompt.userChoice;
+    if (result.outcome === 'accepted') {
+      showToast('已安裝到主畫面！', 'success');
+    }
+    deferredPrompt = null;
+    const banner = document.getElementById('pwaInstallBanner');
+    if (banner) banner.remove();
+  };
+})();
+</script>
+</body>
+</html>
