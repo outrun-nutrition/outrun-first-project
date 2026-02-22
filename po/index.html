@@ -2076,7 +2076,7 @@ function buildQuoteHTML(q) {
     <!-- 標頭 -->
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
       <div>
-        ${logoSrc ? '<img src="' + logoSrc + '" style="height:48px;margin-bottom:8px" crossorigin="anonymous">' : '<div style="font-size:22px;font-weight:700;color:' + accent + ';margin-bottom:4px">' + escHtml(co.name || '堅心 Outrun Nutrition') + '</div>'}
+        ${logoSrc ? '<img src="' + logoSrc + '" style="max-height:52px;max-width:280px;object-fit:contain;margin-bottom:8px" crossorigin="anonymous">' : '<div style="font-size:22px;font-weight:700;color:' + accent + ';margin-bottom:4px">' + escHtml(co.name || '堅心 Outrun Nutrition') + '</div>'}
         ${co.legalName ? '<div style="font-size:11px;color:#666">' + escHtml(co.legalName) + (co.nameEn ? ' / ' + escHtml(co.nameEn) : '') + '</div>' : ''}
         ${co.taxId ? '<div style="font-size:11px;color:#666">統編：' + escHtml(co.taxId) + '</div>' : ''}
         ${co.address ? '<div style="font-size:11px;color:#666">地址：' + escHtml(co.address) + '</div>' : ''}
@@ -2209,7 +2209,7 @@ function buildPOHTML(po) {
     <!-- 標頭 -->
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
       <div>
-        ${logoSrc ? '<img src="' + logoSrc + '" style="height:48px;margin-bottom:8px" crossorigin="anonymous">' : '<div style="font-size:22px;font-weight:700;color:' + accent + ';margin-bottom:4px">' + escHtml(co.name || '堅心 Outrun Nutrition') + '</div>'}
+        ${logoSrc ? '<img src="' + logoSrc + '" style="max-height:52px;max-width:280px;object-fit:contain;margin-bottom:8px" crossorigin="anonymous">' : '<div style="font-size:22px;font-weight:700;color:' + accent + ';margin-bottom:4px">' + escHtml(co.name || '堅心 Outrun Nutrition') + '</div>'}
         ${co.legalName ? '<div style="font-size:11px;color:#666">' + escHtml(co.legalName) + (co.nameEn ? ' / ' + escHtml(co.nameEn) : '') + '</div>' : ''}
         ${co.taxId ? '<div style="font-size:11px;color:#666">統編：' + escHtml(co.taxId) + '</div>' : ''}
         ${co.address ? '<div style="font-size:11px;color:#666">地址：' + escHtml(co.address) + '</div>' : ''}
