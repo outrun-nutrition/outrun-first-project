@@ -872,6 +872,10 @@ body {
         <input type="email" id="settingSalesEmail" class="form-input" placeholder="sales@outrun.com">
       </div>
     </div>
+    <div class="form-group">
+      <label class="form-label">LINE ID</label>
+      <input type="text" id="settingSalesLine" class="form-input" placeholder="LINE ID 或顯示名稱">
+    </div>
   </div>
 
   <!-- 匯款資訊 -->
@@ -1020,7 +1024,7 @@ let state = {
       legalName: '焠爾瑯股份有限公司',
       phone: '', email: '', address: '新北市新店區華興街46號1樓', taxId: '91114185'
     },
-    salesRep: { name: '', phone: '', email: '' },
+    salesRep: { name: '', phone: '', email: '', line: '' },
     bankInfo: { bankName: '玉山銀行', bankCode: '808', branch: '北新分行 (0901)', holder: '焠爾瑯股份有限公司', account: '0901-9400-22708' },
     logoBase64: '',
     stampBase64: '',
@@ -1815,6 +1819,7 @@ function renderSettings() {
   document.getElementById('settingSalesName').value = state.settings.salesRep?.name || '';
   document.getElementById('settingSalesPhone').value = state.settings.salesRep?.phone || '';
   document.getElementById('settingSalesEmail').value = state.settings.salesRep?.email || '';
+  document.getElementById('settingSalesLine').value = state.settings.salesRep?.line || '';
   document.getElementById('settingBankName').value = state.settings.bankInfo?.bankName || '';
   document.getElementById('settingBankCode').value = state.settings.bankInfo?.bankCode || '';
   document.getElementById('settingBankBranch').value = state.settings.bankInfo?.branch || '';
@@ -1843,6 +1848,7 @@ function saveSettings() {
     name: document.getElementById('settingSalesName').value.trim(),
     phone: document.getElementById('settingSalesPhone').value.trim(),
     email: document.getElementById('settingSalesEmail').value.trim(),
+    line: document.getElementById('settingSalesLine').value.trim(),
   };
   state.settings.bankInfo = {
     bankName: document.getElementById('settingBankName').value.trim(),
@@ -2085,6 +2091,7 @@ function buildQuoteHTML(q) {
         <div style="font-size:14px;font-weight:600;color:#333;margin-bottom:4px">${escHtml(sr.name || state.settings.recorder || '')}</div>
         ${sr.phone ? '<div style="font-size:11px;color:#666">電話：' + escHtml(sr.phone) + '</div>' : ''}
         ${sr.email ? '<div style="font-size:11px;color:#666">Email：' + escHtml(sr.email) + '</div>' : ''}
+        ${sr.line ? '<div style="font-size:11px;color:#666">LINE：' + escHtml(sr.line) + '</div>' : ''}
       </div>
     </div>
 
@@ -2408,7 +2415,27 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   addQuoteLineItem();
+
+  // 自動載入預設 Logo（如果尚未上傳自訂 Logo）
+  if (!state.settings.logoBase64) {
+    autoLoadDefaultLogo();
+  }
 });
+
+async function autoLoadDefaultLogo() {
+  try {
+    const resp = await fetch('logo.png');
+    if (!resp.ok) return;
+    const blob = await resp.blob();
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      state.settings.logoBase64 = e.target.result;
+      saveState();
+      renderImagePreview('logo', e.target.result);
+    };
+    reader.readAsDataURL(blob);
+  } catch (e) { /* 靜默失敗 — 本地開啟時可能沒有 logo.png */ }
+}
 </script>
 </body>
 </html>
