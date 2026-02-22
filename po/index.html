@@ -592,8 +592,15 @@ body {
         <span class="label">折扣</span>
         <span class="value" id="quoteDiscountAmount">-NTD 0</span>
       </div>
+      <div class="form-group" style="margin:8px 0 4px">
+        <select id="quoteTaxType" class="form-select" onchange="calcQuoteTotals()" style="font-size:13px;padding:8px">
+          <option value="excluded">稅外加 (5%)</option>
+          <option value="included">含稅 (5%)</option>
+          <option value="exempt">免稅</option>
+        </select>
+      </div>
       <div class="amount-row">
-        <span class="label">稅額 (5%)</span>
+        <span class="label" id="quoteTaxLabel">稅額 (5%)</span>
         <span class="value" id="quoteTaxAmount">NTD 0</span>
       </div>
       <div class="amount-row total">
@@ -665,8 +672,15 @@ body {
         <span class="label">小計</span>
         <span class="value" id="poSubtotal">NTD 0</span>
       </div>
+      <div class="form-group" style="margin:8px 0 4px">
+        <select id="poTaxType" class="form-select" onchange="calcPOTotals()" style="font-size:13px;padding:8px">
+          <option value="excluded">稅外加 (5%)</option>
+          <option value="included">含稅 (5%)</option>
+          <option value="exempt">免稅</option>
+        </select>
+      </div>
       <div class="amount-row">
-        <span class="label">稅額 (5%)</span>
+        <span class="label" id="poTaxLabel">稅額 (5%)</span>
         <span class="value" id="poTaxAmount">NTD 0</span>
       </div>
       <div class="amount-row total">
@@ -1116,8 +1130,23 @@ function calcQuoteTotals() {
   else discAmount = discVal;
 
   const afterDiscount = subtotal - discAmount;
-  const tax = Math.round(afterDiscount * 0.05);
-  const total = afterDiscount + tax;
+  const taxType = document.getElementById('quoteTaxType').value;
+  let tax = 0, total = 0;
+  const taxLabel = document.getElementById('quoteTaxLabel');
+
+  if (taxType === 'excluded') {
+    tax = Math.round(afterDiscount * 0.05);
+    total = afterDiscount + tax;
+    taxLabel.textContent = '稅額 (外加 5%)';
+  } else if (taxType === 'included') {
+    tax = Math.round(afterDiscount - afterDiscount / 1.05);
+    total = afterDiscount;
+    taxLabel.textContent = '稅額 (內含 5%)';
+  } else {
+    tax = 0;
+    total = afterDiscount;
+    taxLabel.textContent = '稅額 (免稅)';
+  }
 
   document.getElementById('quoteSubtotal').textContent = 'NTD ' + numberFormat(subtotal);
   document.getElementById('quoteDiscountAmount').textContent = '-NTD ' + numberFormat(discAmount);
@@ -1212,8 +1241,23 @@ function updatePOItemCount() {
 function calcPOTotals() {
   const items = getPOLineItems();
   const subtotal = items.reduce((s, i) => s + i.subtotal, 0);
-  const tax = Math.round(subtotal * 0.05);
-  const total = subtotal + tax;
+  const taxType = document.getElementById('poTaxType').value;
+  let tax = 0, total = 0;
+  const taxLabel = document.getElementById('poTaxLabel');
+
+  if (taxType === 'excluded') {
+    tax = Math.round(subtotal * 0.05);
+    total = subtotal + tax;
+    taxLabel.textContent = '稅額 (外加 5%)';
+  } else if (taxType === 'included') {
+    tax = Math.round(subtotal - subtotal / 1.05);
+    total = subtotal;
+    taxLabel.textContent = '稅額 (內含 5%)';
+  } else {
+    tax = 0;
+    total = subtotal;
+    taxLabel.textContent = '稅額 (免稅)';
+  }
 
   document.getElementById('poSubtotal').textContent = 'NTD ' + numberFormat(subtotal);
   document.getElementById('poTaxAmount').textContent = 'NTD ' + numberFormat(tax);
@@ -1240,8 +1284,11 @@ function saveQuotation(genPDF = false) {
   const discVal = Number(document.getElementById('quoteDiscountValue').value) || 0;
   let discAmount = discType === 'percent' ? Math.round(subtotal * discVal / 100) : discVal;
   const afterDisc = subtotal - discAmount;
-  const tax = Math.round(afterDisc * 0.05);
-  const total = afterDisc + tax;
+  const taxType = document.getElementById('quoteTaxType').value;
+  let tax = 0, total = 0, taxRate = 0;
+  if (taxType === 'excluded') { tax = Math.round(afterDisc * 0.05); total = afterDisc + tax; taxRate = 0.05; }
+  else if (taxType === 'included') { tax = Math.round(afterDisc - afterDisc / 1.05); total = afterDisc; taxRate = 0.05; }
+  else { tax = 0; total = afterDisc; taxRate = 0; }
 
   const quotation = {
     id: generateId('QUOT'),
@@ -1256,7 +1303,7 @@ function saveQuotation(genPDF = false) {
     },
     items, subtotal,
     discountType: discType, discountValue: discVal, discountAmount: discAmount,
-    taxRate: 0.05, taxAmount: tax, total,
+    taxType, taxRate, taxAmount: tax, total,
     notes: document.getElementById('quoteNotes').value.trim(),
     status: '草稿',
     recorder: state.settings.recorder || '未設定',
@@ -1281,6 +1328,7 @@ function resetQuoteForm() {
   document.getElementById('quoteCustAddr').value = '';
   document.getElementById('quoteNotes').value = '';
   document.getElementById('quoteDiscountValue').value = '0';
+  document.getElementById('quoteTaxType').value = 'excluded';
   document.getElementById('quoteLineItems').innerHTML = '';
   quoteLineCounter = 0;
   initDateFields();
@@ -1296,8 +1344,11 @@ function savePurchaseOrder(genPDF = false) {
   if (items.length === 0) { showToast('請新增至少一個品項', 'error'); return; }
 
   const subtotal = items.reduce((s, i) => s + i.subtotal, 0);
-  const tax = Math.round(subtotal * 0.05);
-  const total = subtotal + tax;
+  const taxType = document.getElementById('poTaxType').value;
+  let tax = 0, total = 0, taxRate = 0;
+  if (taxType === 'excluded') { tax = Math.round(subtotal * 0.05); total = subtotal + tax; taxRate = 0.05; }
+  else if (taxType === 'included') { tax = Math.round(subtotal - subtotal / 1.05); total = subtotal; taxRate = 0.05; }
+  else { tax = 0; total = subtotal; taxRate = 0; }
 
   const po = {
     id: generateId('PO'),
@@ -1309,7 +1360,7 @@ function savePurchaseOrder(genPDF = false) {
       email: document.getElementById('poVendorEmail').value.trim(),
     },
     items, subtotal,
-    taxRate: 0.05, taxAmount: tax, total,
+    taxType, taxRate, taxAmount: tax, total,
     expectedDelivery: document.getElementById('poDeliveryDate').value || '',
     paymentTerms: document.getElementById('poPaymentTerms').value,
     notes: document.getElementById('poNotes').value.trim(),
@@ -1337,6 +1388,7 @@ function resetPOForm() {
   document.getElementById('poNotes').value = '';
   document.getElementById('poDeliveryDate').value = '';
   document.getElementById('poRelatedQuote').value = '';
+  document.getElementById('poTaxType').value = 'excluded';
   document.getElementById('poLineItems').innerHTML = '';
   poLineCounter = 0;
   initDateFields();
@@ -1478,7 +1530,7 @@ function showDocDetail(type, id) {
           <span style="font-family:var(--font-en);font-weight:600;color:var(--success)">-NTD ${numberFormat(doc.discountAmount)}</span>
         </div>` : ''}
         <div style="display:flex;justify-content:space-between;padding:2px 0">
-          <span style="color:var(--text-secondary)">稅額 (5%)</span>
+          <span style="color:var(--text-secondary)">稅額 (${doc.taxType === 'excluded' ? '外加 5%' : doc.taxType === 'included' ? '內含 5%' : '免稅'})</span>
           <span style="font-family:var(--font-en);font-weight:600">NTD ${numberFormat(doc.taxAmount)}</span>
         </div>
         <div style="display:flex;justify-content:space-between;padding:6px 0;border-top:2px solid var(--orange);margin-top:6px;font-size:16px">
@@ -1858,7 +1910,8 @@ function generateQuotePDF(q) {
   if (q.discountAmount) {
     doc.text('Discount:', rightX - 60, y); doc.text('-NTD ' + numberFormat(q.discountAmount), rightX, y, { align: 'right' }); y += 6;
   }
-  doc.text('Tax (5%):', rightX - 60, y); doc.text('NTD ' + numberFormat(q.taxAmount), rightX, y, { align: 'right' }); y += 2;
+  const qTaxLabel = q.taxType === 'excluded' ? 'Tax (5% excl.)' : q.taxType === 'included' ? 'Tax (5% incl.)' : 'Tax (exempt)';
+  doc.text(qTaxLabel + ':', rightX - 60, y); doc.text('NTD ' + numberFormat(q.taxAmount), rightX, y, { align: 'right' }); y += 2;
   doc.setDrawColor(237, 93, 43);
   doc.setLineWidth(0.5);
   doc.line(rightX - 65, y, rightX, y); y += 6;
@@ -1951,7 +2004,8 @@ function generatePOPDF(po) {
   doc.setFontSize(10);
   doc.setTextColor(100, 100, 100);
   doc.text('Subtotal:', rightX - 60, y); doc.text('NTD ' + numberFormat(po.subtotal), rightX, y, { align: 'right' }); y += 6;
-  doc.text('Tax (5%):', rightX - 60, y); doc.text('NTD ' + numberFormat(po.taxAmount), rightX, y, { align: 'right' }); y += 2;
+  const poTaxLabel = po.taxType === 'excluded' ? 'Tax (5% excl.)' : po.taxType === 'included' ? 'Tax (5% incl.)' : 'Tax (exempt)';
+  doc.text(poTaxLabel + ':', rightX - 60, y); doc.text('NTD ' + numberFormat(po.taxAmount), rightX, y, { align: 'right' }); y += 2;
   doc.setDrawColor(20, 93, 221);
   doc.setLineWidth(0.5);
   doc.line(rightX - 65, y, rightX, y); y += 6;
