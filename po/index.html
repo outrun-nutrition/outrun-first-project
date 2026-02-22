@@ -2076,7 +2076,7 @@ function buildQuoteHTML(q) {
     <!-- 標頭 -->
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
       <div>
-        ${logoSrc ? '<div style="width:260px;height:60px;margin-bottom:8px;background-image:url(' + logoSrc + ');background-size:contain;background-repeat:no-repeat;background-position:left center"></div>' : '<div style="font-size:22px;font-weight:700;color:' + accent + ';margin-bottom:4px">' + escHtml(co.name || '堅心 Outrun Nutrition') + '</div>'}
+        ${logoSrc ? '<img src="' + logoSrc + '" style="display:block;width:280px;margin-bottom:8px" crossorigin="anonymous">' : '<div style="font-size:22px;font-weight:700;color:' + accent + ';margin-bottom:4px">' + escHtml(co.name || '堅心 Outrun Nutrition') + '</div>'}
         ${co.legalName ? '<div style="font-size:11px;color:#666">' + escHtml(co.legalName) + (co.nameEn ? ' / ' + escHtml(co.nameEn) : '') + '</div>' : ''}
         ${co.taxId ? '<div style="font-size:11px;color:#666">統編：' + escHtml(co.taxId) + '</div>' : ''}
         ${co.address ? '<div style="font-size:11px;color:#666">地址：' + escHtml(co.address) + '</div>' : ''}
@@ -2172,12 +2172,12 @@ function buildQuoteHTML(q) {
         <div style="height:120px"></div>
         <div style="border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa">公司名稱 / 日期</div>
       </div>
-      <div style="flex:1;text-align:right">
-        <div style="font-size:10px;color:#888;margin-bottom:4px;text-align:center">${escHtml(co.legalName || co.name || '')} Authorized By</div>
-        <div style="height:120px;display:flex;align-items:flex-end;justify-content:flex-end">
+      <div style="flex:1;text-align:center">
+        <div style="font-size:10px;color:#888;margin-bottom:4px">${escHtml(co.legalName || co.name || '')} Authorized By</div>
+        <div style="height:120px;display:flex;align-items:center;justify-content:center">
           ${stampSrc ? '<img src="' + stampSrc + '" style="display:block;width:120px;height:120px" crossorigin="anonymous">' : ''}
         </div>
-        <div style="border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa;text-align:center">授權簽章 / 日期</div>
+        <div style="border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa">授權簽章 / 日期</div>
       </div>
     </div>
 
@@ -2212,7 +2212,7 @@ function buildPOHTML(po) {
     <!-- 標頭 -->
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
       <div>
-        ${logoSrc ? '<div style="width:260px;height:60px;margin-bottom:8px;background-image:url(' + logoSrc + ');background-size:contain;background-repeat:no-repeat;background-position:left center"></div>' : '<div style="font-size:22px;font-weight:700;color:' + accent + ';margin-bottom:4px">' + escHtml(co.name || '堅心 Outrun Nutrition') + '</div>'}
+        ${logoSrc ? '<img src="' + logoSrc + '" style="display:block;width:280px;margin-bottom:8px" crossorigin="anonymous">' : '<div style="font-size:22px;font-weight:700;color:' + accent + ';margin-bottom:4px">' + escHtml(co.name || '堅心 Outrun Nutrition') + '</div>'}
         ${co.legalName ? '<div style="font-size:11px;color:#666">' + escHtml(co.legalName) + (co.nameEn ? ' / ' + escHtml(co.nameEn) : '') + '</div>' : ''}
         ${co.taxId ? '<div style="font-size:11px;color:#666">統編：' + escHtml(co.taxId) + '</div>' : ''}
         ${co.address ? '<div style="font-size:11px;color:#666">地址：' + escHtml(co.address) + '</div>' : ''}
@@ -2293,12 +2293,12 @@ function buildPOHTML(po) {
         <div style="height:120px"></div>
         <div style="border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa">公司名稱 / 日期</div>
       </div>
-      <div style="flex:1;text-align:right">
-        <div style="font-size:10px;color:#888;margin-bottom:4px;text-align:center">${escHtml(co.legalName || co.name || '')} 核准</div>
-        <div style="height:120px;display:flex;align-items:flex-end;justify-content:flex-end">
+      <div style="flex:1;text-align:center">
+        <div style="font-size:10px;color:#888;margin-bottom:4px">${escHtml(co.legalName || co.name || '')} 核准</div>
+        <div style="height:120px;display:flex;align-items:center;justify-content:center">
           ${stampSrc ? '<img src="' + stampSrc + '" style="display:block;width:120px;height:120px" crossorigin="anonymous">' : ''}
         </div>
-        <div style="border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa;text-align:center">授權簽章 / 日期</div>
+        <div style="border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa">授權簽章 / 日期</div>
       </div>
     </div>
 
