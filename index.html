@@ -3,942 +3,331 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>運動營養需求評估｜堅心 Outrun Nutrition</title>
-<meta name="description" content="5 分鐘完成你的運動營養需求評估。根據 ACSM/ISSN 指南，結合你的訓練模式、恢復狀態與賽事目標，提供個人化的科學補給建議。">
+<title>堅心團隊工具包｜Outrun Nutrition Toolbox</title>
+<meta name="description" content="堅心 Outrun Nutrition 團隊內部工具包 — 報價採購、記帳、營養評估、問卷等一站式入口。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --kenshin-black:#2F2F2F;--kenshin-orange:#ED5D2B;--kenshin-orange-hover:#D94F20;
-  --kenshin-orange-glow:rgba(237,93,43,.12);--kenshin-blue:#145DDD;--kenshin-blue-light:#1A6BF0;
-  --kenshin-blue-glow:rgba(20,93,221,.12);--layer-gray:#3A3A3A;--soft-white:#E0E0E0;
-  --neutral-gray:#A0A0A0;--bg:var(--kenshin-black);--surface:var(--layer-gray);
-  --surface-alt:#333333;--text:var(--soft-white);--text-secondary:var(--neutral-gray);
-  --text-muted:#787878;--border:#4A4A4A;--radius:12px;--radius-sm:4px;
-  --shadow:0 2px 8px rgba(0,0,0,.3);--shadow-lg:0 8px 32px rgba(0,0,0,.4);
-  --green:#34C759;--yellow:#FFD60A;--red:#FF453A;
+  --kenshin-black:#2F2F2F;
+  --kenshin-orange:#ED5D2B;
+  --kenshin-orange-hover:#D94F20;
+  --kenshin-orange-glow:rgba(237,93,43,.10);
+  --kenshin-blue:#145DDD;
+  --kenshin-blue-glow:rgba(20,93,221,.10);
+  --layer-gray:#3A3A3A;
+  --soft-white:#E0E0E0;
+  --neutral-gray:#A0A0A0;
+  --text-muted:#787878;
+  --border:#4A4A4A;
+  --radius:12px;
+  --radius-sm:6px;
 }
-body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
-.font-en{font-family:'Montserrat','Noto Sans TC',sans-serif;letter-spacing:.05em;text-transform:uppercase}
-.nc-wrap{max-width:720px;margin:0 auto;padding:32px 16px 48px}
-
-/* Header */
-.nc-header{text-align:center;margin-bottom:32px}
-.nc-brand{display:flex;justify-content:center;margin-bottom:18px}
-.nc-brand-logo{height:44px;width:auto;object-fit:contain}
-@media(max-width:480px){.nc-brand-logo{height:34px}}
-.nc-header h1{font-size:1.6rem;font-weight:700;color:var(--soft-white);margin-bottom:6px}
-.nc-header .nc-subtitle{color:var(--neutral-gray);font-size:.9rem;max-width:500px;margin:0 auto 12px;line-height:1.7}
-.nc-header .nc-meta{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
-.nc-meta-tag{padding:4px 12px;border-radius:var(--radius-sm);font-size:.75rem;font-weight:500}
-.nc-meta-tag.ntsu{background:var(--kenshin-blue-glow);color:var(--kenshin-blue-light)}
-.nc-meta-tag.time{background:rgba(160,160,160,.1);color:var(--neutral-gray)}
-
-/* Progress */
-.nc-progress-wrap{margin-bottom:24px}
-.nc-step-labels{display:flex;justify-content:space-between;margin-bottom:6px;padding:0 2px}
-.nc-step-labels span{font-size:.68rem;color:var(--text-muted);font-weight:500;transition:color .3s}
-.nc-step-labels span.active{color:var(--kenshin-orange)}
-.nc-step-labels span.done{color:var(--kenshin-blue)}
-.nc-progress{display:flex;gap:4px}
-.nc-progress .bar{flex:1;height:3px;border-radius:2px;background:var(--border);transition:background .4s}
-.nc-progress .bar.active{background:var(--kenshin-orange)}
-.nc-progress .bar.done{background:var(--kenshin-blue)}
-
-/* Card */
-.nc-card{background:var(--surface);border-radius:var(--radius);padding:28px 24px;box-shadow:var(--shadow);border:1px solid var(--border);position:relative}
-.nc-card-logo{position:absolute;top:14px;right:16px;height:16px;width:auto;opacity:.25;object-fit:contain}
-@media(max-width:480px){.nc-card-logo{height:13px;top:12px;right:12px}}
-.nc-step-title{font-size:1.12rem;font-weight:600;margin-bottom:3px;color:var(--soft-white)}
-.nc-step-desc{color:var(--neutral-gray);font-size:.85rem;margin-bottom:20px;line-height:1.6}
-
-/* Form */
-.nc-field{margin-bottom:16px}
-.nc-field>label{display:block;font-size:.83rem;font-weight:500;color:var(--neutral-gray);margin-bottom:6px}
-.nc-field input[type="number"],.nc-field input[type="email"],.nc-field input[type="text"],.nc-field input[type="tel"],.nc-field select{
-  width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;
-  font-size:1rem;color:var(--soft-white);background:var(--surface-alt);transition:border-color .2s;font-family:inherit
+body{
+  font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--kenshin-black);
+  color:var(--soft-white);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
 }
-.nc-field input::placeholder{color:var(--text-muted)}
-.nc-field input:focus,.nc-field select:focus{outline:none;border-color:var(--kenshin-orange)}
-.nc-field .nc-hint{font-size:.73rem;color:var(--text-muted);margin-top:4px;line-height:1.5}
-.nc-row{display:flex;gap:12px}
-.nc-row .nc-field{flex:1}
+.font-en{font-family:'Montserrat','Noto Sans TC',sans-serif;letter-spacing:.05em}
 
-/* Toggle group */
-.nc-toggle-group{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.nc-toggle-group.cols-3{grid-template-columns:repeat(3,1fr)}
-.nc-toggle-group input[type="radio"],.nc-toggle-group input[type="checkbox"]{display:none}
-.nc-toggle-group label.nc-toggle{
-  display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 6px;
-  border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;
-  text-align:center;font-size:.82rem;font-weight:500;color:var(--neutral-gray);
-  background:transparent;min-height:48px;justify-content:center
+/* ===== Header ===== */
+.header{
+  text-align:center;
+  padding:48px 20px 36px;
 }
-.nc-toggle-group label.nc-toggle:hover{border-color:rgba(237,93,43,.4);background:rgba(237,93,43,.03)}
-.nc-toggle-group input:checked+label.nc-toggle{border-color:var(--kenshin-orange);background:rgba(237,93,43,.08);color:var(--soft-white)}
-.nc-toggle .nc-icon{font-size:1.35rem;margin-bottom:1px}
-
-/* Other text input inside toggle */
-.nc-other-input{
-  margin-top:6px;width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;
-  font-size:.8rem;color:var(--soft-white);background:var(--surface-alt);font-family:inherit;
-  transition:border-color .2s
+.header-brand{
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
 }
-.nc-other-input:focus{outline:none;border-color:var(--kenshin-orange)}
-.nc-other-input::placeholder{color:var(--text-muted)}
-.nc-other-wrap{display:none}.nc-other-wrap.show{display:block}
-
-/* Likert scale */
-.nc-likert{display:flex;gap:6px}
-.nc-likert input{display:none}
-.nc-likert label{flex:1;text-align:center;padding:10px 4px;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;font-size:.78rem;font-weight:500;color:var(--text-muted)}
-.nc-likert label:hover{border-color:rgba(237,93,43,.3)}
-.nc-likert input:checked+label{border-color:var(--kenshin-orange);background:rgba(237,93,43,.08);color:var(--soft-white)}
-.nc-likert-labels{display:flex;justify-content:space-between;font-size:.68rem;color:var(--text-muted);margin-top:4px;padding:0 4px}
-
-/* Buttons */
-.nc-actions{display:flex;gap:10px;margin-top:24px}
-.nc-btn{flex:1;padding:13px 20px;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
-.nc-btn-primary{background:var(--kenshin-orange);color:#fff}
-.nc-btn-primary:hover{background:var(--kenshin-orange-hover)}
-.nc-btn-secondary{background:var(--surface-alt);color:var(--neutral-gray);border:1px solid var(--border)}
-.nc-btn-secondary:hover{background:var(--border);color:var(--soft-white)}
-.nc-btn:disabled{opacity:.5;cursor:not-allowed}
-.nc-btn-lg{padding:15px 24px;font-size:1rem}
-.nc-btn-ghost{display:inline-flex;align-items:center;gap:5px;padding:9px 20px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--neutral-gray);font-size:.85rem;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit}
-.nc-btn-ghost:hover{border-color:var(--soft-white);color:var(--soft-white)}
-
-/* Email section */
-.nc-email-error{color:var(--red);font-size:.78rem;margin-top:6px;display:none}
-
-/* Results */
-.nc-result-section{margin-bottom:28px}
-.nc-result-section h3{font-size:1rem;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border);color:var(--soft-white);display:flex;align-items:center;gap:8px}
-.nc-result-badge{font-size:.68rem;padding:2px 8px;border-radius:var(--radius-sm);font-weight:500}
-.nc-calorie-box{display:flex;justify-content:center;align-items:center;flex-direction:column;gap:4px;padding:22px;background:linear-gradient(135deg,rgba(237,93,43,.08),rgba(20,93,221,.06));border-radius:var(--radius);margin-bottom:24px;border:1px solid rgba(237,93,43,.15)}
-.nc-calorie-num{font-family:'Montserrat',sans-serif;font-size:2.4rem;font-weight:800;color:var(--kenshin-orange);letter-spacing:-.02em}
-.nc-calorie-unit{color:var(--neutral-gray);font-size:.85rem}
-.nc-nutrient{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(74,74,74,.5)}
-.nc-nutrient:last-child{border-bottom:none}
-.nc-nutrient-name{width:90px;font-size:.83rem;font-weight:500;flex-shrink:0;color:var(--soft-white)}
-.nc-nutrient-bar-wrap{flex:1;height:7px;background:var(--surface-alt);border-radius:4px;overflow:hidden}
-.nc-nutrient-bar{height:100%;border-radius:4px;transition:width .8s ease}
-.nc-nutrient-val{width:100px;text-align:right;font-size:.82rem;font-weight:600;flex-shrink:0;color:var(--soft-white)}
-.nc-nutrient-ref{font-size:.72rem;color:var(--text-muted);margin-top:8px}
-
-/* Radar */
-.nc-radar-wrap{display:flex;justify-content:center;margin-bottom:20px}
-.nc-radar-canvas{max-width:280px;max-height:280px}
-
-/* Status */
-.nc-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
-.nc-status-item{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--surface-alt);border-radius:8px}
-.nc-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.nc-status-dot.green{background:var(--green)}.nc-status-dot.yellow{background:var(--yellow)}.nc-status-dot.red{background:var(--red)}
-.nc-status-label{font-size:.8rem;color:var(--soft-white)}
-.nc-status-val{margin-left:auto;font-size:.75rem;font-weight:600;color:var(--neutral-gray)}
-
-/* Product cards */
-.nc-product{display:flex;gap:14px;padding:14px;background:var(--surface-alt);border-radius:10px;margin-bottom:8px;align-items:flex-start;transition:all .2s;border:1px solid transparent}
-.nc-product:hover{box-shadow:0 4px 16px rgba(0,0,0,.3);border-color:var(--border)}
-.nc-product.kenshin-product{border:1px solid rgba(237,93,43,.2);background:linear-gradient(135deg,rgba(237,93,43,.04),transparent)}
-.nc-product-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
-.nc-product-info{flex:1;min-width:0}
-.nc-product-name{font-weight:600;font-size:.9rem;margin-bottom:2px;color:var(--soft-white)}
-.nc-product-name .kenshin-badge{font-size:.65rem;color:var(--kenshin-orange);font-weight:500;margin-left:4px}
-.nc-product-dose{font-size:.78rem;color:var(--neutral-gray)}
-.nc-product-reason{font-size:.75rem;color:var(--text-muted);margin-top:2px;line-height:1.5}
-.nc-product-ref{font-size:.68rem;color:var(--kenshin-blue-light);margin-top:3px;font-style:italic}
-.nc-product-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
-.nc-product-tag{padding:3px 9px;border-radius:20px;font-size:.7rem;font-weight:600;white-space:nowrap}
-.nc-tag-essential{background:rgba(237,93,43,.15);color:var(--kenshin-orange)}
-.nc-tag-recommended{background:var(--kenshin-blue-glow);color:var(--kenshin-blue-light)}
-.nc-tag-optional{background:rgba(160,160,160,.12);color:var(--neutral-gray)}
-.nc-product-cta{display:inline-flex;align-items:center;gap:3px;padding:4px 10px;border-radius:6px;font-size:.72rem;font-weight:600;text-decoration:none;transition:all .2s;white-space:nowrap}
-.nc-product-cta.kenshin{background:var(--kenshin-orange);color:#fff}
-.nc-product-cta.kenshin:hover{background:var(--kenshin-orange-hover)}
-
-/* A.R.G. */
-.nc-arg-section{margin-top:24px;padding:18px;border-radius:var(--radius);background:linear-gradient(135deg,rgba(20,93,221,.05),rgba(237,93,43,.03));border:1px solid rgba(20,93,221,.12)}
-.nc-arg-title{font-size:.9rem;font-weight:600;color:var(--kenshin-blue-light);margin-bottom:6px;display:flex;align-items:center;gap:8px}
-.nc-arg-title .font-en{font-size:.68rem;padding:2px 8px;background:rgba(20,93,221,.1);border-radius:var(--radius-sm)}
-.nc-arg-desc{font-size:.8rem;color:var(--neutral-gray);line-height:1.7;margin-bottom:12px}
-.nc-arg-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.nc-arg-step{text-align:center;padding:10px 6px;background:rgba(47,47,47,.5);border-radius:8px}
-.nc-arg-step-icon{font-size:1.2rem;margin-bottom:3px}
-.nc-arg-step-label{font-size:.73rem;font-weight:600;color:var(--soft-white);margin-bottom:1px}
-.nc-arg-step-product{font-size:.68rem;color:var(--kenshin-orange)}
-
-/* Misc */
-.nc-disclaimer{margin-top:20px;padding:12px 14px;background:rgba(160,160,160,.06);border:1px solid var(--border);border-radius:8px;font-size:.73rem;color:var(--text-muted);line-height:1.6}
-.nc-references{margin-top:12px;padding:12px 14px;background:rgba(20,93,221,.04);border:1px solid rgba(20,93,221,.1);border-radius:8px;font-size:.7rem;color:var(--text-muted);line-height:1.7}
-.nc-references strong{color:var(--kenshin-blue-light);font-weight:600}
-.nc-cta-banner{margin-top:24px;padding:20px;border-radius:var(--radius);text-align:center;background:linear-gradient(135deg,rgba(237,93,43,.1),rgba(237,93,43,.04));border:1px solid rgba(237,93,43,.2)}
-.nc-cta-banner h4{font-size:.95rem;font-weight:600;color:var(--soft-white);margin-bottom:4px}
-.nc-cta-banner p{font-size:.8rem;color:var(--neutral-gray);margin-bottom:14px}
-.nc-cta-banner .nc-btn{max-width:280px;margin:0 auto;display:block;flex:none}
-.nc-bottom-actions{display:flex;justify-content:center;gap:12px;margin-top:20px}
-.nc-footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px solid var(--border)}
-.nc-footer-brand{font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:700;color:var(--neutral-gray);letter-spacing:.1em;text-transform:uppercase}
-.nc-footer-sub{font-size:.7rem;color:var(--text-muted);margin-top:3px}
-
-/* Privacy */
-.nc-privacy{margin-top:16px;margin-bottom:4px}
-.nc-privacy-check{display:flex;align-items:flex-start;gap:10px;cursor:pointer;position:relative;padding-left:0}
-.nc-privacy-check input[type="checkbox"]{position:absolute;opacity:0;width:0;height:0}
-.nc-checkmark{width:20px;height:20px;min-width:20px;border:2px solid var(--border);border-radius:4px;background:var(--surface-alt);display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:1px}
-.nc-privacy-check input:checked~.nc-checkmark{background:var(--kenshin-orange);border-color:var(--kenshin-orange)}
-.nc-privacy-check input:checked~.nc-checkmark::after{content:'✓';color:#fff;font-size:.75rem;font-weight:700}
-.nc-privacy-text{font-size:.82rem;color:var(--neutral-gray);line-height:1.5}
-.nc-privacy-text a{color:var(--kenshin-blue-light);text-decoration:underline;font-weight:500}
-.nc-privacy-text a:hover{color:var(--kenshin-orange)}
-.nc-privacy-content{margin-top:10px;max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:rgba(47,47,47,.5)}
-.nc-privacy-body{padding:14px 16px;font-size:.73rem;color:var(--text-muted);line-height:1.7}
-.nc-privacy-body strong{color:var(--soft-white);font-size:.78rem}
-.nc-privacy-body b{color:var(--neutral-gray)}
-.nc-privacy-content::-webkit-scrollbar{width:4px}
-.nc-privacy-content::-webkit-scrollbar-track{background:transparent}
-.nc-privacy-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-
-/* Send report option */
-.nc-send-report{margin-top:20px;padding:16px;background:var(--surface-alt);border-radius:var(--radius);border:1px solid var(--border)}
-.nc-send-report h4{font-size:.88rem;font-weight:600;color:var(--soft-white);margin-bottom:8px}
-.nc-send-report .nc-row{margin-bottom:8px}
-.nc-send-report .nc-btn{flex:none;width:100%}
-.nc-send-success{color:var(--green);font-size:.8rem;margin-top:8px;display:none}
-
-/* Responsive — tablet */
-@media(max-width:768px){
-  .nc-wrap{padding:24px 14px 40px}
-  .nc-card{padding:24px 18px}
-  .nc-product-right{flex-direction:row;align-items:center;gap:8px}
+.brand-icon{
+  width:44px;height:44px;
+  background:var(--kenshin-orange);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  box-shadow:0 2px 12px rgba(237,93,43,.3);
 }
-/* Responsive — mobile */
-@media(max-width:480px){
-  html{font-size:15px;-webkit-text-size-adjust:100%}
-  .nc-wrap{padding:16px 10px 36px}
-  .nc-card{padding:18px 14px}
-  .nc-header h1{font-size:1.35rem}
-  .nc-header .nc-subtitle{font-size:.84rem}
-  .nc-header .nc-meta{gap:6px}
-  .nc-meta-tag{font-size:.7rem;padding:3px 8px}
-  .nc-step-labels span{font-size:.6rem}
-  .nc-step-title{font-size:1.05rem}
-  .nc-step-desc{font-size:.82rem}
-  .nc-field>label{font-size:.82rem}
-  .nc-field input[type="number"],.nc-field input[type="email"],.nc-field input[type="text"],.nc-field input[type="tel"],.nc-field select{
-    font-size:16px;padding:12px 14px
-  }
-  .nc-toggle-group,.nc-toggle-group.cols-3{grid-template-columns:1fr 1fr}
-  .nc-toggle-group label.nc-toggle{padding:10px 6px;font-size:.8rem;min-height:44px}
-  .nc-toggle .nc-icon{font-size:1.2rem}
-  .nc-row{flex-direction:column;gap:0}
-  .nc-btn{padding:14px 20px;font-size:.95rem;min-height:48px}
-  .nc-btn-lg{padding:16px 24px;font-size:1rem}
-  .nc-calorie-num{font-size:2rem}
-  .nc-arg-steps{grid-template-columns:1fr}
-  .nc-status-grid{grid-template-columns:1fr}
-  .nc-product{flex-wrap:wrap}
-  .nc-product-right{flex-direction:row;align-items:center;width:100%;margin-top:6px}
-  .nc-product-icon{width:40px;height:40px;font-size:1.2rem}
-  .nc-product-name{font-size:.85rem}
-  .nc-product-dose{font-size:.76rem}
-  .nc-product-reason{font-size:.73rem}
-  .nc-likert{gap:3px}
-  .nc-likert label{padding:10px 2px;font-size:.75rem;min-height:44px}
-  .nc-likert-labels span{font-size:.64rem}
-  .nc-radar-canvas{max-width:240px;max-height:240px}
-  .nc-privacy-body{font-size:.7rem}
-  .nc-disclaimer{font-size:.7rem}
-  .nc-references{font-size:.68rem}
-  .nc-hint{font-size:.7rem}
+.brand-name{
+  font-family:'Montserrat','Noto Sans TC',sans-serif;
+  font-size:22px;font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--kenshin-orange);
 }
-/* Ensure inputs don't zoom on iOS */
-@supports(-webkit-touch-callout:none){
-  .nc-field input,.nc-field select{font-size:16px!important}
+.header-title{
+  font-size:15px;
+  color:var(--neutral-gray);
+  font-weight:400;
+  letter-spacing:.08em;
 }
-/* Touch-friendly tap targets */
-@media(pointer:coarse){
-  .nc-toggle-group label.nc-toggle{min-height:48px}
-  .nc-likert label{min-height:48px}
-  .nc-btn{min-height:48px}
-  .nc-checkmark{width:22px;height:22px;min-width:22px}
+.header-divider{
+  width:60px;height:3px;
+  background:linear-gradient(90deg, var(--kenshin-orange), var(--kenshin-blue));
+  border-radius:2px;
+  margin:20px auto 0;
 }
-.nc-hidden{display:none!important}
-.nc-fade-in{animation:ncFadeIn .35s ease}
-@keyframes ncFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.nc-spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:ncSpin .6s linear infinite;margin-right:6px;vertical-align:middle}
-@keyframes ncSpin{to{transform:rotate(360deg)}}
+
+/* ===== Main Content ===== */
+.main{
+  flex:1;
+  max-width:820px;
+  width:100%;
+  margin:0 auto;
+  padding:0 20px 48px;
+}
+
+/* ===== Tool Grid ===== */
+.tool-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:20px;
+}
+.tool-card{
+  background:var(--layer-gray);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px 24px;
+  text-decoration:none;
+  color:var(--soft-white);
+  display:flex;
+  flex-direction:column;
+  transition:all .25s ease;
+  position:relative;
+  overflow:hidden;
+}
+.tool-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:var(--kenshin-orange);
+  opacity:0;
+  transition:opacity .25s ease;
+}
+.tool-card:hover{
+  border-color:var(--kenshin-orange);
+  transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(0,0,0,.3), 0 0 0 1px rgba(237,93,43,.15);
+}
+.tool-card:hover::before{
+  opacity:1;
+}
+.tool-card-header{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:14px;
+}
+.tool-icon{
+  width:48px;height:48px;
+  background:rgba(255,255,255,.06);
+  border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;
+  flex-shrink:0;
+}
+.tool-name{
+  font-size:17px;
+  font-weight:700;
+  line-height:1.3;
+}
+.tool-name-en{
+  font-family:'Montserrat','Noto Sans TC',sans-serif;
+  font-size:11px;
+  font-weight:600;
+  color:var(--neutral-gray);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  margin-top:2px;
+}
+.tool-desc{
+  font-size:13px;
+  color:var(--neutral-gray);
+  line-height:1.5;
+  flex:1;
+  margin-bottom:18px;
+}
+.tool-action{
+  font-family:'Montserrat','Noto Sans TC',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  color:var(--kenshin-orange);
+  letter-spacing:.03em;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  transition:gap .2s ease;
+}
+.tool-card:hover .tool-action{
+  gap:10px;
+}
+.tool-action-arrow{
+  font-size:14px;
+  transition:transform .2s ease;
+}
+.tool-card:hover .tool-action-arrow{
+  transform:translateX(3px);
+}
+
+/* ===== Category Label ===== */
+.category{
+  grid-column:1 / -1;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:12px;
+}
+.category-label{
+  font-size:12px;
+  font-weight:600;
+  color:var(--text-muted);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.category-line{
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+
+/* ===== Footer ===== */
+.footer{
+  text-align:center;
+  padding:24px 20px;
+  border-top:1px solid var(--border);
+}
+.footer-text{
+  font-size:12px;
+  color:var(--text-muted);
+}
+.footer-hint{
+  font-size:11px;
+  color:var(--text-muted);
+  margin-top:6px;
+  opacity:.6;
+}
+
+/* ===== RWD ===== */
+@media(max-width:600px){
+  .header{padding:36px 16px 28px}
+  .brand-name{font-size:18px}
+  .main{padding:0 16px 36px}
+  .tool-grid{grid-template-columns:1fr;gap:16px}
+  .tool-card{padding:22px 20px}
+  .tool-name{font-size:16px}
+}
 </style>
 </head>
 <body>
-<div class="nc-wrap" id="ncApp">
 
-  <!-- Header -->
-  <div class="nc-header">
-    <div class="nc-brand">
-      <img class="nc-brand-logo" src="logo-white.png" alt="堅心 Outrun Nutrition">
-    </div>
-    <h1>運動營養需求評估</h1>
-    <p class="nc-subtitle">回答幾個關於你訓練與生活狀態的問題，我們會根據運動科學文獻，為你生成個人化的營養建議報告</p>
-    <div class="nc-meta">
-      <span class="nc-meta-tag ntsu">NTSU 國立體育大學實證支持</span>
-      <span class="nc-meta-tag time">約 5 分鐘完成</span>
-    </div>
+<!-- Header -->
+<header class="header">
+  <div class="header-brand">
+    <div class="brand-icon">🥜</div>
+    <span class="brand-name font-en">Outrun Nutrition</span>
   </div>
+  <div class="header-title">堅心團隊工具包</div>
+  <div class="header-divider"></div>
+</header>
 
-  <!-- Progress -->
-  <div class="nc-progress-wrap">
-    <div class="nc-step-labels" id="ncStepLabels">
-      <span class="active">聯絡資料</span><span>基本資料</span><span>訓練負荷</span><span>身體狀態</span><span>營養與目標</span><span>個人報告</span>
-    </div>
-    <div class="nc-progress" id="ncProgress">
-      <div class="bar active"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-    </div>
-  </div>
+<!-- Main Content -->
+<main class="main">
+  <div class="tool-grid" id="toolGrid"></div>
+</main>
 
-  <!-- ====== STEP 1: 聯絡資料（移到最前面） ====== -->
-  <div class="nc-card nc-fade-in" id="step1">
-    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
-    <div class="nc-step-title">歡迎！先讓我們認識你</div>
-    <div class="nc-step-desc">留下聯絡資訊，評估完成後可選擇將完整報告寄到你的信箱。你的資料僅供堅心提供營養建議使用，不會分享給第三方。</div>
-    <div class="nc-field">
-      <label for="userName">你的名字</label>
-      <input type="text" id="userName" placeholder="例：小明">
-    </div>
-    <div class="nc-field">
-      <label for="userEmail">Email</label>
-      <input type="email" id="userEmail" placeholder="your@email.com">
-      <div class="nc-hint">選填。填寫後可在結果頁選擇將報告寄到信箱。</div>
-    </div>
-    <div class="nc-field">
-      <label for="userPhone">手機號碼</label>
-      <input type="tel" id="userPhone" placeholder="0912345678" inputmode="tel" pattern="[0-9]{10}" maxlength="10">
-      <div class="nc-hint">選填。用於建立你的個人運動營養檔案，方便日後追蹤與優化建議。</div>
-    </div>
-    <div class="nc-privacy">
-      <label class="nc-privacy-check">
-        <input type="checkbox" id="privacyAgree">
-        <span class="nc-checkmark"></span>
-        <span class="nc-privacy-text">我已閱讀並同意<a href="javascript:void(0)" id="privacyToggle">《隱私權條款》</a></span>
-      </label>
-      <div class="nc-privacy-content nc-hidden" id="privacyContent">
-        <div class="nc-privacy-body">
-          <strong>焠爾瑯股份有限公司（堅心 Outrun Nutrition）個人資料蒐集、處理及利用同意書</strong><br><br>
-          感謝你使用本運動營養需求評估工具。焠爾瑯股份有限公司（以下稱「本公司」，品牌名稱為「堅心 Outrun Nutrition」）依據中華民國《個人資料保護法》（以下稱「個資法」）及相關法規，向你說明本次資料蒐集之相關事項：<br><br>
-          <b>一、蒐集機關名稱</b><br>
-          焠爾瑯股份有限公司（品牌：堅心 Outrun Nutrition）。<br><br>
-          <b>二、蒐集目的</b><br>
-          本公司蒐集你的個人資料，係基於以下特定目的：<br>
-          (1) 行銷業務（代碼 040）：提供個人化運動營養評估報告及產品資訊。<br>
-          (2) 消費者保護（代碼 090）：建立個人運動營養檔案，以便持續追蹤與優化營養建議。<br>
-          (3) 調查、統計與研究分析（代碼 157）：進行去識別化之產品開發與市場研究。<br>
-          (4) 其他經營合於營業登記項目或組織章程所定業務之需要。<br><br>
-          <b>三、蒐集之個人資料類別</b><br>
-          依個資法施行細則第 12 條分類，本次蒐集之資料類別包含：<br>
-          ・辨識類（C001）：姓名、電子信箱、手機號碼。<br>
-          ・特徵類（C011）：性別、年齡、身高、體重。<br>
-          ・社會活動（C061）：運動類型、訓練頻率、訓練時長、訓練週期、目標賽事。<br>
-          ・健康與其他（C093）：睡眠品質、恢復狀態、身體狀況自評、腸胃狀態、營養補充品使用情形。<br>
-          ※ 電子信箱與手機號碼為選填項目，未提供不影響評估報告之產出。<br><br>
-          <b>四、個人資料利用之期間、地區、對象及方式</b><br>
-          (1) 期間：自蒐集之日起，至本公司停止營業或你請求刪除之日止。你得隨時請求本公司刪除個人資料。<br>
-          (2) 地區：中華民國境內。如有跨境傳輸之必要，本公司將依個資法相關規定辦理。<br>
-          (3) 對象：僅限本公司內部人員。本公司不會將你的個人資料出售、交換或出租予任何第三方。如因業務委託需要（如電子報發送系統），本公司將確保受託者善盡保密義務。<br>
-          (4) 方式：以自動化或非自動化方式進行資料之蒐集、處理與利用，包含但不限於：營養評估計算、個人化報告產出、電子郵件或簡訊發送產品資訊與活動通知、去識別化後之統計分析。<br><br>
-          <b>五、資料安全保護措施</b><br>
-          本公司採取合理之技術與組織安全措施保護你的個人資料，包含：資料傳輸加密、存取權限管控、定期安全檢視，以防止未經授權之存取、使用、竄改或揭露。<br><br>
-          <b>六、當事人權利</b><br>
-          依據個資法第 3 條，你得隨時向本公司行使以下權利：<br>
-          (1) 查詢或請求閱覽你的個人資料。<br>
-          (2) 請求製給複製本。<br>
-          (3) 請求補充或更正。<br>
-          (4) 請求停止蒐集、處理或利用。<br>
-          (5) 請求刪除。<br>
-          如需行使上述權利，請透過堅心官網或客服信箱聯繫本公司，本公司將於收到請求後 30 日內處理完畢。<br><br>
-          <b>七、不提供個人資料之影響</b><br>
-          你可自由選擇是否提供個人資料。若不提供姓名、電子信箱或手機號碼等選填欄位，不影響你使用本評估工具及獲得營養建議報告。惟若未提供聯絡資訊，本公司將無法為你建立個人檔案或寄送報告副本。<br><br>
-          <b>八、Cookie 與自動化資料蒐集</b><br>
-          本評估工具可能使用 Cookie 或類似技術，以優化你的使用體驗。這些資料不涉及個人身份識別，你可透過瀏覽器設定停用 Cookie。<br><br>
-          <b>九、條款修訂</b><br>
-          本公司保留隨時修訂本同意書之權利，修訂後將公告於堅心官網（outrunnutrition.com）。修訂後繼續使用本工具，即視為你同意修訂後之內容。<br><br>
-          <b>十、聯繫方式</b><br>
-          如有任何關於個人資料保護之問題，歡迎聯繫：<br>
-          焠爾瑯股份有限公司<br>
-          品牌：堅心 Outrun Nutrition<br>
-          官網：outrunnutrition.com
-        </div>
-      </div>
-    </div>
-    <div class="nc-actions">
-      <button class="nc-btn nc-btn-primary" onclick="goStep(2)" id="startBtn" disabled>開始評估 →</button>
-    </div>
-  </div>
-
-  <!-- ====== STEP 2: 基本資料 ====== -->
-  <div class="nc-card nc-hidden" id="step2">
-    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
-    <div class="nc-step-title">基本資料</div>
-    <div class="nc-step-desc">用於計算你的基礎代謝率（BMR）與每日能量需求（TDEE），採用國際認可的 Mifflin-St Jeor 公式。</div>
-    <div class="nc-field">
-      <label>生理性別</label>
-      <div class="nc-toggle-group">
-        <input type="radio" name="gender" id="genderM" value="male" checked><label class="nc-toggle" for="genderM"><span class="nc-icon">🙋‍♂️</span>男性</label>
-        <input type="radio" name="gender" id="genderF" value="female"><label class="nc-toggle" for="genderF"><span class="nc-icon">🙋‍♀️</span>女性</label>
-      </div>
-    </div>
-    <div class="nc-row">
-      <div class="nc-field"><label for="age">年齡（歲）</label><input type="number" id="age" min="15" max="80" placeholder="35"></div>
-      <div class="nc-field"><label for="weight">體重（公斤）</label><input type="number" id="weight" min="30" max="200" step="0.1" placeholder="72"></div>
-      <div class="nc-field"><label for="height">身高（公分）</label><input type="number" id="height" min="100" max="230" placeholder="175"></div>
-    </div>
-    <div class="nc-actions">
-      <button class="nc-btn nc-btn-secondary" onclick="goStep(1)">上一步</button>
-      <button class="nc-btn nc-btn-primary" onclick="goStep(3)">下一步</button>
-    </div>
-  </div>
-
-  <!-- ====== STEP 3: 訓練負荷（運動類型改複選 + 週期加說明 + 其他選項） ====== -->
-  <div class="nc-card nc-hidden" id="step3">
-    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
-    <div class="nc-step-title">訓練負荷</div>
-    <div class="nc-step-desc">了解你的訓練量與模式，是精準計算碳水化合物與蛋白質需求的關鍵（參考 ACSM 碳水需求分級指引）。</div>
-
-    <div class="nc-field">
-      <label>你從事哪些運動？（可複選）</label>
-      <div class="nc-toggle-group cols-3">
-        <input type="checkbox" id="sport_marathon" value="marathon"><label class="nc-toggle" for="sport_marathon"><span class="nc-icon">🏃‍♂️</span>路跑/馬拉松</label>
-        <input type="checkbox" id="sport_strength" value="strength"><label class="nc-toggle" for="sport_strength"><span class="nc-icon">🏋️</span>重量訓練</label>
-        <input type="checkbox" id="sport_ball" value="ball"><label class="nc-toggle" for="sport_ball"><span class="nc-icon">⚽</span>球類運動</label>
-        <input type="checkbox" id="sport_cycling" value="cycling"><label class="nc-toggle" for="sport_cycling"><span class="nc-icon">🚴</span>自行車</label>
-        <input type="checkbox" id="sport_triathlon" value="triathlon"><label class="nc-toggle" for="sport_triathlon"><span class="nc-icon">🏊‍♂️</span>鐵人三項</label>
-        <input type="checkbox" id="sport_crossfit" value="crossfit"><label class="nc-toggle" for="sport_crossfit"><span class="nc-icon">🔥</span>CrossFit/功能性</label>
-        <input type="checkbox" id="sport_hyrox" value="hyrox"><label class="nc-toggle" for="sport_hyrox"><span class="nc-icon">⚡</span>HYROX</label>
-        <input type="checkbox" id="sport_combat" value="combat"><label class="nc-toggle" for="sport_combat"><span class="nc-icon">🥊</span>格鬥/武術</label>
-        <input type="checkbox" id="sport_swim" value="swimming"><label class="nc-toggle" for="sport_swim"><span class="nc-icon">🏊</span>游泳</label>
-        <input type="checkbox" id="sport_trail" value="trail"><label class="nc-toggle" for="sport_trail"><span class="nc-icon">⛰️</span>越野/登山</label>
-        <input type="checkbox" id="sport_dance" value="dance"><label class="nc-toggle" for="sport_dance"><span class="nc-icon">💃</span>舞蹈/有氧</label>
-        <input type="checkbox" id="sport_other" value="other"><label class="nc-toggle" for="sport_other"><span class="nc-icon">✏️</span>其他</label>
-      </div>
-      <div class="nc-other-wrap" id="sportOtherWrap"><input type="text" class="nc-other-input" id="sportOtherText" placeholder="請輸入你的運動項目，例如：瑜珈、攀岩、划船..."></div>
-    </div>
-
-    <div class="nc-field">
-      <label>每週訓練天數</label>
-      <div class="nc-toggle-group">
-        <input type="radio" name="frequency" id="freq1" value="1-2"><label class="nc-toggle" for="freq1"><span class="nc-icon">🚶</span>1-2 天</label>
-        <input type="radio" name="frequency" id="freq2" value="3-4" checked><label class="nc-toggle" for="freq2"><span class="nc-icon">🏃</span>3-4 天</label>
-        <input type="radio" name="frequency" id="freq3" value="5-6"><label class="nc-toggle" for="freq3"><span class="nc-icon">💪</span>5-6 天</label>
-        <input type="radio" name="frequency" id="freq4" value="7+"><label class="nc-toggle" for="freq4"><span class="nc-icon">🔥</span>每天</label>
-      </div>
-    </div>
-
-    <div class="nc-field">
-      <label>每次訓練平均時長</label>
-      <div class="nc-toggle-group cols-3">
-        <input type="radio" name="duration" id="dur1" value="30-60"><label class="nc-toggle" for="dur1">30-60 分鐘</label>
-        <input type="radio" name="duration" id="dur2" value="60-90" checked><label class="nc-toggle" for="dur2">60-90 分鐘</label>
-        <input type="radio" name="duration" id="dur3" value="90+"><label class="nc-toggle" for="dur3">90 分鐘以上</label>
-      </div>
-    </div>
-
-    <div class="nc-field">
-      <label>目前的訓練週期階段</label>
-      <div class="nc-toggle-group">
-        <input type="radio" name="phase" id="phase1" value="base" checked><label class="nc-toggle" for="phase1"><span class="nc-icon">🌱</span>基礎打底期</label>
-        <input type="radio" name="phase" id="phase2" value="build"><label class="nc-toggle" for="phase2"><span class="nc-icon">📈</span>強化提升期</label>
-        <input type="radio" name="phase" id="phase3" value="peak"><label class="nc-toggle" for="phase3"><span class="nc-icon">🎯</span>目標衝刺期</label>
-        <input type="radio" name="phase" id="phase4" value="recovery"><label class="nc-toggle" for="phase4"><span class="nc-icon">🧘</span>恢復過渡期</label>
-        <input type="radio" name="phase" id="phase5" value="unsure"><label class="nc-toggle" for="phase5"><span class="nc-icon">🤔</span>不太確定</label>
-      </div>
-      <div class="nc-hint">🌱 基礎期＝穩定訓練、打底累積體能（離比賽或目標還很遠）｜📈 強化期＝提高訓練強度與專項能力（距目標 8-16 週）｜🎯 衝刺期＝針對比賽或目標做最後準備與減量調整（< 8 週）｜🧘 恢復期＝休息、降低訓練量的過渡階段｜🤔 不確定也沒關係，我們會根據其他資料幫你評估</div>
-    </div>
-
-    <div class="nc-actions">
-      <button class="nc-btn nc-btn-secondary" onclick="goStep(2)">上一步</button>
-      <button class="nc-btn nc-btn-primary" onclick="goStep(4)">下一步</button>
-    </div>
-  </div>
-
-  <!-- ====== STEP 4: 身體狀態（擴充版：恢復+睡眠+壓力+疼痛+心率） ====== -->
-  <div class="nc-card nc-hidden" id="step4">
-    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
-    <div class="nc-step-title">身體狀態與恢復評估</div>
-    <div class="nc-step-desc">這個區塊評估你的整體恢復能力，包含睡眠、肌肉恢復、精神狀態與身體訊號。研究顯示超過 60% 的規律運動者曾出現過度訓練的早期徵兆。</div>
-
-    <div class="nc-field">
-      <label>訓練後的整體恢復感受（過去兩週平均）</label>
-      <div class="nc-likert">
-        <input type="radio" name="recoveryFeel" id="rf1" value="1"><label for="rf1">1</label>
-        <input type="radio" name="recoveryFeel" id="rf2" value="2"><label for="rf2">2</label>
-        <input type="radio" name="recoveryFeel" id="rf3" value="3" checked><label for="rf3">3</label>
-        <input type="radio" name="recoveryFeel" id="rf4" value="4"><label for="rf4">4</label>
-        <input type="radio" name="recoveryFeel" id="rf5" value="5"><label for="rf5">5</label>
-      </div>
-      <div class="nc-likert-labels"><span>隔天全身痠痛，很難再訓練</span><span>幾乎完全恢復，充滿動力</span></div>
-    </div>
-
-    <div class="nc-field">
-      <label>整體睡眠品質（過去兩週平均）</label>
-      <div class="nc-likert">
-        <input type="radio" name="sleepQuality" id="sq1" value="1"><label for="sq1">1</label>
-        <input type="radio" name="sleepQuality" id="sq2" value="2"><label for="sq2">2</label>
-        <input type="radio" name="sleepQuality" id="sq3" value="3" checked><label for="sq3">3</label>
-        <input type="radio" name="sleepQuality" id="sq4" value="4"><label for="sq4">4</label>
-        <input type="radio" name="sleepQuality" id="sq5" value="5"><label for="sq5">5</label>
-      </div>
-      <div class="nc-likert-labels"><span>難以入睡 / 淺眠 / 醒來仍疲憊</span><span>入睡快、深度足、精神飽滿</span></div>
-    </div>
-
-    <div class="nc-field">
-      <label>日常精力與專注力（過去兩週平均）</label>
-      <div class="nc-likert">
-        <input type="radio" name="energyLevel" id="el1" value="1"><label for="el1">1</label>
-        <input type="radio" name="energyLevel" id="el2" value="2"><label for="el2">2</label>
-        <input type="radio" name="energyLevel" id="el3" value="3" checked><label for="el3">3</label>
-        <input type="radio" name="energyLevel" id="el4" value="4"><label for="el4">4</label>
-        <input type="radio" name="energyLevel" id="el5" value="5"><label for="el5">5</label>
-      </div>
-      <div class="nc-likert-labels"><span>整天昏沉、注意力渙散</span><span>精力充沛、工作/生活狀態很好</span></div>
-    </div>
-
-    <div class="nc-field">
-      <label>你目前有以下狀況嗎？（可複選）</label>
-      <div class="nc-toggle-group">
-        <input type="checkbox" id="issue1" value="slow_recovery"><label class="nc-toggle" for="issue1"><span class="nc-icon">😩</span>肌肉痠痛超過 48 小時</label>
-        <input type="checkbox" id="issue2" value="post_training_insomnia"><label class="nc-toggle" for="issue2"><span class="nc-icon">🌙</span>高強度訓練後反而睡不著</label>
-        <input type="checkbox" id="issue3" value="brain_fog"><label class="nc-toggle" for="issue3"><span class="nc-icon">🧠</span>訓練隔天工作腦霧</label>
-        <input type="checkbox" id="issue4" value="motivation_drop"><label class="nc-toggle" for="issue4"><span class="nc-icon">📉</span>近期對訓練失去動力</label>
-        <input type="checkbox" id="issue5" value="elevated_rhr"><label class="nc-toggle" for="issue5"><span class="nc-icon">❤️‍🔥</span>晨起靜息心率偏高</label>
-        <input type="checkbox" id="issue6" value="frequent_illness"><label class="nc-toggle" for="issue6"><span class="nc-icon">🤧</span>容易感冒或免疫力下降</label>
-        <input type="checkbox" id="issue7" value="joint_pain"><label class="nc-toggle" for="issue7"><span class="nc-icon">🦴</span>關節或肌腱不適</label>
-        <input type="checkbox" id="issue8" value="mood_swings"><label class="nc-toggle" for="issue8"><span class="nc-icon">😤</span>情緒波動或易怒</label>
-        <input type="checkbox" id="issue_other" value="other"><label class="nc-toggle" for="issue_other"><span class="nc-icon">✏️</span>其他</label>
-      </div>
-      <div class="nc-other-wrap" id="issueOtherWrap"><input type="text" class="nc-other-input" id="issueOtherText" placeholder="請描述你的狀況..."></div>
-      <div class="nc-hint">以上多項為過度訓練綜合症（OTS）的早期訊號。若同時勾選 3 項以上，建議諮詢專業運動醫學醫師。晨起靜息心率比個人基線高出 5bpm 以上可能代表恢復不足。</div>
-    </div>
-
-    <div class="nc-field">
-      <label>是否使用穿戴裝置監控恢復數據？</label>
-      <div class="nc-toggle-group cols-3">
-        <input type="radio" name="wearable" id="wear0" value="none" checked><label class="nc-toggle" for="wear0">沒有使用</label>
-        <input type="radio" name="wearable" id="wear1" value="garmin"><label class="nc-toggle" for="wear1">Garmin</label>
-        <input type="radio" name="wearable" id="wear2" value="coros"><label class="nc-toggle" for="wear2">COROS</label>
-        <input type="radio" name="wearable" id="wear3" value="apple"><label class="nc-toggle" for="wear3">Apple Watch</label>
-        <input type="radio" name="wearable" id="wear4" value="amazfit"><label class="nc-toggle" for="wear4">Amazfit</label>
-        <input type="radio" name="wearable" id="wear_other" value="other"><label class="nc-toggle" for="wear_other"><span class="nc-icon">✏️</span>其他</label>
-      </div>
-      <div class="nc-other-wrap" id="wearOtherWrap"><input type="text" class="nc-other-input" id="wearOtherText" placeholder="請輸入你使用的裝置品牌，例如：WHOOP、Polar、Suunto..."></div>
-    </div>
-
-    <div class="nc-actions">
-      <button class="nc-btn nc-btn-secondary" onclick="goStep(3)">上一步</button>
-      <button class="nc-btn nc-btn-primary" onclick="goStep(5)">下一步</button>
-    </div>
-  </div>
-
-  <!-- ====== STEP 5: 營養、體感與賽事目標（補充品擴充 + 其他選項） ====== -->
-  <div class="nc-card nc-hidden" id="step5">
-    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
-    <div class="nc-step-title">營養習慣與運動目標</div>
-    <div class="nc-step-desc">不同運動類型對腸胃的衝擊不同，高強度訓練中 30-50% 的運動者會遭遇腸胃不適。了解你的體感與營養現況，才能給出最合適的補給建議。</div>
-
-    <div class="nc-field">
-      <label>高強度或長時間訓練中的腸胃狀態</label>
-      <div class="nc-toggle-group cols-3">
-        <input type="radio" name="giStatus" id="gi0" value="good" checked><label class="nc-toggle" for="gi0"><span class="nc-icon">👍</span>幾乎沒問題</label>
-        <input type="radio" name="giStatus" id="gi1" value="mild"><label class="nc-toggle" for="gi1"><span class="nc-icon">😐</span>偶爾脹氣不適</label>
-        <input type="radio" name="giStatus" id="gi2" value="severe"><label class="nc-toggle" for="gi2"><span class="nc-icon">🫠</span>經常腹痛腹瀉</label>
-      </div>
-    </div>
-
-    <div class="nc-field">
-      <label>目前最主要的目標</label>
-      <div class="nc-toggle-group cols-3">
-        <input type="radio" name="goal" id="goal1" value="race_pr" checked><label class="nc-toggle" for="goal1"><span class="nc-icon">🏆</span>突破比賽成績</label>
-        <input type="radio" name="goal" id="goal2" value="endurance_up"><label class="nc-toggle" for="goal2"><span class="nc-icon">🏃</span>提升耐力體能</label>
-        <input type="radio" name="goal" id="goal3" value="muscle_gain"><label class="nc-toggle" for="goal3"><span class="nc-icon">💪</span>增肌/肌肥大</label>
-        <input type="radio" name="goal" id="goal4" value="faster_recovery"><label class="nc-toggle" for="goal4"><span class="nc-icon">🔄</span>加速訓練恢復</label>
-        <input type="radio" name="goal" id="goal5" value="body_comp"><label class="nc-toggle" for="goal5"><span class="nc-icon">⚖️</span>體態管理/減脂</label>
-        <input type="radio" name="goal" id="goal6" value="general_health"><label class="nc-toggle" for="goal6"><span class="nc-icon">🧘</span>整體健康維持</label>
-        <input type="radio" name="goal" id="goal_other" value="other"><label class="nc-toggle" for="goal_other"><span class="nc-icon">✏️</span>其他</label>
-      </div>
-      <div class="nc-other-wrap" id="goalOtherWrap"><input type="text" class="nc-other-input" id="goalOtherText" placeholder="請輸入你的目標..."></div>
-    </div>
-
-    <div class="nc-field">
-      <label>近期有規劃的目標比賽或挑戰嗎？</label>
-      <div class="nc-toggle-group cols-3">
-        <input type="radio" name="race" id="race0" value="none" checked><label class="nc-toggle" for="race0">目前沒有</label>
-        <input type="radio" name="race" id="race1" value="half"><label class="nc-toggle" for="race1">半馬/標鐵</label>
-        <input type="radio" name="race" id="race2" value="full"><label class="nc-toggle" for="race2">全馬/超鐵/超馬</label>
-        <input type="radio" name="race" id="race3" value="strength_comp"><label class="nc-toggle" for="race3">健力/舉重賽</label>
-        <input type="radio" name="race" id="race4" value="ball_league"><label class="nc-toggle" for="race4">球類聯賽/盃賽</label>
-        <input type="radio" name="race" id="race5" value="functional_comp"><label class="nc-toggle" for="race5">HYROX/CrossFit</label>
-        <input type="radio" name="race" id="race_other" value="other"><label class="nc-toggle" for="race_other"><span class="nc-icon">✏️</span>其他</label>
-      </div>
-      <div class="nc-other-wrap" id="raceOtherWrap"><input type="text" class="nc-other-input" id="raceOtherText" placeholder="例如：Spartan Race、格鬥賽、登山縱走、舞蹈比賽..."></div>
-    </div>
-
-    <div class="nc-field">
-      <label>目前有在使用哪些營養補充品？（可複選）</label>
-      <div class="nc-toggle-group cols-3">
-        <input type="checkbox" id="supp0" value="none"><label class="nc-toggle" for="supp0">都沒有</label>
-        <input type="checkbox" id="supp1" value="protein"><label class="nc-toggle" for="supp1">蛋白粉</label>
-        <input type="checkbox" id="supp2" value="bcaa"><label class="nc-toggle" for="supp2">BCAA/EAA</label>
-        <input type="checkbox" id="supp3" value="electrolyte"><label class="nc-toggle" for="supp3">電解質</label>
-        <input type="checkbox" id="supp4" value="probiotic"><label class="nc-toggle" for="supp4">益生菌</label>
-        <input type="checkbox" id="supp5" value="sleep_aid"><label class="nc-toggle" for="supp5">助眠產品</label>
-        <input type="checkbox" id="supp6" value="vitamin_d"><label class="nc-toggle" for="supp6">維生素 D</label>
-        <input type="checkbox" id="supp7" value="vitamin_b"><label class="nc-toggle" for="supp7">維生素 B 群</label>
-        <input type="checkbox" id="supp8" value="multivitamin"><label class="nc-toggle" for="supp8">綜合維他命</label>
-        <input type="checkbox" id="supp9" value="fish_oil"><label class="nc-toggle" for="supp9">魚油 Omega-3</label>
-        <input type="checkbox" id="supp10" value="iron"><label class="nc-toggle" for="supp10">鐵劑</label>
-        <input type="checkbox" id="supp11" value="magnesium"><label class="nc-toggle" for="supp11">鎂</label>
-        <input type="checkbox" id="supp12" value="calcium"><label class="nc-toggle" for="supp12">鈣</label>
-        <input type="checkbox" id="supp13" value="creatine"><label class="nc-toggle" for="supp13">肌酸</label>
-        <input type="checkbox" id="supp14" value="caffeine"><label class="nc-toggle" for="supp14">咖啡因錠</label>
-        <input type="checkbox" id="supp15" value="collagen"><label class="nc-toggle" for="supp15">膠原蛋白</label>
-        <input type="checkbox" id="supp16" value="energy_gel"><label class="nc-toggle" for="supp16">能量膠/果膠</label>
-        <input type="checkbox" id="supp_other" value="other"><label class="nc-toggle" for="supp_other"><span class="nc-icon">✏️</span>其他</label>
-      </div>
-      <div class="nc-other-wrap" id="suppOtherWrap"><input type="text" class="nc-other-input" id="suppOtherText" placeholder="請輸入你使用的補充品..."></div>
-    </div>
-
-    <div class="nc-actions">
-      <button class="nc-btn nc-btn-secondary" onclick="goStep(4)">上一步</button>
-      <button class="nc-btn nc-btn-primary nc-btn-lg" onclick="showResults()" id="calcBtn">查看我的評估報告 →</button>
-    </div>
-  </div>
-
-  <!-- ====== STEP 6: 個人化評估報告 ====== -->
-  <div class="nc-card nc-hidden" id="step6">
-    <img class="nc-card-logo" src="logo-white.png" alt="堅心">
-    <div class="nc-step-title" id="reportTitle">你的運動營養評估報告</div>
-    <div class="nc-step-desc" id="resultSummary"></div>
-
-    <div class="nc-result-section"><h3>狀態總覽</h3><div class="nc-status-grid" id="statusGrid"></div></div>
-    <div class="nc-result-section"><h3>六維評估 <span class="nc-result-badge" style="background:var(--kenshin-blue-glow);color:var(--kenshin-blue-light)">ASSESSMENT</span></h3><div class="nc-radar-wrap"><canvas class="nc-radar-canvas" id="radarChart" width="280" height="280"></canvas></div></div>
-    <div class="nc-calorie-box"><div class="nc-calorie-num" id="resultTDEE">0</div><div class="nc-calorie-unit">每日建議攝取熱量（kcal）</div></div>
-    <div class="nc-result-section"><h3>巨量營養素分配 <span class="nc-result-badge" style="background:var(--kenshin-orange-glow);color:var(--kenshin-orange)">MACROS</span></h3><div id="macroList"></div><div class="nc-nutrient-ref" id="macroRef"></div></div>
-    <div class="nc-result-section"><h3>個人化補給建議</h3><div id="productList"></div></div>
-
-    <div class="nc-arg-section">
-      <div class="nc-arg-title">堅心 A.R.G. 科學恢復系統 <span class="font-en">RECOVERY SYSTEM</span></div>
-      <div class="nc-arg-desc">訓練是為了變強，恢復才是變強的開始。堅心的產品線覆蓋完整的運動恢復循環，由國立體育大學產學合作研發。</div>
-      <div class="nc-arg-steps">
-        <div class="nc-arg-step"><div class="nc-arg-step-icon">⚡</div><div class="nc-arg-step-label">訓練前啟動</div><div class="nc-arg-step-product">食動力 運動益生菌</div></div>
-        <div class="nc-arg-step"><div class="nc-arg-step-icon">🔄</div><div class="nc-arg-step-label">訓練後修復</div><div class="nc-arg-step-product">能易復 恢復蛋白</div></div>
-        <div class="nc-arg-step"><div class="nc-arg-step-icon">🌙</div><div class="nc-arg-step-label">深度關機</div><div class="nc-arg-step-product">眠易復 運動恢復膠囊</div></div>
-      </div>
-    </div>
-
-    <!-- 可選寄送報告 -->
-    <div class="nc-send-report" id="sendReportSection">
-      <h4>將評估報告寄到你的信箱</h4>
-      <div class="nc-row">
-        <div class="nc-field" style="margin-bottom:0"><input type="email" id="sendEmail" placeholder="確認你的 Email"></div>
-      </div>
-      <button class="nc-btn nc-btn-primary" onclick="sendReport()" id="sendReportBtn" style="margin-top:8px">寄送報告副本到信箱</button>
-      <div class="nc-send-success" id="sendSuccess">報告已送出，請查收信箱 📬</div>
-    </div>
-
-    <div class="nc-cta-banner">
-      <h4>想更深入了解你的補給方案？</h4>
-      <p>加入堅心 LINE 官方帳號，取得一對一的運動營養諮詢</p>
-      <a class="nc-btn nc-btn-primary" href="https://www.outrunnutrition.com/" target="_blank" rel="noopener">前往堅心官網了解更多</a>
-    </div>
-
-    <div class="nc-disclaimer">本評估工具由焠爾瑯股份有限公司（品牌：堅心 Outrun Nutrition）提供，營養建議僅供參考，旨在輔助日常營養補給規劃。計算公式參考 ACSM/ISSN 國際指引，實際營養需求因個人體質、健康狀況及訓練強度而異。堅心產品為食品，非藥品，不具醫療效能。如有特殊疾病、用藥情形或懷孕哺乳，請先諮詢專業醫師或營養師。</div>
-    <div class="nc-references"><strong>參考文獻</strong><br>1. Thomas DT et al. Nutrition and Athletic Performance. J Acad Nutr Diet. 2016;116(3):501-528.<br>2. Kerksick CM et al. ISSN exercise &amp; sports nutrition review update. J Int Soc Sports Nutr. 2018;15(1):38.<br>3. Jager R et al. ISSN Position Stand: protein and exercise. J Int Soc Sports Nutr. 2017;14:20.<br>4. de Oliveira EP et al. GI complaints during exercise. Sports Med. 2014;44 Suppl 1:S79-85.<br>5. Rawson ES et al. ISSN Position Stand: Creatine supplementation and exercise. J Int Soc Sports Nutr. 2021;18:46.<br>6. Calder PC. Omega-3 fatty acids and inflammatory processes. Nutrients. 2010;2(3):355-374.<br>7. Peeling P et al. Evidence-Based Supplements for the Enhancement of Athletic Performance. Int J Sport Nutr Exerc Metab. 2018;28(2):178-187.<br>8. Samuels CH. Sleep, recovery, and performance. Phys Med Rehabil Clin. 2009;20(1):149-159.</div>
-    <div class="nc-bottom-actions"><button class="nc-btn-ghost" onclick="restart()">重新評估</button></div>
-  </div>
-
-  <div class="nc-footer">
-    <div style="display:flex;justify-content:center;margin-bottom:8px">
-      <img src="logo-white.png" alt="堅心 Outrun Nutrition" style="height:24px;width:auto;opacity:.5">
-    </div>
-    <div class="nc-footer-sub">堅心｜恢復即競爭力</div>
-  </div>
-</div>
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-text">堅心 Outrun Nutrition &copy; 2026</div>
+  <div class="footer-hint">新增工具請聯繫管理員，或於 TOOLS 陣列中擴充</div>
+</footer>
 
 <script>
-(function(){
-"use strict";
-var WEBHOOK_URL="";
-var ALL_SUPP_IDS=["supp0","supp1","supp2","supp3","supp4","supp5","supp6","supp7","supp8","supp9","supp10","supp11","supp12","supp13","supp14","supp15","supp16","supp_other"];
-var ALL_SPORT_IDS=["sport_marathon","sport_strength","sport_ball","sport_cycling","sport_triathlon","sport_crossfit","sport_hyrox","sport_combat","sport_swim","sport_trail","sport_dance","sport_other"];
-var ALL_ISSUE_IDS=["issue1","issue2","issue3","issue4","issue5","issue6","issue7","issue8","issue_other"];
+// ==================== 工具定義 ====================
+// 未來新增工具只需在此陣列加一行即可
+const TOOLS = [
+  // ── 營運工具 ──
+  { category: '營運工具 OPERATIONS' },
+  {
+    name: '報價/採購系統',
+    nameEn: 'PO System',
+    icon: '📄',
+    url: '/outrun-first-project/po/',
+    desc: '報價單、採購單管理與 PDF 匯出，支援產品目錄快速選取與雲端同步。'
+  },
+  {
+    name: '記帳系統',
+    nameEn: 'Expense Tracker',
+    icon: '💰',
+    url: '/outrun-first-project/expense/',
+    desc: '日常費用記帳、收支分類，自動產生月報表並同步至 Google Sheets。'
+  },
+  // ── 行銷工具 ──
+  { category: '行銷工具 MARKETING' },
+  {
+    name: '運動營養評估',
+    nameEn: 'Nutrition Calculator',
+    icon: '🏃',
+    url: '/outrun-first-project/nutrition-calculator.html',
+    desc: '5 分鐘完成個人化運動營養需求評估，根據 ACSM/ISSN 指南提供科學補給建議。'
+  },
+  {
+    name: '會員問卷',
+    nameEn: 'Member Survey',
+    icon: '📋',
+    url: '/outrun-first-project/member-survey.html',
+    desc: '會員滿意度調查與回饋收集，協助優化產品與服務體驗。'
+  },
+  // ── 未來擴充 ──
+  // { category: '數據分析 ANALYTICS' },
+  // { name: '銷售儀表板', nameEn: 'Sales Dashboard', icon: '📊', url: '/outrun-first-project/dashboard/', desc: '各通路銷售數據即時視覺化...' },
+];
 
-function getVal(n){var e=document.querySelector('input[name="'+n+'"]:checked');return e?e.value:null}
-function getNum(id){return parseFloat(document.getElementById(id).value)||0}
-function getChecked(ids){var o=[];ids.forEach(function(id){var e=document.getElementById(id);if(e&&e.checked)o.push(e.value)});return o}
+// ==================== 渲染 ====================
+function renderTools() {
+  const grid = document.getElementById('toolGrid');
+  grid.innerHTML = '';
 
-/* "Other" toggle logic */
-function setupOtherToggle(checkboxId,wrapId){
-  var cb=document.getElementById(checkboxId);
-  if(!cb)return;
-  cb.addEventListener("change",function(){document.getElementById(wrapId).classList.toggle("show",this.checked)});
-}
-setupOtherToggle("sport_other","sportOtherWrap");
-setupOtherToggle("issue_other","issueOtherWrap");
-setupOtherToggle("supp_other","suppOtherWrap");
-/* For radios with "other" value */
-document.querySelectorAll('input[name="wearable"]').forEach(function(r){r.addEventListener("change",function(){document.getElementById("wearOtherWrap").classList.toggle("show",this.value==="other")})});
-document.querySelectorAll('input[name="goal"]').forEach(function(r){r.addEventListener("change",function(){document.getElementById("goalOtherWrap").classList.toggle("show",this.value==="other")})});
-document.querySelectorAll('input[name="race"]').forEach(function(r){r.addEventListener("change",function(){document.getElementById("raceOtherWrap").classList.toggle("show",this.value==="other")})});
-
-/* Privacy toggle & agree logic */
-document.getElementById("privacyToggle").addEventListener("click",function(e){e.preventDefault();document.getElementById("privacyContent").classList.toggle("nc-hidden")});
-document.getElementById("privacyAgree").addEventListener("change",function(){document.getElementById("startBtn").disabled=!this.checked});
-
-/* Supplement mutual exclusion */
-document.getElementById("supp0").addEventListener("change",function(){if(this.checked)ALL_SUPP_IDS.forEach(function(id){if(id!=="supp0"){var e=document.getElementById(id);if(e)e.checked=false}})});
-ALL_SUPP_IDS.forEach(function(id){if(id!=="supp0"){var e=document.getElementById(id);if(e)e.addEventListener("change",function(){if(this.checked)document.getElementById("supp0").checked=false})}});
-
-var currentStep=1;
-window.goStep=function(n){
-  if(n===3&&currentStep===2){if(!getNum("age")||!getNum("weight")||!getNum("height")){alert("請填寫完整的基本資料");return}}
-  document.getElementById("step"+currentStep).classList.add("nc-hidden");
-  document.getElementById("step"+n).classList.remove("nc-hidden");
-  document.getElementById("step"+n).classList.add("nc-fade-in");
-  currentStep=n;updateProgress();
-  document.getElementById("step"+n).scrollIntoView({behavior:"smooth",block:"start"});
-};
-function updateProgress(){
-  document.querySelectorAll("#ncProgress .bar").forEach(function(b,i){b.className="bar";if(i<currentStep-1)b.classList.add("done");else if(i===currentStep-1)b.classList.add("active")});
-  document.querySelectorAll("#ncStepLabels span").forEach(function(l,i){l.className="";if(i<currentStep-1)l.classList.add("done");else if(i===currentStep-1)l.classList.add("active")});
-}
-
-/* Show results directly (no email gate) */
-window.showResults=function(){
-  var btn=document.getElementById("calcBtn");
-  btn.innerHTML='<span class="nc-spinner"></span>分析中...';btn.disabled=true;
-  calculate();sendToSheet();
-  setTimeout(function(){btn.innerHTML='查看我的評估報告 →';btn.disabled=false;goStep(6)},1000);
-};
-
-/* Send report to email (optional, on results page) */
-window.sendReport=function(){
-  var em=document.getElementById("sendEmail").value.trim();
-  if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){alert("請輸入有效的 Email");return}
-  document.getElementById("sendSuccess").style.display="block";
-  /* In real implementation, trigger email sending here */
-};
-
-function sendToSheet(){
-  if(!WEBHOOK_URL)return;
-  var sports=getChecked(ALL_SPORT_IDS);
-  var otherSport=document.getElementById("sportOtherText").value.trim();
-  if(otherSport)sports.push("other:"+otherSport);
-  var issues=getChecked(ALL_ISSUE_IDS);
-  var otherIssue=document.getElementById("issueOtherText").value.trim();
-  if(otherIssue)issues.push("other:"+otherIssue);
-  var supps=getChecked(ALL_SUPP_IDS);
-  var otherSupp=document.getElementById("suppOtherText").value.trim();
-  if(otherSupp)supps.push("other:"+otherSupp);
-  var wearVal=getVal("wearable");
-  if(wearVal==="other")wearVal="other:"+document.getElementById("wearOtherText").value.trim();
-  var goalVal=getVal("goal");
-  if(goalVal==="other")goalVal="other:"+document.getElementById("goalOtherText").value.trim();
-  var raceVal=getVal("race");
-  if(raceVal==="other")raceVal="other:"+document.getElementById("raceOtherText").value.trim();
-
-  var d={timestamp:new Date().toISOString(),name:document.getElementById("userName").value.trim(),email:document.getElementById("userEmail").value.trim(),phone:document.getElementById("userPhone").value.trim(),gender:getVal("gender"),age:getNum("age"),weight:getNum("weight"),height:getNum("height"),sports:sports.join(","),frequency:getVal("frequency"),duration:getVal("duration"),phase:getVal("phase"),recoveryFeel:getVal("recoveryFeel"),sleepQuality:getVal("sleepQuality"),energyLevel:getVal("energyLevel"),issues:issues.join(","),wearable:wearVal,giStatus:getVal("giStatus"),goal:goalVal,race:raceVal,supplements:supps.join(",")};
-  try{var img=new Image();img.src=WEBHOOK_URL+"?"+Object.keys(d).map(function(k){return encodeURIComponent(k)+"="+encodeURIComponent(d[k])}).join("&")}catch(e){}
+  TOOLS.forEach(item => {
+    if (item.category) {
+      // Category divider
+      const div = document.createElement('div');
+      div.className = 'category';
+      div.innerHTML = `<span class="category-label">${item.category}</span><div class="category-line"></div>`;
+      grid.appendChild(div);
+    } else {
+      // Tool card
+      const card = document.createElement('a');
+      card.className = 'tool-card';
+      card.href = item.url;
+      card.innerHTML = `
+        <div class="tool-card-header">
+          <div class="tool-icon">${item.icon}</div>
+          <div>
+            <div class="tool-name">${item.name}</div>
+            <div class="tool-name-en font-en">${item.nameEn}</div>
+          </div>
+        </div>
+        <div class="tool-desc">${item.desc}</div>
+        <div class="tool-action">
+          開啟工具 <span class="tool-action-arrow">→</span>
+        </div>
+      `;
+      grid.appendChild(card);
+    }
+  });
 }
 
-function calculate(){
-  var gender=getVal("gender"),age=getNum("age"),weight=getNum("weight"),height=getNum("height");
-  var sports=getChecked(ALL_SPORT_IDS);
-  var freq=getVal("frequency"),duration=getVal("duration"),phase=getVal("phase");
-  var rf=parseInt(getVal("recoveryFeel"))||3,sq=parseInt(getVal("sleepQuality"))||3,el=parseInt(getVal("energyLevel"))||3;
-  var issues=getChecked(ALL_ISSUE_IDS);
-  var gi=getVal("giStatus"),goal=getVal("goal"),race=getVal("race");
-  var supps=getChecked(ALL_SUPP_IDS);
-
-  var isEndurance=["marathon","triathlon","cycling","trail","swimming"].some(function(s){return sports.indexOf(s)!==-1});
-  var isStrength=sports.indexOf("strength")!==-1;
-  var isBallSport=sports.indexOf("ball")!==-1;
-  var isCombat=sports.indexOf("combat")!==-1;
-  var isMixed=["crossfit","hyrox"].some(function(s){return sports.indexOf(s)!==-1});
-  var isDance=sports.indexOf("dance")!==-1;
-  var intense=freq==="5-6"||freq==="7+";
-  var longSession=duration==="90+";
-  var hasRace=race!=="none";
-  var isFullRace=race==="full";
-  var isStrengthComp=race==="strength_comp";
-  var isFunctionalComp=race==="functional_comp";
-
-  /* BMR */
-  var bmr=gender==="male"?10*weight+6.25*height-5*age+5:10*weight+6.25*height-5*age-161;
-  var actMul={"1-2":1.4,"3-4":1.6,"5-6":1.8,"7+":1.95};
-  var tdee=Math.round(bmr*(actMul[freq]||1.6));
-  if(isEndurance)tdee=Math.round(tdee*1.07);
-  if(sports.indexOf("triathlon")!==-1)tdee=Math.round(tdee*1.03);
-  if(isStrength&&intense)tdee=Math.round(tdee*1.05);
-  if(isMixed)tdee=Math.round(tdee*1.06);
-  if(isBallSport)tdee=Math.round(tdee*1.04);
-  if(isCombat)tdee=Math.round(tdee*1.05);
-  if(longSession)tdee=Math.round(tdee*1.08);
-  var phaseAdj={"base":1.0,"build":1.05,"peak":1.1,"recovery":0.92,"unsure":1.0};
-  tdee=Math.round(tdee*(phaseAdj[phase]||1.0));
-  var goalAdj={"race_pr":1.05,"endurance_up":1.05,"muscle_gain":1.12,"faster_recovery":1.0,"body_comp":0.82,"general_health":1.0,"other":1.0};
-  tdee=Math.round(tdee*(goalAdj[goal]||1.0));
-  if(isFullRace&&phase==="peak")tdee=Math.round(tdee*1.05);
-  if(isStrengthComp&&phase==="peak")tdee=Math.round(tdee*1.03);
-
-  /* Macros */
-  var carbGPerKg,proteinGPerKg;
-  if(isEndurance){
-    if(freq==="7+"&&longSession)carbGPerKg=8;else if(intense||longSession)carbGPerKg=7;else if(freq==="3-4")carbGPerKg=6;else carbGPerKg=5;
-  }else if(isStrength&&!isEndurance){
-    carbGPerKg=intense?4.5:3.5;
-  }else if(isMixed||isCombat){
-    carbGPerKg=intense?6:5;
-  }else if(isBallSport){
-    carbGPerKg=intense?5.5:4.5;
-  }else if(isDance){
-    carbGPerKg=intense?5:4;
-  }else{carbGPerKg=intense?5:4}
-  if(phase==="peak")carbGPerKg=Math.min(carbGPerKg+1,10);
-  if(phase==="recovery")carbGPerKg=Math.max(carbGPerKg-1,3);
-  if(goal==="body_comp")carbGPerKg=Math.max(carbGPerKg-1.5,3);
-  if(goal==="muscle_gain")carbGPerKg=Math.max(carbGPerKg,4.5);
-  if(goal==="body_comp")proteinGPerKg=2.2;
-  else if(goal==="muscle_gain")proteinGPerKg=2.0;
-  else if(goal==="faster_recovery")proteinGPerKg=1.8;
-  else if(isStrength)proteinGPerKg=1.8;
-  else if(isMixed||isCombat)proteinGPerKg=1.7;
-  else if(isBallSport)proteinGPerKg=1.6;
-  else if(isEndurance)proteinGPerKg=1.5;
-  else proteinGPerKg=1.6;
-  if(intense)proteinGPerKg+=0.2;
-  if(phase==="build"||phase==="peak")proteinGPerKg+=0.1;
-  if(goal==="muscle_gain"&&isStrength)proteinGPerKg=Math.max(proteinGPerKg,2.2);
-  var protein=Math.round(proteinGPerKg*weight),carb=Math.round(carbGPerKg*weight);
-  var fatCal=tdee-protein*4-carb*4;if(fatCal<0)fatCal=0;
-  var fat=Math.round(fatCal/9);
-
-  /* Scores */
-  var sc={};
-  var ls=40;if(freq==="3-4")ls=55;if(freq==="5-6")ls=75;if(freq==="7+")ls=90;if(longSession)ls=Math.min(100,ls+15);sc.trainingLoad=ls;
-  sc.recovery=rf*20;sc.sleep=sq*20;sc.energy=el*20;
-  var ns=50;if(supps.indexOf("protein")!==-1)ns+=8;if(supps.indexOf("electrolyte")!==-1)ns+=8;if(supps.indexOf("vitamin_d")!==-1)ns+=6;if(supps.indexOf("fish_oil")!==-1)ns+=6;if(supps.indexOf("magnesium")!==-1)ns+=5;if(supps.indexOf("iron")!==-1)ns+=5;if(supps.indexOf("none")!==-1)ns=25;sc.nutrition=Math.min(100,ns);
-  sc.gutHealth={"good":90,"mild":55,"severe":25}[gi]||60;
-
-  /* Render */
-  var un=document.getElementById("userName").value.trim();
-  if(un)document.getElementById("reportTitle").textContent=un+"，這是你的運動營養評估報告";
-  document.getElementById("resultTDEE").textContent=tdee.toLocaleString();
-  var sn=sports.map(function(s){return{"marathon":"路跑","triathlon":"三鐵","cycling":"單車","hyrox":"HYROX","strength":"重訓","ball":"球類","crossfit":"CrossFit","combat":"格鬥","trail":"越野","swimming":"游泳","dance":"舞蹈/有氧","other":"其他"}[s]||s}).join("、");
-  document.getElementById("resultSummary").textContent=(gender==="male"?"男性":"女性")+"・"+age+" 歲・"+weight+" kg・"+sn;
-  var em=document.getElementById("userEmail").value.trim();
-  if(em)document.getElementById("sendEmail").value=em;
-  else document.getElementById("sendReportSection").style.display="none";
-
-  renderStatusGrid(sc);drawRadar(sc);renderMacros(protein,carb,fat,weight,tdee,isEndurance);
-  renderProducts(buildRecs(gender,weight,goal,freq,sports,duration,phase,issues,race,gi,supps,sc,intense,longSession,isEndurance,isStrength,isMixed,isBallSport,isCombat,isDance,hasRace,isFullRace,isStrengthComp,isFunctionalComp,rf,sq,el));
-}
-
-function renderStatusGrid(s){
-  function d(v){return v>=70?"green":v>=40?"yellow":"red"}
-  function l(v){return v>=70?"良好":v>=40?"需留意":"需改善"}
-  var its=[{n:"訓練負荷",v:s.trainingLoad},{n:"恢復品質",v:s.recovery},{n:"睡眠品質",v:s.sleep},{n:"日常精力",v:s.energy},{n:"營養準備度",v:s.nutrition},{n:"腸道健康",v:s.gutHealth}];
-  var h="";its.forEach(function(i){h+='<div class="nc-status-item"><span class="nc-status-dot '+d(i.v)+'"></span><span class="nc-status-label">'+i.n+'</span><span class="nc-status-val">'+l(i.v)+'</span></div>'});
-  document.getElementById("statusGrid").innerHTML=h;
-}
-
-function drawRadar(s){
-  var c=document.getElementById("radarChart"),ctx=c.getContext("2d"),W=c.width,H=c.height,cx=W/2,cy=H/2,R=100;
-  ctx.clearRect(0,0,W,H);
-  var dims=["trainingLoad","recovery","sleep","energy","nutrition","gutHealth"],labels=["訓練負荷","恢復品質","睡眠品質","日常精力","營養準備","腸道健康"],n=dims.length;
-  [.25,.5,.75,1].forEach(function(p){ctx.beginPath();for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2,x=cx+Math.cos(a)*R*p,y=cy+Math.sin(a)*R*p;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.closePath();ctx.strokeStyle="rgba(160,160,160,.15)";ctx.lineWidth=1;ctx.stroke()});
-  for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);ctx.strokeStyle="rgba(160,160,160,.1)";ctx.stroke()}
-  ctx.beginPath();for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2,v=Math.min(100,s[dims[i]]||0)/100;var x=cx+Math.cos(a)*R*v,y=cy+Math.sin(a)*R*v;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.closePath();ctx.fillStyle="rgba(237,93,43,.15)";ctx.fill();ctx.strokeStyle="#ED5D2B";ctx.lineWidth=2;ctx.stroke();
-  for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2,v=Math.min(100,s[dims[i]]||0)/100;ctx.beginPath();ctx.arc(cx+Math.cos(a)*R*v,cy+Math.sin(a)*R*v,4,0,Math.PI*2);ctx.fillStyle="#ED5D2B";ctx.fill()}
-  ctx.font="500 11px 'Noto Sans TC',sans-serif";ctx.fillStyle="#A0A0A0";ctx.textAlign="center";
-  for(var i=0;i<n;i++){var a=Math.PI*2*i/n-Math.PI/2;ctx.fillText(labels[i],cx+Math.cos(a)*(R+20),cy+Math.sin(a)*(R+20)+4)}
-}
-
-function renderMacros(p,c,f,w,t,ie){
-  var ms=[{n:"蛋白質",v:p,u:"g",pk:(p/w).toFixed(1),cl:"#ED5D2B",mx:Math.round(2.5*w)},{n:"碳水化合物",v:c,u:"g",pk:(c/w).toFixed(1),cl:"#1A6BF0",mx:Math.round(10*w)},{n:"脂肪",v:f,u:"g",pk:(f/w).toFixed(1),cl:"#A0A0A0",mx:Math.round(t*.4/9)}];
-  var h="";ms.forEach(function(m){var pct=Math.min(100,Math.round(m.v/m.mx*100));h+='<div class="nc-nutrient"><span class="nc-nutrient-name">'+m.n+'</span><div class="nc-nutrient-bar-wrap"><div class="nc-nutrient-bar" style="width:'+pct+'%;background:'+m.cl+'"></div></div><span class="nc-nutrient-val">'+m.v+' '+m.u+'（'+m.pk+'g/kg）</span></div>'});
-  document.getElementById("macroList").innerHTML=h;
-  document.getElementById("macroRef").textContent=ie?"碳水需求參考 ACSM 耐力運動員指引（5-10 g/kg/day），蛋白質參考 ISSN 立場聲明（1.2-1.6 g/kg/day）。":"蛋白質需求參考 ISSN 立場聲明（1.6-2.2 g/kg/day for 肌力/爆發型運動），碳水依運動類型與訓練量調整。";
-}
-
-function buildRecs(gender,wt,goal,freq,sports,dur,phase,issues,race,gi,supps,sc,intense,longS,isEnd,isStr,isMix,isBall,isCmbt,isDnc,hasRace,fullRace,strComp,funcComp,rf,sq,el){
-  var its=[];
-  /* 眠易復 — 適用所有高強度運動類型 */
-  var sn=0;if(issues.indexOf("post_training_insomnia")!==-1)sn+=35;if(issues.indexOf("brain_fog")!==-1)sn+=15;if(issues.indexOf("slow_recovery")!==-1)sn+=10;if(issues.indexOf("mood_swings")!==-1)sn+=10;if(sc.sleep<=40)sn+=30;else if(sc.sleep<=60)sn+=15;if(intense)sn+=10;if(el<=2)sn+=10;if(isCmbt)sn+=5;if(isMix)sn+=5;
-  if(sn>=25)its.push({name:"眠易復 運動恢復膠囊",icon:"🌙",bg:"rgba(20,93,221,.12)",dose:"睡前 30 分鐘服用 2 粒",reason:"含檸檬馬鞭草萃取、OLPLUS 益菌萃取、GABA 與甘胺酸鎂，引導深度睡眠，輔助生理修復。針對高強度訓練後交感神經亢奮導致的入睡困難設計。",ref:"Samuels CH. Sleep, recovery and performance. Phys Med Rehabil Clin. 2009.",pri:sn>=45?"essential":"recommended",pl:sn>=45?"核心推薦":"推薦",sc:70+sn/3,k:true});
-  /* 能易復 — 適用所有需肌肉修復的運動 */
-  var rn=0;if(isEnd)rn+=20;if(isStr)rn+=20;if(isMix)rn+=15;if(isBall)rn+=12;if(isCmbt)rn+=15;if(longS)rn+=15;if(goal==="faster_recovery")rn+=25;if(goal==="muscle_gain")rn+=20;if(goal==="race_pr")rn+=10;if(issues.indexOf("slow_recovery")!==-1)rn+=20;if(hasRace)rn+=10;if(supps.indexOf("protein")===-1)rn+=10;
-  if(rn>=25)its.push({name:"能易復 恢復蛋白（黑糖仙草）",icon:"🥤",bg:"rgba(237,93,43,.1)",dose:fullRace?"賽後 30 分鐘內 1 份，長距離建議攜帶 500g 盒裝":"訓練後 30 分鐘內沖泡 1 份",reason:"專利 EAAlpha 配方提供 20g 蛋白質 + 24g 碳水的恢復黃金比例，全素可食。符合 ISSN 運動後 0-2 小時蛋白質攝取窗口建議，無論耐力或肌力訓練都適用。",ref:"Jager R et al. ISSN Position Stand: protein and exercise. 2017.",pri:rn>=45?"essential":"recommended",pl:rn>=45?"核心推薦":"推薦",sc:65+rn/3,k:true});
-  /* 食動力 — 適用所有高強度及長時間運動 */
-  var gn=0;if(gi==="severe")gn+=35;if(gi==="mild")gn+=15;if(isEnd)gn+=15;if(isMix)gn+=12;if(isCmbt)gn+=10;if(isBall)gn+=8;if(longS)gn+=10;if(hasRace)gn+=10;if(intense)gn+=8;if(supps.indexOf("probiotic")===-1)gn+=10;
-  if(gn>=25)its.push({name:"食動力 運動益生菌",icon:"⚡",bg:"rgba(237,93,43,.1)",dose:"訓練前 1 包，搭配溫水服用",reason:"TWK-10 專利益生菌 + GasAid 配方。高強度運動中 30-50% 的運動者遭遇腸胃不適，穩定腸道功能是運動表現的基礎。",ref:"de Oliveira EP et al. GI complaints during exercise. Sports Med. 2014.",pri:gn>=40?"essential":"recommended",pl:gn>=40?"核心推薦":"推薦",sc:60+gn/3,k:true});
-  /* OARC — 適用長距離賽事 或 高強度混合賽事 */
-  if((fullRace&&isEnd)||(funcComp&&isMix))its.push({name:"OARC 專業科學訓練補給組",icon:"🎯",bg:"rgba(20,93,221,.1)",dose:"依賽事類型客製組合",reason:"結合食動力與能易復的完整科學循環，針對高強度賽事的系統化補給方案。",ref:"",pri:"recommended",pl:"推薦",sc:75,k:true});
-
-  /* ===== 通用文獻佐證推薦 ===== */
-  if(supps.indexOf("magnesium")===-1&&(sc.sleep<=60||issues.indexOf("post_training_insomnia")!==-1))
-    its.push({name:"鎂（甘胺酸鎂/檸檬酸鎂）",icon:"💊",bg:"rgba(160,160,160,.08)",dose:"睡前 200-400mg 元素鎂",reason:"鎂參與超過 300 種酶反應，包含肌肉放鬆與神經傳導。研究顯示鎂補充可輔助改善睡眠品質與減少肌肉痙攣。耐力運動員因流汗流失鎂的風險更高。",ref:"Zhang Y et al. Association of magnesium intake with sleep. Nutrients. 2022;14(5):1116.",pri:"recommended",pl:"建議",sc:58,k:false});
-
-  if(supps.indexOf("iron")===-1&&(gender==="female"||(isEnd&&intense)))
-    its.push({name:"鐵劑",icon:"🩸",bg:"rgba(160,160,160,.08)",dose:"每日 15-30mg（建議搭配維生素 C 促進吸收）",reason:"女性運動者與高訓練量的耐力運動者是缺鐵性貧血的高風險族群。鐵是血紅素的核心組成，不足會導致運動表現與恢復力顯著下降。建議定期檢測血清鐵蛋白。",ref:"Peeling P et al. Athletic induced iron deficiency. Int J Sport Nutr Exerc Metab. 2008;18(5):501-514.",pri:"recommended",pl:"建議",sc:56,k:false});
-
-  if(supps.indexOf("fish_oil")===-1&&(issues.indexOf("slow_recovery")!==-1||issues.indexOf("joint_pain")!==-1||intense))
-    its.push({name:"高濃度魚油（Omega-3）",icon:"🐟",bg:"rgba(160,160,160,.08)",dose:"每日 2-3g EPA+DHA",reason:"EPA 與 DHA 具調節發炎反應的作用，有助於高強度訓練後的肌肉與關節恢復。多項統合分析支持其在運動恢復中的輔助角色。",ref:"Calder PC. Omega-3 fatty acids and inflammatory processes. Nutrients. 2010;2(3):355-374.",pri:issues.indexOf("joint_pain")!==-1?"recommended":"optional",pl:issues.indexOf("joint_pain")!==-1?"建議":"可選",sc:issues.indexOf("joint_pain")!==-1?55:45,k:false});
-
-  if((isEnd||longS||isBall||isCmbt||isMix)&&supps.indexOf("electrolyte")===-1)
-    its.push({name:"電解質補充",icon:"💦",bg:"rgba(160,160,160,.08)",dose:"訓練中每 30-45 分鐘，含鈉 300-500mg",reason:"中高強度運動流汗導致鈉、鉀流失，影響肌肉收縮與神經傳導。球類、格鬥及混合訓練的流汗量不亞於耐力運動，建議根據個人調整。",ref:"Sawka MN et al. ACSM Position Stand: Exercise and fluid replacement. Med Sci Sports Exerc. 2007.",pri:longS?"essential":"recommended",pl:longS?"必備":"建議",sc:longS?62:50,k:false});
-
-  if((isEnd&&longS&&hasRace)||(isMix&&hasRace))
-    its.push({name:"運動中碳水補給（能量膠/飲品）",icon:"🍯",bg:"rgba(160,160,160,.08)",dose:"每 45-60 分鐘補充 30-60g 碳水",reason:"超過 60-90 分鐘的高強度運動建議使用多重轉運體碳水（葡萄糖+果糖 2:1），可將攝取量提升至 60-90g/hr，需經腸道訓練適應。",ref:"Jeukendrup AE. Training the gut for athletes. Sports Med. 2017;47(Suppl 1):101-110.",pri:"recommended",pl:"建議",sc:58,k:false});
-
-  if(supps.indexOf("vitamin_d")===-1)
-    its.push({name:"維生素 D3",icon:"☀️",bg:"rgba(160,160,160,.08)",dose:"每日 2000-4000 IU",reason:"影響骨骼健康、肌肉功能與免疫力。台灣超過 60% 的成年人維生素 D 不足，規律運動者尤其需要關注。建議檢測血清 25(OH)D，目標維持 40-60 ng/mL。",ref:"Owens DJ et al. Vitamin D and the athlete. Sports Med. 2018;48:3-16.",pri:"optional",pl:"可選",sc:42,k:false});
-
-  if(supps.indexOf("vitamin_b")===-1&&(intense||goal==="body_comp"))
-    its.push({name:"維生素 B 群",icon:"🟡",bg:"rgba(160,160,160,.08)",dose:"每日 1 顆（活性型態尤佳）",reason:"B 群是能量代謝的必需輔酶，高訓練量或熱量限制期間需求增加。B1、B6、B12 對於碳水與蛋白質代謝特別重要。",ref:"Woolf K, Manore MM. B-vitamins and exercise. Int J Sport Nutr Exerc Metab. 2006;16(5):453-484.",pri:"optional",pl:"可選",sc:40,k:false});
-
-  if(supps.indexOf("creatine")===-1&&(isStr||isMix||isCmbt||isBall||goal==="muscle_gain"))
-    its.push({name:"肌酸（Creatine Monohydrate）",icon:"⚡",bg:"rgba(160,160,160,.08)",dose:"每日 3-5g，搭配水或果汁",reason:"ISSN 評定為 A 級證據（強烈推薦）。可提升高強度短時間的力量輸出與爆發力，對重訓、球類、格鬥及功能性訓練者皆有益處，長期使用安全性良好。",ref:"Rawson ES et al. ISSN Position Stand: Creatine supplementation. J Int Soc Sports Nutr. 2021;18:46.",pri:"recommended",pl:"建議",sc:55,k:false});
-
-  if(supps.indexOf("collagen")===-1&&issues.indexOf("joint_pain")!==-1)
-    its.push({name:"膠原蛋白胜肽",icon:"🦴",bg:"rgba(160,160,160,.08)",dose:"每日 10-15g，搭配維生素 C",reason:"研究顯示水解膠原蛋白搭配維生素 C 在運動前 30-60 分鐘補充，可促進肌腱與韌帶膠原蛋白合成。適合有關節不適或傷後恢復需求者。",ref:"Shaw G et al. Vitamin C-enriched gelatin supplementation. Am J Clin Nutr. 2017;105(1):136-143.",pri:"recommended",pl:"建議",sc:50,k:false});
-
-  if(issues.indexOf("frequent_illness")!==-1&&supps.indexOf("vitamin_d")===-1)
-    its.push({name:"維生素 C + 鋅",icon:"🍊",bg:"rgba(160,160,160,.08)",dose:"維生素 C 500-1000mg + 鋅 15-25mg/日",reason:"高強度訓練會暫時抑制免疫功能（open window 理論）。維生素 C 與鋅的補充有助於縮短上呼吸道感染的持續時間。",ref:"Hemila H. Vitamin C and infections. Nutrients. 2017;9(4):339.",pri:"recommended",pl:"建議",sc:48,k:false});
-
-  its.sort(function(a,b){return b.sc-a.sc});return its;
-}
-
-function renderProducts(ps){
-  var h="";ps.forEach(function(p){
-    var cta=p.k?'<a class="nc-product-cta kenshin" href="https://www.outrunnutrition.com/" target="_blank" rel="noopener">了解更多 →</a>':"";
-    var cls="nc-product"+(p.k?" kenshin-product":"");
-    var badge=p.k?' <span class="kenshin-badge">堅心出品</span>':"";
-    var refHtml=p.ref?'<div class="nc-product-ref">'+p.ref+'</div>':"";
-    h+='<div class="'+cls+'"><div class="nc-product-icon" style="background:'+p.bg+'">'+p.icon+'</div><div class="nc-product-info"><div class="nc-product-name">'+p.name+badge+'</div><div class="nc-product-dose">建議用量：'+p.dose+'</div><div class="nc-product-reason">'+p.reason+'</div>'+refHtml+'</div><div class="nc-product-right"><span class="nc-product-tag nc-tag-'+p.pri+'">'+p.pl+'</span>'+cta+'</div></div>';
-  });document.getElementById("productList").innerHTML=h;
-}
-
-window.restart=function(){
-  document.getElementById("step6").classList.add("nc-hidden");document.getElementById("step1").classList.remove("nc-hidden");
-  currentStep=1;updateProgress();
-  ["age","weight","height","userEmail","userName","userPhone","sendEmail"].forEach(function(id){var e=document.getElementById(id);if(e)e.value=""});
-  document.getElementById("sendSuccess").style.display="none";
-  document.getElementById("sendReportSection").style.display="block";
-  window.scrollTo({top:0,behavior:"smooth"});
-};
-})();
+renderTools();
 </script>
 </body>
 </html>
