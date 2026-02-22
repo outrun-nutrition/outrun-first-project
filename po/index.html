@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="堅心報價採購">
+<meta name="theme-color" content="#2F2F2F">
+<meta name="mobile-web-app-capable" content="yes">
+<title>堅心報價/採購 — Outrun Nutrition</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<style>
+/* ==================== 基礎設定 ==================== */
+:root {
+  --black: #2F2F2F;
+  --orange: #ED5D2B;
+  --orange-hover: #d14e1f;
+  --blue: #145DDD;
+  --dark-gray: #3A3A3A;
+  --card-gray: #444444;
+  --text-primary: #E0E0E0;
+  --text-secondary: #A0A0A0;
+  --text-dim: #707070;
+  --danger: #E53935;
+  --success: #43A047;
+  --warning: #FB8C00;
+  --radius-lg: 12px;
+  --radius-sm: 6px;
+  --radius-xs: 4px;
+  --font-zh: 'Noto Sans TC', sans-serif;
+  --font-en: 'Montserrat', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; }
+body {
+  font-family: var(--font-zh);
+  background: var(--black);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==================== 頂部導覽 ==================== */
+.top-bar {
+  background: var(--dark-gray);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(237, 93, 43, 0.3);
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon {
+  width: 32px; height: 32px;
+  background: var(--orange);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.brand-name {
+  font-family: var(--font-en);
+  font-weight: 700; font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+.brand-sub { font-size: 11px; color: var(--text-secondary); }
+.sync-status {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--text-secondary);
+}
+.sync-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--success);
+}
+.sync-dot.offline { background: var(--warning); }
+
+/* ==================== 分頁導覽 ==================== */
+.tab-nav {
+  display: flex;
+  background: var(--dark-gray);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-btn {
+  flex: 1; min-width: 70px;
+  padding: 10px 6px;
+  background: none; border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-zh);
+  font-size: 12px; font-weight: 500;
+  cursor: pointer; text-align: center;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+.tab-btn:hover { color: var(--text-primary); }
+.tab-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+
+/* ==================== 主內容區 ==================== */
+.main-content { max-width: 640px; margin: 0 auto; padding: 16px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ==================== 卡片元件 ==================== */
+.card {
+  background: var(--dark-gray);
+  border-radius: var(--radius-lg);
+  padding: 20px; margin-bottom: 16px;
+}
+.card-header {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 16px;
+}
+.card-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.card-badge {
+  font-family: var(--font-en);
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 3px 8px; border-radius: var(--radius-xs);
+  background: rgba(237, 93, 43, 0.15); color: var(--orange);
+}
+
+/* ==================== 表單元件 ==================== */
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block; font-size: 13px; font-weight: 500;
+  color: var(--text-secondary); margin-bottom: 6px;
+}
+.form-label .required { color: var(--orange); margin-left: 2px; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 10px 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-zh); font-size: 15px;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none; border-color: var(--orange);
+  background: rgba(237, 93, 43, 0.05);
+}
+.form-input::placeholder { color: var(--text-dim); }
+.form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A0A0A0' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  color-scheme: dark;
+}
+.form-select option { background: var(--dark-gray); color: var(--text-primary); }
+.form-textarea { resize: vertical; min-height: 60px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+/* ==================== 按鈕 ==================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 12px 24px; border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-zh); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; text-decoration: none;
+}
+.btn-primary {
+  background: var(--orange); color: #fff;
+  width: 100%; padding: 14px; font-size: 16px;
+}
+.btn-primary:hover { background: var(--orange-hover); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { background: rgba(255,255,255,0.08); color: var(--text-primary); }
+.btn-secondary:hover { background: rgba(255,255,255,0.12); }
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text-primary);
+}
+.btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+.btn-danger { background: rgba(229, 57, 53, 0.15); color: var(--danger); }
+.btn-danger:hover { background: rgba(229, 57, 53, 0.25); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-group { display: flex; gap: 8px; margin-top: 16px; }
+
+/* ==================== 明細行表格 ==================== */
+.line-items { margin-bottom: 16px; }
+.line-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  padding: 12px; margin-bottom: 8px;
+  position: relative;
+}
+.line-item-header {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 8px;
+}
+.line-item-num {
+  font-family: var(--font-en); font-size: 11px;
+  font-weight: 600; color: var(--orange);
+}
+.line-item-remove {
+  width: 24px; height: 24px; border: none;
+  background: rgba(229, 57, 53, 0.1);
+  border-radius: 50%; color: var(--danger);
+  font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.line-item-remove:hover { background: rgba(229, 57, 53, 0.25); }
+.line-item .form-group { margin-bottom: 8px; }
+.line-item .form-label { font-size: 11px; margin-bottom: 4px; }
+.line-item .form-input, .line-item .form-select {
+  padding: 8px 10px; font-size: 13px;
+}
+.line-item-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.line-item-subtotal {
+  text-align: right; font-family: var(--font-en);
+  font-size: 14px; font-weight: 600; color: var(--orange);
+  padding-top: 4px;
+}
+.add-line-btn {
+  width: 100%; padding: 10px; border: 2px dashed rgba(255,255,255,0.12);
+  border-radius: var(--radius-sm); background: none;
+  color: var(--text-secondary); font-family: var(--font-zh);
+  font-size: 13px; cursor: pointer; transition: all 0.2s;
+}
+.add-line-btn:hover {
+  border-color: var(--orange); color: var(--orange);
+  background: rgba(237, 93, 43, 0.05);
+}
+
+/* ==================== 金額匯總 ==================== */
+.amount-summary {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 12px; margin-top: 8px;
+}
+.amount-row {
+  display: flex; justify-content: space-between;
+  align-items: center; padding: 6px 0;
+  font-size: 14px;
+}
+.amount-row .label { color: var(--text-secondary); }
+.amount-row .value {
+  font-family: var(--font-en); font-weight: 600;
+}
+.amount-row.total {
+  border-top: 2px solid var(--orange);
+  padding-top: 10px; margin-top: 6px;
+  font-size: 18px;
+}
+.amount-row.total .label { color: var(--text-primary); font-weight: 700; }
+.amount-row.total .value { color: var(--orange); font-weight: 700; }
+.amount-row.discount .value { color: var(--success); }
+
+/* ==================== 列表卡片 ==================== */
+.doc-card {
+  background: var(--dark-gray);
+  border-radius: var(--radius-lg);
+  padding: 16px; margin-bottom: 10px;
+  cursor: pointer; transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.doc-card:hover { border-color: rgba(237, 93, 43, 0.3); }
+.doc-card-top {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 8px;
+}
+.doc-card-id {
+  font-family: var(--font-en); font-size: 13px;
+  font-weight: 600; color: var(--text-primary);
+}
+.doc-card-date { font-size: 12px; color: var(--text-dim); }
+.doc-card-mid {
+  display: flex; justify-content: space-between;
+  align-items: center;
+}
+.doc-card-name { font-size: 14px; font-weight: 500; }
+.doc-card-amount {
+  font-family: var(--font-en); font-size: 16px;
+  font-weight: 700; color: var(--orange);
+}
+.doc-card-bottom {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-top: 8px;
+}
+.doc-card-recorder { font-size: 11px; color: var(--text-dim); }
+
+/* ==================== 狀態標籤 ==================== */
+.status-tag {
+  display: inline-block; padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  font-size: 11px; font-weight: 600;
+}
+.status-draft { background: rgba(160,160,160,0.15); color: var(--text-secondary); }
+.status-sent { background: rgba(20,93,221,0.15); color: var(--blue); }
+.status-accepted { background: rgba(67,160,71,0.15); color: var(--success); }
+.status-rejected { background: rgba(229,57,53,0.15); color: var(--danger); }
+.status-pending { background: rgba(251,140,0,0.15); color: var(--warning); }
+.status-confirmed { background: rgba(20,93,221,0.15); color: var(--blue); }
+.status-delivered { background: rgba(67,160,71,0.15); color: var(--success); }
+.status-invoiced { background: rgba(237,93,43,0.15); color: var(--orange); }
+.status-paid { background: rgba(67,160,71,0.25); color: var(--success); }
+
+/* ==================== 搜尋列 ==================== */
+.search-bar {
+  display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.search-bar input {
+  flex: 1; min-width: 120px; padding: 8px 12px;
+  background: var(--dark-gray);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-zh); font-size: 13px;
+}
+.search-bar input:focus { outline: none; border-color: var(--orange); }
+.search-bar input::placeholder { color: var(--text-dim); }
+.search-bar select {
+  padding: 8px 10px;
+  background: var(--dark-gray);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-zh); font-size: 13px;
+  color-scheme: dark;
+}
+
+/* ==================== 月份選擇器 ==================== */
+.month-nav {
+  display: flex; align-items: center;
+  justify-content: center; gap: 16px;
+  margin-bottom: 16px;
+}
+.month-nav button {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%; color: var(--text-primary);
+  font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.month-nav button:hover { border-color: var(--orange); color: var(--orange); }
+.month-nav .month-label {
+  font-family: var(--font-en); font-size: 16px;
+  font-weight: 600; min-width: 120px; text-align: center;
+}
+
+/* ==================== 統計卡片 ==================== */
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--dark-gray);
+  border-radius: var(--radius-lg);
+  padding: 16px; text-align: center;
+}
+.stat-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+.stat-value {
+  font-family: var(--font-en); font-size: 22px;
+  font-weight: 700; color: var(--text-primary);
+}
+.stat-value.orange { color: var(--orange); }
+
+/* ==================== 趨勢圖 ==================== */
+.trend-chart {
+  display: flex; align-items: flex-end;
+  gap: 4px; height: 120px; padding: 8px 0;
+}
+.trend-bar-wrap {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; height: 100%;
+}
+.trend-bar {
+  width: 100%; max-width: 28px;
+  background: var(--orange);
+  border-radius: 3px 3px 0 0;
+  transition: height 0.3s; min-height: 2px;
+}
+.trend-bar.blue { background: var(--blue); }
+.trend-label {
+  font-size: 10px; color: var(--text-dim);
+  margin-top: 4px; font-family: var(--font-en);
+}
+.trend-value {
+  font-size: 9px; color: var(--text-secondary);
+  margin-bottom: 4px; font-family: var(--font-en);
+  white-space: nowrap;
+}
+.trend-summary {
+  display: flex; justify-content: space-between;
+  padding: 8px 0; border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 8px; font-size: 12px; color: var(--text-secondary);
+}
+.trend-summary strong { color: var(--text-primary); font-family: var(--font-en); }
+
+/* ==================== Modal ==================== */
+.modal-overlay {
+  display: none; position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200; align-items: flex-end;
+  justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+  background: var(--black);
+  border-radius: 16px 16px 0 0;
+  width: 100%; max-width: 640px;
+  max-height: 85vh; overflow-y: auto;
+  padding: 20px; animation: slideUp 0.25s ease;
+}
+.modal-box h3 { font-size: 16px; margin-bottom: 16px; }
+.modal-close {
+  float: right; background: none; border: none;
+  color: var(--text-dim); font-size: 24px;
+  cursor: pointer; padding: 0 4px;
+}
+.modal-close:hover { color: var(--text-primary); }
+
+/* ==================== Toast ==================== */
+.toast {
+  position: fixed; top: 16px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--dark-gray);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  padding: 12px 20px; font-size: 13px;
+  z-index: 999; animation: fadeSlideIn 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  max-width: 90%; text-align: center;
+}
+.toast.success { border-color: var(--success); color: var(--success); }
+.toast.error { border-color: var(--danger); color: var(--danger); }
+.toast.info { border-color: var(--blue); color: var(--blue); }
+
+/* ==================== 產品目錄管理 ==================== */
+.product-list-item {
+  display: flex; justify-content: space-between;
+  align-items: center; padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.product-list-item:last-child { border-bottom: none; }
+.product-info { flex: 1; }
+.product-name { font-size: 14px; font-weight: 500; }
+.product-spec { font-size: 12px; color: var(--text-secondary); }
+.product-price {
+  font-family: var(--font-en); font-size: 14px;
+  font-weight: 600; color: var(--orange); margin-right: 12px;
+}
+
+/* ==================== 動畫 ==================== */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* ==================== 響應式 ==================== */
+@media (max-width: 380px) {
+  .tab-btn { font-size: 11px; padding: 8px 4px; }
+  .tab-icon { font-size: 14px; }
+  .form-row, .line-item-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== 頂部品牌列 ==================== -->
+<div class="top-bar">
+  <div class="brand">
+    <div class="brand-icon">🥜</div>
+    <div>
+      <div class="brand-name">Outrun Nutrition</div>
+      <div class="brand-sub">報價 / 採購管理</div>
+    </div>
+  </div>
+  <div class="sync-status">
+    <div class="sync-dot" id="syncDot"></div>
+    <span id="syncLabel">本機</span>
+  </div>
+</div>
+
+<!-- ==================== 分頁導覽 ==================== -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('quote')">
+    <span class="tab-icon">📝</span>新增報價
+  </button>
+  <button class="tab-btn" onclick="switchTab('po')">
+    <span class="tab-icon">📦</span>新增採購
+  </button>
+  <button class="tab-btn" onclick="switchTab('list')">
+    <span class="tab-icon">📋</span>單據列表
+  </button>
+  <button class="tab-btn" onclick="switchTab('stats')">
+    <span class="tab-icon">📊</span>統計
+  </button>
+  <button class="tab-btn" onclick="switchTab('settings')">
+    <span class="tab-icon">⚙️</span>設定
+  </button>
+</nav>
+
+<div class="main-content">
+
+<!-- ==================== Tab 1: 新增報價單 ==================== -->
+<div id="tab-quote" class="tab-panel active">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">📝 報價單</span>
+      <span class="card-badge">QUOTATION</span>
+    </div>
+
+    <!-- 日期 -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">報價日期</label>
+        <input type="date" id="quoteDate" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">有效期限</label>
+        <input type="date" id="quoteValidUntil" class="form-input">
+      </div>
+    </div>
+
+    <!-- 客戶資訊 -->
+    <div class="form-group">
+      <label class="form-label">客戶名稱 <span class="required">*</span></label>
+      <input type="text" id="quoteCustName" class="form-input" placeholder="公司或個人名稱">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">聯繫人</label>
+        <input type="text" id="quoteCustContact" class="form-input" placeholder="姓名">
+      </div>
+      <div class="form-group">
+        <label class="form-label">電話</label>
+        <input type="tel" id="quoteCustPhone" class="form-input" placeholder="09xx-xxx-xxx">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" id="quoteCustEmail" class="form-input" placeholder="email@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">地址</label>
+        <input type="text" id="quoteCustAddr" class="form-input" placeholder="送貨/通訊地址">
+      </div>
+    </div>
+  </div>
+
+  <!-- 商品明細 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">商品明細</span>
+      <span class="card-badge" id="quoteItemCount">0 ITEMS</span>
+    </div>
+    <div id="quoteLineItems" class="line-items"></div>
+    <button class="add-line-btn" onclick="addQuoteLineItem()">+ 新增品項</button>
+
+    <!-- 金額匯總 -->
+    <div class="amount-summary">
+      <div class="amount-row">
+        <span class="label">小計</span>
+        <span class="value" id="quoteSubtotal">NTD 0</span>
+      </div>
+      <div class="form-row" style="margin:8px 0">
+        <div class="form-group" style="margin:0">
+          <select id="quoteDiscountType" class="form-select" onchange="calcQuoteTotals()" style="font-size:13px;padding:8px">
+            <option value="percent">折扣 %</option>
+            <option value="fixed">折扣金額</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0">
+          <input type="number" id="quoteDiscountValue" class="form-input" value="0" min="0" oninput="calcQuoteTotals()" style="font-size:13px;padding:8px">
+        </div>
+      </div>
+      <div class="amount-row discount">
+        <span class="label">折扣</span>
+        <span class="value" id="quoteDiscountAmount">-NTD 0</span>
+      </div>
+      <div class="amount-row">
+        <span class="label">稅額 (5%)</span>
+        <span class="value" id="quoteTaxAmount">NTD 0</span>
+      </div>
+      <div class="amount-row total">
+        <span class="label">總計</span>
+        <span class="value" id="quoteTotal">NTD 0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 備註 -->
+  <div class="card">
+    <div class="form-group" style="margin:0">
+      <label class="form-label">備註</label>
+      <textarea id="quoteNotes" class="form-textarea" placeholder="付款條件、交貨方式等補充說明"></textarea>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="saveQuotation()" style="flex:2">儲存報價單</button>
+    <button class="btn btn-secondary" onclick="saveQuotation(true)" style="flex:1">存檔+PDF</button>
+  </div>
+</div>
+
+<!-- ==================== Tab 2: 新增採購單 ==================== -->
+<div id="tab-po" class="tab-panel">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">📦 採購單</span>
+      <span class="card-badge">PURCHASE ORDER</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">採購日期</label>
+      <input type="date" id="poDate" class="form-input">
+    </div>
+
+    <!-- 供應商 -->
+    <div class="form-group">
+      <label class="form-label">供應商名稱 <span class="required">*</span></label>
+      <input type="text" id="poVendorName" class="form-input" placeholder="供應商名稱">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">聯繫人</label>
+        <input type="text" id="poVendorContact" class="form-input" placeholder="姓名">
+      </div>
+      <div class="form-group">
+        <label class="form-label">電話</label>
+        <input type="tel" id="poVendorPhone" class="form-input" placeholder="電話">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input type="email" id="poVendorEmail" class="form-input" placeholder="email@example.com">
+    </div>
+  </div>
+
+  <!-- 採購明細 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">採購明細</span>
+      <span class="card-badge" id="poItemCount">0 ITEMS</span>
+    </div>
+    <div id="poLineItems" class="line-items"></div>
+    <button class="add-line-btn" onclick="addPOLineItem()">+ 新增品項</button>
+
+    <div class="amount-summary">
+      <div class="amount-row">
+        <span class="label">小計</span>
+        <span class="value" id="poSubtotal">NTD 0</span>
+      </div>
+      <div class="amount-row">
+        <span class="label">稅額 (5%)</span>
+        <span class="value" id="poTaxAmount">NTD 0</span>
+      </div>
+      <div class="amount-row total">
+        <span class="label">總計</span>
+        <span class="value" id="poTotal">NTD 0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 交貨與付款 -->
+  <div class="card">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">預期交貨日</label>
+        <input type="date" id="poDeliveryDate" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">付款條件</label>
+        <select id="poPaymentTerms" class="form-select">
+          <option value="月結30天">月結30天</option>
+          <option value="月結60天">月結60天</option>
+          <option value="貨到付款">貨到付款</option>
+          <option value="預付款">預付款</option>
+          <option value="其他">其他</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">關聯報價單</label>
+      <select id="poRelatedQuote" class="form-select">
+        <option value="">（無）</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin:0">
+      <label class="form-label">備註</label>
+      <textarea id="poNotes" class="form-textarea" placeholder="特殊需求、注意事項"></textarea>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="savePurchaseOrder()" style="flex:2">儲存採購單</button>
+    <button class="btn btn-secondary" onclick="savePurchaseOrder(true)" style="flex:1">存檔+PDF</button>
+  </div>
+</div>
+
+<!-- ==================== Tab 3: 單據列表 ==================== -->
+<div id="tab-list" class="tab-panel">
+  <div class="month-nav">
+    <button onclick="changeListMonth(-1)">◀</button>
+    <span class="month-label" id="listMonthLabel"></span>
+    <button onclick="changeListMonth(1)">▶</button>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" id="listSearch" placeholder="搜尋編號、客戶、供應商" oninput="renderDocList()">
+    <select id="listTypeFilter" onchange="renderDocList()">
+      <option value="">全部</option>
+      <option value="quotation">報價單</option>
+      <option value="po">採購單</option>
+    </select>
+  </div>
+
+  <div id="docListContainer"></div>
+  <div id="docListEmpty" style="text-align:center;padding:40px 0;color:var(--text-dim);display:none">
+    <div style="font-size:40px;margin-bottom:8px">📄</div>
+    <div>本月尚無單據</div>
+  </div>
+</div>
+
+<!-- ==================== Tab 4: 統計 ==================== -->
+<div id="tab-stats" class="tab-panel">
+  <div class="month-nav">
+    <button onclick="changeStatsMonth(-1)">◀</button>
+    <span class="month-label" id="statsMonthLabel"></span>
+    <button onclick="changeStatsMonth(1)">▶</button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">報價單數</div>
+      <div class="stat-value" id="statQuoteCount">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">採購單數</div>
+      <div class="stat-value" id="statPOCount">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">報價總額</div>
+      <div class="stat-value orange" id="statQuoteTotal">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">採購總額</div>
+      <div class="stat-value orange" id="statPOTotal">0</div>
+    </div>
+  </div>
+
+  <!-- 報價單狀態分布 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">報價單狀態分布</span>
+    </div>
+    <div id="quoteStatusDist"></div>
+  </div>
+
+  <!-- 年度趨勢 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">年度趨勢</span>
+      <select id="trendYear" class="form-select" onchange="renderTrend()" style="width:auto;padding:4px 28px 4px 8px;font-size:12px"></select>
+    </div>
+    <div id="trendChart" class="trend-chart"></div>
+    <div id="trendSummary" class="trend-summary"></div>
+  </div>
+</div>
+
+<!-- ==================== Tab 5: 設定 ==================== -->
+<div id="tab-settings" class="tab-panel">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">⚙️ 系統設定</span>
+      <span class="card-badge">SETTINGS</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Apps Script API 網址</label>
+      <input type="url" id="settingApiUrl" class="form-input" placeholder="https://script.google.com/macros/s/...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">使用者名稱</label>
+      <input type="text" id="settingRecorder" class="form-input" placeholder="你的名字">
+    </div>
+  </div>
+
+  <!-- 公司資訊 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">公司資訊（用於 PDF）</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">公司名稱</label>
+      <input type="text" id="settingCompanyName" class="form-input" value="堅心 Outrun Nutrition">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">統一編號</label>
+        <input type="text" id="settingTaxId" class="form-input" placeholder="12345678">
+      </div>
+      <div class="form-group">
+        <label class="form-label">電話</label>
+        <input type="tel" id="settingCompanyPhone" class="form-input" placeholder="02-xxxx-xxxx">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input type="email" id="settingCompanyEmail" class="form-input" placeholder="info@outrun.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">地址</label>
+      <input type="text" id="settingCompanyAddr" class="form-input" placeholder="公司地址">
+    </div>
+  </div>
+
+  <!-- 產品目錄 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">產品目錄</span>
+      <span class="card-badge" id="productCountBadge">0</span>
+    </div>
+    <div id="productList"></div>
+    <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:12px;margin-top:12px">
+      <div class="form-group">
+        <label class="form-label">新增自訂產品</label>
+        <div class="form-row" style="margin-bottom:8px">
+          <input type="text" id="newProdName" class="form-input" placeholder="品名" style="font-size:13px;padding:8px">
+          <input type="text" id="newProdSpec" class="form-input" placeholder="規格" style="font-size:13px;padding:8px">
+        </div>
+        <div class="form-row">
+          <input type="number" id="newProdPrice" class="form-input" placeholder="售價" style="font-size:13px;padding:8px">
+          <input type="text" id="newProdUnit" class="form-input" placeholder="單位(預設:個)" style="font-size:13px;padding:8px">
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="addCustomProduct()" style="width:100%">+ 新增產品</button>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="saveSettings()">儲存設定</button>
+  <div class="btn-group">
+    <button class="btn btn-outline btn-sm" onclick="syncToCloud()" style="flex:1">☁️ 雲端同步</button>
+    <button class="btn btn-danger btn-sm" onclick="clearLocalData()" style="flex:1">🗑️ 清除本地資料</button>
+  </div>
+</div>
+
+</div><!-- /main-content -->
+
+<!-- ==================== Modal ==================== -->
+<div class="modal-overlay" id="docModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- ==================== JavaScript ==================== -->
+<script>
+// ==================== 預設產品目錄 ====================
+const DEFAULT_PRODUCTS = [
+  { name: '眠易復 運動恢復膠囊', spec: '30粒/罐', price: 1299, unit: '罐' },
+  { name: '能易復 恢復蛋白', spec: '黑糖仙草 750g/袋', price: 1350, unit: '袋' },
+  { name: '能易復 恢復蛋白', spec: '黑糖仙草 500g/盒', price: 950, unit: '盒' },
+  { name: '食動力 運動體感膠囊', spec: '30包/盒', price: 1299, unit: '盒' },
+  { name: 'TEMPO 膠囊', spec: '60顆/罐', price: 1299, unit: '罐' },
+  { name: 'OARC 專業科學訓練補給組', spec: '隨選組合', price: 0, unit: '組' },
+];
+
+// ==================== 狀態常數 ====================
+const QUOTE_STATUSES = ['草稿', '已發送', '已接受', '已拒絕'];
+const PO_STATUSES = ['待確認', '已確認', '已交貨', '已開票', '已結款'];
+
+const STORAGE_KEYS = {
+  QUOTATIONS: 'outrun_po_quotations',
+  PURCHASE_ORDERS: 'outrun_po_purchase_orders',
+  SETTINGS: 'outrun_po_settings',
+  PRODUCTS: 'outrun_po_products',
+  PENDING: 'outrun_po_pending',
+};
+
+// ==================== State ====================
+let state = {
+  quotations: [],
+  purchaseOrders: [],
+  products: [],
+  pendingSync: [],
+  settings: {
+    apiUrl: '',
+    recorder: '',
+    companyInfo: {
+      name: '堅心 Outrun Nutrition',
+      phone: '', email: '', address: '', taxId: ''
+    }
+  }
+};
+
+// 列表/統計的當前月份
+let listYear, listMonth, statsYear, statsMonth;
+
+// ==================== 工具函式 ====================
+function numberFormat(n) {
+  return Number(n || 0).toLocaleString('en-US');
+}
+
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function addDays(dateStr, days) {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + days);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function generateId(prefix) {
+  const today = todayStr().replace(/-/g, '');
+  const arr = prefix === 'QUOT' ? state.quotations : state.purchaseOrders;
+  const todayDocs = arr.filter(d => d.id && d.id.startsWith(prefix + '-' + today));
+  const seq = String(todayDocs.length + 1).padStart(3, '0');
+  return prefix + '-' + today + '-' + seq;
+}
+
+function getStatusClass(status) {
+  const map = {
+    '草稿': 'status-draft', '已發送': 'status-sent',
+    '已接受': 'status-accepted', '已拒絕': 'status-rejected',
+    '待確認': 'status-pending', '已確認': 'status-confirmed',
+    '已交貨': 'status-delivered', '已開票': 'status-invoiced',
+    '已結款': 'status-paid',
+  };
+  return map[status] || 'status-draft';
+}
+
+function showToast(msg, type = 'info') {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ==================== 分頁切換 ====================
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  const tabs = ['quote', 'po', 'list', 'stats', 'settings'];
+  const idx = tabs.indexOf(tab);
+  if (idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+
+  if (tab === 'list') renderDocList();
+  if (tab === 'stats') renderStats();
+  if (tab === 'settings') renderSettings();
+  if (tab === 'po') populateRelatedQuotes();
+}
+
+// ==================== localStorage ====================
+function saveState() {
+  localStorage.setItem(STORAGE_KEYS.QUOTATIONS, JSON.stringify(state.quotations));
+  localStorage.setItem(STORAGE_KEYS.PURCHASE_ORDERS, JSON.stringify(state.purchaseOrders));
+  localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(state.settings));
+  localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(state.products));
+  localStorage.setItem(STORAGE_KEYS.PENDING, JSON.stringify(state.pendingSync));
+}
+
+function loadState() {
+  try {
+    const q = localStorage.getItem(STORAGE_KEYS.QUOTATIONS);
+    if (q) state.quotations = JSON.parse(q);
+    const p = localStorage.getItem(STORAGE_KEYS.PURCHASE_ORDERS);
+    if (p) state.purchaseOrders = JSON.parse(p);
+    const s = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+    if (s) state.settings = { ...state.settings, ...JSON.parse(s) };
+    const pr = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
+    if (pr) state.products = JSON.parse(pr);
+    else state.products = [...DEFAULT_PRODUCTS];
+    const pn = localStorage.getItem(STORAGE_KEYS.PENDING);
+    if (pn) state.pendingSync = JSON.parse(pn);
+  } catch (e) {
+    console.error('loadState error', e);
+    state.products = [...DEFAULT_PRODUCTS];
+  }
+}
+
+// ==================== 報價單明細行 ====================
+let quoteLineCounter = 0;
+
+function addQuoteLineItem(data) {
+  quoteLineCounter++;
+  const n = quoteLineCounter;
+  const container = document.getElementById('quoteLineItems');
+
+  const productOptions = state.products.map((p, i) =>
+    `<option value="${i}" ${data && data.productName === p.name ? 'selected' : ''}>${p.name} (${p.spec})</option>`
+  ).join('');
+
+  const div = document.createElement('div');
+  div.className = 'line-item';
+  div.id = 'quoteLine-' + n;
+  div.innerHTML = `
+    <div class="line-item-header">
+      <span class="line-item-num">#${n}</span>
+      <button class="line-item-remove" onclick="removeQuoteLine(${n})">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">產品</label>
+      <select class="form-select" onchange="onQuoteProductSelect(${n}, this.value)" id="qProd-${n}">
+        <option value="">— 自訂輸入 —</option>
+        ${productOptions}
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">品名</label>
+        <input type="text" class="form-input" id="qName-${n}" value="${data ? data.productName : ''}" oninput="calcQuoteTotals()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">規格</label>
+        <input type="text" class="form-input" id="qSpec-${n}" value="${data ? data.spec : ''}">
+      </div>
+    </div>
+    <div class="line-item-row">
+      <div class="form-group">
+        <label class="form-label">數量</label>
+        <input type="number" class="form-input" id="qQty-${n}" value="${data ? data.qty : 1}" min="1" oninput="calcQuoteLineSubtotal(${n})">
+      </div>
+      <div class="form-group">
+        <label class="form-label">單位</label>
+        <input type="text" class="form-input" id="qUnit-${n}" value="${data ? data.unit : '個'}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">單價</label>
+        <input type="number" class="form-input" id="qPrice-${n}" value="${data ? data.unitPrice : 0}" min="0" oninput="calcQuoteLineSubtotal(${n})">
+      </div>
+    </div>
+    <div class="line-item-subtotal" id="qSubtotal-${n}">NTD 0</div>
+  `;
+  container.appendChild(div);
+  calcQuoteLineSubtotal(n);
+  updateQuoteItemCount();
+}
+
+function onQuoteProductSelect(n, idx) {
+  if (idx === '') return;
+  const p = state.products[parseInt(idx)];
+  if (!p) return;
+  document.getElementById('qName-' + n).value = p.name;
+  document.getElementById('qSpec-' + n).value = p.spec;
+  document.getElementById('qPrice-' + n).value = p.price;
+  document.getElementById('qUnit-' + n).value = p.unit;
+  calcQuoteLineSubtotal(n);
+}
+
+function removeQuoteLine(n) {
+  const el = document.getElementById('quoteLine-' + n);
+  if (el) el.remove();
+  calcQuoteTotals();
+  updateQuoteItemCount();
+}
+
+function calcQuoteLineSubtotal(n) {
+  const qty = Number(document.getElementById('qQty-' + n)?.value) || 0;
+  const price = Number(document.getElementById('qPrice-' + n)?.value) || 0;
+  const sub = qty * price;
+  const el = document.getElementById('qSubtotal-' + n);
+  if (el) el.textContent = 'NTD ' + numberFormat(sub);
+  calcQuoteTotals();
+}
+
+function getQuoteLineItems() {
+  const items = [];
+  document.querySelectorAll('#quoteLineItems .line-item').forEach(li => {
+    const n = li.id.replace('quoteLine-', '');
+    const qty = Number(document.getElementById('qQty-' + n)?.value) || 0;
+    const unitPrice = Number(document.getElementById('qPrice-' + n)?.value) || 0;
+    items.push({
+      productName: document.getElementById('qName-' + n)?.value || '',
+      spec: document.getElementById('qSpec-' + n)?.value || '',
+      qty, unit: document.getElementById('qUnit-' + n)?.value || '個',
+      unitPrice, subtotal: qty * unitPrice,
+    });
+  });
+  return items;
+}
+
+function updateQuoteItemCount() {
+  const count = document.querySelectorAll('#quoteLineItems .line-item').length;
+  document.getElementById('quoteItemCount').textContent = count + ' ITEMS';
+}
+
+function calcQuoteTotals() {
+  const items = getQuoteLineItems();
+  const subtotal = items.reduce((s, i) => s + i.subtotal, 0);
+
+  const discType = document.getElementById('quoteDiscountType').value;
+  const discVal = Number(document.getElementById('quoteDiscountValue').value) || 0;
+  let discAmount = 0;
+  if (discType === 'percent') discAmount = Math.round(subtotal * discVal / 100);
+  else discAmount = discVal;
+
+  const afterDiscount = subtotal - discAmount;
+  const tax = Math.round(afterDiscount * 0.05);
+  const total = afterDiscount + tax;
+
+  document.getElementById('quoteSubtotal').textContent = 'NTD ' + numberFormat(subtotal);
+  document.getElementById('quoteDiscountAmount').textContent = '-NTD ' + numberFormat(discAmount);
+  document.getElementById('quoteTaxAmount').textContent = 'NTD ' + numberFormat(tax);
+  document.getElementById('quoteTotal').textContent = 'NTD ' + numberFormat(total);
+}
+
+// ==================== 採購單明細行 ====================
+let poLineCounter = 0;
+
+function addPOLineItem(data) {
+  poLineCounter++;
+  const n = poLineCounter;
+  const container = document.getElementById('poLineItems');
+
+  const div = document.createElement('div');
+  div.className = 'line-item';
+  div.id = 'poLine-' + n;
+  div.innerHTML = `
+    <div class="line-item-header">
+      <span class="line-item-num">#${n}</span>
+      <button class="line-item-remove" onclick="removePOLine(${n})">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">品名</label>
+        <input type="text" class="form-input" id="pName-${n}" value="${data ? data.itemName : ''}" oninput="calcPOTotals()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">規格</label>
+        <input type="text" class="form-input" id="pSpec-${n}" value="${data ? data.spec : ''}">
+      </div>
+    </div>
+    <div class="line-item-row">
+      <div class="form-group">
+        <label class="form-label">數量</label>
+        <input type="number" class="form-input" id="pQty-${n}" value="${data ? data.qty : 1}" min="1" oninput="calcPOLineSubtotal(${n})">
+      </div>
+      <div class="form-group">
+        <label class="form-label">單位</label>
+        <input type="text" class="form-input" id="pUnit-${n}" value="${data ? data.unit : '個'}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">單價</label>
+        <input type="number" class="form-input" id="pPrice-${n}" value="${data ? data.unitPrice : 0}" min="0" oninput="calcPOLineSubtotal(${n})">
+      </div>
+    </div>
+    <div class="line-item-subtotal" id="pSubtotal-${n}">NTD 0</div>
+  `;
+  container.appendChild(div);
+  calcPOLineSubtotal(n);
+  updatePOItemCount();
+}
+
+function removePOLine(n) {
+  const el = document.getElementById('poLine-' + n);
+  if (el) el.remove();
+  calcPOTotals();
+  updatePOItemCount();
+}
+
+function calcPOLineSubtotal(n) {
+  const qty = Number(document.getElementById('pQty-' + n)?.value) || 0;
+  const price = Number(document.getElementById('pPrice-' + n)?.value) || 0;
+  const sub = qty * price;
+  const el = document.getElementById('pSubtotal-' + n);
+  if (el) el.textContent = 'NTD ' + numberFormat(sub);
+  calcPOTotals();
+}
+
+function getPOLineItems() {
+  const items = [];
+  document.querySelectorAll('#poLineItems .line-item').forEach(li => {
+    const n = li.id.replace('poLine-', '');
+    const qty = Number(document.getElementById('pQty-' + n)?.value) || 0;
+    const unitPrice = Number(document.getElementById('pPrice-' + n)?.value) || 0;
+    items.push({
+      itemName: document.getElementById('pName-' + n)?.value || '',
+      spec: document.getElementById('pSpec-' + n)?.value || '',
+      qty, unit: document.getElementById('pUnit-' + n)?.value || '個',
+      unitPrice, subtotal: qty * unitPrice,
+    });
+  });
+  return items;
+}
+
+function updatePOItemCount() {
+  const count = document.querySelectorAll('#poLineItems .line-item').length;
+  document.getElementById('poItemCount').textContent = count + ' ITEMS';
+}
+
+function calcPOTotals() {
+  const items = getPOLineItems();
+  const subtotal = items.reduce((s, i) => s + i.subtotal, 0);
+  const tax = Math.round(subtotal * 0.05);
+  const total = subtotal + tax;
+
+  document.getElementById('poSubtotal').textContent = 'NTD ' + numberFormat(subtotal);
+  document.getElementById('poTaxAmount').textContent = 'NTD ' + numberFormat(tax);
+  document.getElementById('poTotal').textContent = 'NTD ' + numberFormat(total);
+}
+
+function populateRelatedQuotes() {
+  const sel = document.getElementById('poRelatedQuote');
+  sel.innerHTML = '<option value="">（無）</option>';
+  state.quotations.filter(q => q.status === '已接受').forEach(q => {
+    sel.innerHTML += `<option value="${q.id}">${q.id} — ${q.customer.name} (NTD ${numberFormat(q.total)})</option>`;
+  });
+}
+
+// ==================== 儲存報價單 ====================
+function saveQuotation(genPDF = false) {
+  const custName = document.getElementById('quoteCustName').value.trim();
+  if (!custName) { showToast('請輸入客戶名稱', 'error'); return; }
+  const items = getQuoteLineItems();
+  if (items.length === 0) { showToast('請新增至少一個品項', 'error'); return; }
+
+  const subtotal = items.reduce((s, i) => s + i.subtotal, 0);
+  const discType = document.getElementById('quoteDiscountType').value;
+  const discVal = Number(document.getElementById('quoteDiscountValue').value) || 0;
+  let discAmount = discType === 'percent' ? Math.round(subtotal * discVal / 100) : discVal;
+  const afterDisc = subtotal - discAmount;
+  const tax = Math.round(afterDisc * 0.05);
+  const total = afterDisc + tax;
+
+  const quotation = {
+    id: generateId('QUOT'),
+    date: document.getElementById('quoteDate').value || todayStr(),
+    validUntil: document.getElementById('quoteValidUntil').value || addDays(todayStr(), 30),
+    customer: {
+      name: custName,
+      contact: document.getElementById('quoteCustContact').value.trim(),
+      phone: document.getElementById('quoteCustPhone').value.trim(),
+      email: document.getElementById('quoteCustEmail').value.trim(),
+      address: document.getElementById('quoteCustAddr').value.trim(),
+    },
+    items, subtotal,
+    discountType: discType, discountValue: discVal, discountAmount: discAmount,
+    taxRate: 0.05, taxAmount: tax, total,
+    notes: document.getElementById('quoteNotes').value.trim(),
+    status: '草稿',
+    recorder: state.settings.recorder || '未設定',
+    createdAt: new Date().toISOString(),
+    synced: false,
+  };
+
+  state.quotations.push(quotation);
+  state.pendingSync.push({ type: 'addQuotation', data: quotation });
+  saveState();
+  showToast('報價單已儲存：' + quotation.id, 'success');
+
+  if (genPDF) generateQuotePDF(quotation);
+  resetQuoteForm();
+}
+
+function resetQuoteForm() {
+  document.getElementById('quoteCustName').value = '';
+  document.getElementById('quoteCustContact').value = '';
+  document.getElementById('quoteCustPhone').value = '';
+  document.getElementById('quoteCustEmail').value = '';
+  document.getElementById('quoteCustAddr').value = '';
+  document.getElementById('quoteNotes').value = '';
+  document.getElementById('quoteDiscountValue').value = '0';
+  document.getElementById('quoteLineItems').innerHTML = '';
+  quoteLineCounter = 0;
+  initDateFields();
+  calcQuoteTotals();
+  updateQuoteItemCount();
+}
+
+// ==================== 儲存採購單 ====================
+function savePurchaseOrder(genPDF = false) {
+  const vendorName = document.getElementById('poVendorName').value.trim();
+  if (!vendorName) { showToast('請輸入供應商名稱', 'error'); return; }
+  const items = getPOLineItems();
+  if (items.length === 0) { showToast('請新增至少一個品項', 'error'); return; }
+
+  const subtotal = items.reduce((s, i) => s + i.subtotal, 0);
+  const tax = Math.round(subtotal * 0.05);
+  const total = subtotal + tax;
+
+  const po = {
+    id: generateId('PO'),
+    date: document.getElementById('poDate').value || todayStr(),
+    vendor: {
+      name: vendorName,
+      contact: document.getElementById('poVendorContact').value.trim(),
+      phone: document.getElementById('poVendorPhone').value.trim(),
+      email: document.getElementById('poVendorEmail').value.trim(),
+    },
+    items, subtotal,
+    taxRate: 0.05, taxAmount: tax, total,
+    expectedDelivery: document.getElementById('poDeliveryDate').value || '',
+    paymentTerms: document.getElementById('poPaymentTerms').value,
+    notes: document.getElementById('poNotes').value.trim(),
+    status: '待確認',
+    relatedQuotationId: document.getElementById('poRelatedQuote').value || '',
+    recorder: state.settings.recorder || '未設定',
+    createdAt: new Date().toISOString(),
+    synced: false,
+  };
+
+  state.purchaseOrders.push(po);
+  state.pendingSync.push({ type: 'addPurchaseOrder', data: po });
+  saveState();
+  showToast('採購單已儲存：' + po.id, 'success');
+
+  if (genPDF) generatePOPDF(po);
+  resetPOForm();
+}
+
+function resetPOForm() {
+  document.getElementById('poVendorName').value = '';
+  document.getElementById('poVendorContact').value = '';
+  document.getElementById('poVendorPhone').value = '';
+  document.getElementById('poVendorEmail').value = '';
+  document.getElementById('poNotes').value = '';
+  document.getElementById('poDeliveryDate').value = '';
+  document.getElementById('poRelatedQuote').value = '';
+  document.getElementById('poLineItems').innerHTML = '';
+  poLineCounter = 0;
+  initDateFields();
+  calcPOTotals();
+  updatePOItemCount();
+}
+
+// ==================== 單據列表 ====================
+function changeListMonth(delta) {
+  listMonth += delta;
+  if (listMonth > 12) { listMonth = 1; listYear++; }
+  if (listMonth < 1) { listMonth = 12; listYear--; }
+  renderDocList();
+}
+
+function renderDocList() {
+  document.getElementById('listMonthLabel').textContent = listYear + ' / ' + String(listMonth).padStart(2, '0');
+  const keyword = (document.getElementById('listSearch')?.value || '').trim().toLowerCase();
+  const typeFilter = document.getElementById('listTypeFilter')?.value || '';
+
+  let docs = [];
+
+  if (typeFilter !== 'po') {
+    state.quotations.forEach(q => {
+      const d = new Date(q.date);
+      if (d.getFullYear() === listYear && (d.getMonth()+1) === listMonth) {
+        docs.push({ ...q, _type: 'quotation' });
+      }
+    });
+  }
+  if (typeFilter !== 'quotation') {
+    state.purchaseOrders.forEach(p => {
+      const d = new Date(p.date);
+      if (d.getFullYear() === listYear && (d.getMonth()+1) === listMonth) {
+        docs.push({ ...p, _type: 'po' });
+      }
+    });
+  }
+
+  if (keyword) {
+    docs = docs.filter(d => {
+      const haystack = [
+        d.id, d._type === 'quotation' ? d.customer?.name : d.vendor?.name,
+        d.notes, d.recorder
+      ].join(' ').toLowerCase();
+      return haystack.includes(keyword);
+    });
+  }
+
+  docs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const container = document.getElementById('docListContainer');
+  const empty = document.getElementById('docListEmpty');
+
+  if (docs.length === 0) {
+    container.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  container.innerHTML = docs.map(d => {
+    const isQuote = d._type === 'quotation';
+    const name = isQuote ? (d.customer?.name || '') : (d.vendor?.name || '');
+    const typeLabel = isQuote ? '報價' : '採購';
+    return `
+      <div class="doc-card" onclick="showDocDetail('${d._type}','${d.id}')">
+        <div class="doc-card-top">
+          <span class="doc-card-id">${d.id}</span>
+          <span class="doc-card-date">${d.date}</span>
+        </div>
+        <div class="doc-card-mid">
+          <span class="doc-card-name">${typeLabel}｜${name}</span>
+          <span class="doc-card-amount">NTD ${numberFormat(d.total)}</span>
+        </div>
+        <div class="doc-card-bottom">
+          <span class="doc-card-recorder">${d.recorder || ''}</span>
+          <span class="status-tag ${getStatusClass(d.status)}">${d.status}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ==================== 單據詳情 Modal ====================
+function showDocDetail(type, id) {
+  const doc = type === 'quotation'
+    ? state.quotations.find(q => q.id === id)
+    : state.purchaseOrders.find(p => p.id === id);
+  if (!doc) return;
+
+  const isQuote = type === 'quotation';
+  const statuses = isQuote ? QUOTE_STATUSES : PO_STATUSES;
+  const target = isQuote ? doc.customer : doc.vendor;
+  const targetLabel = isQuote ? '客戶' : '供應商';
+
+  let itemsHtml = doc.items.map((item, i) => `
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px">
+      <div>
+        <div>${isQuote ? item.productName : item.itemName}</div>
+        <div style="font-size:11px;color:var(--text-dim)">${item.spec} × ${item.qty} ${item.unit}</div>
+      </div>
+      <div style="font-family:var(--font-en);font-weight:600">NTD ${numberFormat(item.subtotal)}</div>
+    </div>
+  `).join('');
+
+  let statusBtns = statuses.map(s =>
+    `<button class="btn btn-sm ${doc.status === s ? 'btn-primary' : 'btn-outline'}"
+      onclick="updateDocStatus('${type}','${id}','${s}')" style="flex:1">${s}</button>`
+  ).join('');
+
+  let extraBtns = '';
+  if (isQuote && doc.status === '已接受') {
+    extraBtns = `<button class="btn btn-secondary btn-sm" onclick="convertQuoteToPO('${id}')" style="width:100%;margin-top:8px">📦 轉為採購單</button>`;
+  }
+
+  const content = document.getElementById('modalContent');
+  content.innerHTML = `
+    <h3>${isQuote ? '📝 報價單' : '📦 採購單'} ${doc.id}</h3>
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">
+      <div>日期：${doc.date}${isQuote ? ' ｜ 有效至：' + doc.validUntil : ''}</div>
+      <div>${targetLabel}：<strong style="color:var(--text-primary)">${target?.name || ''}</strong></div>
+      ${target?.contact ? '<div>聯繫人：' + target.contact + (target.phone ? ' / ' + target.phone : '') + '</div>' : ''}
+      ${target?.email ? '<div>Email：' + target.email : ''}
+      ${!isQuote && doc.expectedDelivery ? '<div>預期交貨：' + doc.expectedDelivery + '</div>' : ''}
+      ${!isQuote ? '<div>付款條件：' + doc.paymentTerms + '</div>' : ''}
+      <div>建立人：${doc.recorder}</div>
+    </div>
+
+    <div class="card" style="padding:12px;margin-bottom:12px">
+      ${itemsHtml}
+      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-top:8px;font-size:13px">
+        <div style="display:flex;justify-content:space-between;padding:2px 0">
+          <span style="color:var(--text-secondary)">小計</span>
+          <span style="font-family:var(--font-en);font-weight:600">NTD ${numberFormat(doc.subtotal)}</span>
+        </div>
+        ${isQuote && doc.discountAmount ? `<div style="display:flex;justify-content:space-between;padding:2px 0">
+          <span style="color:var(--text-secondary)">折扣</span>
+          <span style="font-family:var(--font-en);font-weight:600;color:var(--success)">-NTD ${numberFormat(doc.discountAmount)}</span>
+        </div>` : ''}
+        <div style="display:flex;justify-content:space-between;padding:2px 0">
+          <span style="color:var(--text-secondary)">稅額 (5%)</span>
+          <span style="font-family:var(--font-en);font-weight:600">NTD ${numberFormat(doc.taxAmount)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-top:2px solid var(--orange);margin-top:6px;font-size:16px">
+          <span style="font-weight:700">總計</span>
+          <span style="font-family:var(--font-en);font-weight:700;color:var(--orange)">NTD ${numberFormat(doc.total)}</span>
+        </div>
+      </div>
+    </div>
+
+    ${doc.notes ? `<div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">備註：${doc.notes}</div>` : ''}
+
+    <div style="margin-bottom:8px;font-size:12px;color:var(--text-secondary)">狀態變更</div>
+    <div class="btn-group" style="flex-wrap:wrap;margin-top:0">${statusBtns}</div>
+    ${extraBtns}
+
+    <div class="btn-group" style="margin-top:12px">
+      <button class="btn btn-secondary btn-sm" onclick="${isQuote ? 'generateQuotePDF' : 'generatePOPDF'}(state.${isQuote ? 'quotations' : 'purchaseOrders'}.find(d=>d.id==='${id}'))" style="flex:1">📄 產生 PDF</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteDoc('${type}','${id}')" style="flex:1">🗑️ 刪除</button>
+    </div>
+  `;
+  document.getElementById('docModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('docModal').classList.remove('active');
+}
+
+function updateDocStatus(type, id, newStatus) {
+  if (type === 'quotation') {
+    const q = state.quotations.find(d => d.id === id);
+    if (q) q.status = newStatus;
+  } else {
+    const p = state.purchaseOrders.find(d => d.id === id);
+    if (p) p.status = newStatus;
+  }
+  saveState();
+  showToast('狀態已更新為「' + newStatus + '」', 'success');
+  showDocDetail(type, id);
+  renderDocList();
+}
+
+function deleteDoc(type, id) {
+  if (!confirm('確定要刪除此單據嗎？此操作無法復原。')) return;
+  if (type === 'quotation') {
+    state.quotations = state.quotations.filter(d => d.id !== id);
+  } else {
+    state.purchaseOrders = state.purchaseOrders.filter(d => d.id !== id);
+  }
+  saveState();
+  closeModal();
+  renderDocList();
+  showToast('已刪除', 'info');
+}
+
+function convertQuoteToPO(quoteId) {
+  const q = state.quotations.find(d => d.id === quoteId);
+  if (!q) return;
+  closeModal();
+  switchTab('po');
+
+  document.getElementById('poVendorName').value = q.customer.name;
+  document.getElementById('poVendorContact').value = q.customer.contact || '';
+  document.getElementById('poVendorPhone').value = q.customer.phone || '';
+  document.getElementById('poVendorEmail').value = q.customer.email || '';
+  document.getElementById('poRelatedQuote').value = quoteId;
+
+  document.getElementById('poLineItems').innerHTML = '';
+  poLineCounter = 0;
+  q.items.forEach(item => {
+    addPOLineItem({
+      itemName: item.productName,
+      spec: item.spec,
+      qty: item.qty,
+      unit: item.unit,
+      unitPrice: item.unitPrice,
+    });
+  });
+
+  showToast('已帶入報價單資料，請確認後儲存', 'info');
+}
+
+// ==================== 統計 ====================
+function changeStatsMonth(delta) {
+  statsMonth += delta;
+  if (statsMonth > 12) { statsMonth = 1; statsYear++; }
+  if (statsMonth < 1) { statsMonth = 12; statsYear--; }
+  renderStats();
+}
+
+function renderStats() {
+  document.getElementById('statsMonthLabel').textContent = statsYear + ' / ' + String(statsMonth).padStart(2, '0');
+
+  const monthQuotes = state.quotations.filter(q => {
+    const d = new Date(q.date);
+    return d.getFullYear() === statsYear && (d.getMonth()+1) === statsMonth;
+  });
+  const monthPOs = state.purchaseOrders.filter(p => {
+    const d = new Date(p.date);
+    return d.getFullYear() === statsYear && (d.getMonth()+1) === statsMonth;
+  });
+
+  document.getElementById('statQuoteCount').textContent = monthQuotes.length;
+  document.getElementById('statPOCount').textContent = monthPOs.length;
+  document.getElementById('statQuoteTotal').textContent = numberFormat(monthQuotes.reduce((s, q) => s + q.total, 0));
+  document.getElementById('statPOTotal').textContent = numberFormat(monthPOs.reduce((s, p) => s + p.total, 0));
+
+  // 狀態分布
+  const distHtml = QUOTE_STATUSES.map(s => {
+    const count = monthQuotes.filter(q => q.status === s).length;
+    return `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px">
+      <span class="status-tag ${getStatusClass(s)}">${s}</span>
+      <span style="font-family:var(--font-en);font-weight:600">${count}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('quoteStatusDist').innerHTML = distHtml;
+
+  renderTrend();
+}
+
+function renderTrend() {
+  const yearSel = document.getElementById('trendYear');
+  if (yearSel.options.length === 0) {
+    const curYear = new Date().getFullYear();
+    for (let y = curYear - 2; y <= curYear; y++) {
+      yearSel.innerHTML += `<option value="${y}" ${y === curYear ? 'selected' : ''}>${y}</option>`;
+    }
+  }
+  const year = Number(yearSel.value);
+  const monthData = [];
+  let maxVal = 0;
+
+  for (let m = 1; m <= 12; m++) {
+    const qTotal = state.quotations
+      .filter(q => { const d = new Date(q.date); return d.getFullYear() === year && (d.getMonth()+1) === m; })
+      .reduce((s, q) => s + q.total, 0);
+    const pTotal = state.purchaseOrders
+      .filter(p => { const d = new Date(p.date); return d.getFullYear() === year && (d.getMonth()+1) === m; })
+      .reduce((s, p) => s + p.total, 0);
+    monthData.push({ m, qTotal, pTotal });
+    if (qTotal > maxVal) maxVal = qTotal;
+    if (pTotal > maxVal) maxVal = pTotal;
+  }
+
+  const chartEl = document.getElementById('trendChart');
+  chartEl.innerHTML = monthData.map(d => {
+    const qH = maxVal > 0 ? Math.max(2, (d.qTotal / maxVal) * 90) : 2;
+    const qK = d.qTotal >= 1000 ? Math.round(d.qTotal / 1000) + 'k' : d.qTotal;
+    return `<div class="trend-bar-wrap">
+      <div class="trend-value">${qK}</div>
+      <div style="flex:1;display:flex;align-items:flex-end;width:100%">
+        <div class="trend-bar" style="height:${qH}%"></div>
+      </div>
+      <div class="trend-label">${d.m}月</div>
+    </div>`;
+  }).join('');
+
+  const yearQTotal = monthData.reduce((s, d) => s + d.qTotal, 0);
+  const yearPTotal = monthData.reduce((s, d) => s + d.pTotal, 0);
+  document.getElementById('trendSummary').innerHTML = `
+    <span>報價 <strong>NTD ${numberFormat(yearQTotal)}</strong></span>
+    <span>採購 <strong>NTD ${numberFormat(yearPTotal)}</strong></span>
+  `;
+}
+
+// ==================== 設定頁 ====================
+function renderSettings() {
+  document.getElementById('settingApiUrl').value = state.settings.apiUrl || '';
+  document.getElementById('settingRecorder').value = state.settings.recorder || '';
+  document.getElementById('settingCompanyName').value = state.settings.companyInfo?.name || '堅心 Outrun Nutrition';
+  document.getElementById('settingTaxId').value = state.settings.companyInfo?.taxId || '';
+  document.getElementById('settingCompanyPhone').value = state.settings.companyInfo?.phone || '';
+  document.getElementById('settingCompanyEmail').value = state.settings.companyInfo?.email || '';
+  document.getElementById('settingCompanyAddr').value = state.settings.companyInfo?.address || '';
+  renderProductList();
+}
+
+function saveSettings() {
+  state.settings.apiUrl = document.getElementById('settingApiUrl').value.trim();
+  state.settings.recorder = document.getElementById('settingRecorder').value.trim();
+  state.settings.companyInfo = {
+    name: document.getElementById('settingCompanyName').value.trim(),
+    taxId: document.getElementById('settingTaxId').value.trim(),
+    phone: document.getElementById('settingCompanyPhone').value.trim(),
+    email: document.getElementById('settingCompanyEmail').value.trim(),
+    address: document.getElementById('settingCompanyAddr').value.trim(),
+  };
+  saveState();
+  updateSyncStatus();
+  showToast('設定已儲存', 'success');
+}
+
+function renderProductList() {
+  const container = document.getElementById('productList');
+  document.getElementById('productCountBadge').textContent = state.products.length;
+  if (state.products.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:var(--text-dim);padding:16px">尚無產品</div>';
+    return;
+  }
+  container.innerHTML = state.products.map((p, i) => `
+    <div class="product-list-item">
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-spec">${p.spec}｜${p.unit}</div>
+      </div>
+      <span class="product-price">${p.price > 0 ? 'NTD ' + numberFormat(p.price) : '依報價'}</span>
+      <button class="btn btn-danger btn-sm" onclick="removeProduct(${i})" style="padding:4px 8px;font-size:11px">✕</button>
+    </div>
+  `).join('');
+}
+
+function addCustomProduct() {
+  const name = document.getElementById('newProdName').value.trim();
+  const spec = document.getElementById('newProdSpec').value.trim();
+  const price = Number(document.getElementById('newProdPrice').value) || 0;
+  const unit = document.getElementById('newProdUnit').value.trim() || '個';
+  if (!name) { showToast('請輸入品名', 'error'); return; }
+  state.products.push({ name, spec, price, unit });
+  saveState();
+  renderProductList();
+  document.getElementById('newProdName').value = '';
+  document.getElementById('newProdSpec').value = '';
+  document.getElementById('newProdPrice').value = '';
+  document.getElementById('newProdUnit').value = '';
+  showToast('已新增產品', 'success');
+}
+
+function removeProduct(idx) {
+  if (!confirm('確定刪除「' + state.products[idx].name + '」？')) return;
+  state.products.splice(idx, 1);
+  saveState();
+  renderProductList();
+}
+
+// ==================== 雲端同步骨架 ====================
+function updateSyncStatus() {
+  const dot = document.getElementById('syncDot');
+  const label = document.getElementById('syncLabel');
+  if (state.settings.apiUrl) {
+    dot.className = 'sync-dot';
+    label.textContent = '已連線';
+  } else {
+    dot.className = 'sync-dot offline';
+    label.textContent = '本機';
+  }
+}
+
+async function callApi(method, data) {
+  const url = state.settings.apiUrl;
+  if (!url) throw new Error('未設定 API URL');
+
+  if (method === 'GET') {
+    const params = new URLSearchParams(data).toString();
+    const res = await fetch(url + '?' + params);
+    return await res.json();
+  } else {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return await res.json();
+  }
+}
+
+async function syncToCloud() {
+  if (!state.settings.apiUrl) {
+    showToast('請先在設定頁填入 API URL', 'error');
+    return;
+  }
+
+  if (state.pendingSync.length === 0) {
+    showToast('沒有待同步的資料', 'info');
+    return;
+  }
+
+  showToast('正在同步...', 'info');
+  let success = 0;
+  let fail = 0;
+
+  for (const item of state.pendingSync) {
+    try {
+      await callApi('POST', { action: item.type, ...item.data });
+      success++;
+    } catch (e) {
+      fail++;
+    }
+  }
+
+  if (fail === 0) {
+    state.pendingSync = [];
+    saveState();
+    showToast(`同步完成！共 ${success} 筆`, 'success');
+  } else {
+    showToast(`同步部分完成：${success} 成功 / ${fail} 失敗`, 'warning');
+  }
+}
+
+function clearLocalData() {
+  if (!confirm('確定要清除所有本地資料嗎？\n（報價單、採購單、產品目錄都會被清除）')) return;
+  if (!confirm('此操作無法復原，確定要繼續嗎？')) return;
+  Object.values(STORAGE_KEYS).forEach(k => localStorage.removeItem(k));
+  state.quotations = [];
+  state.purchaseOrders = [];
+  state.products = [...DEFAULT_PRODUCTS];
+  state.pendingSync = [];
+  saveState();
+  renderSettings();
+  showToast('本地資料已清除', 'info');
+}
+
+// ==================== PDF 產生 ====================
+function generateQuotePDF(q) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const company = state.settings.companyInfo;
+  const w = doc.internal.pageSize.getWidth();
+
+  // 標頭
+  doc.setFillColor(47, 47, 47);
+  doc.rect(0, 0, w, 45, 'F');
+  doc.setTextColor(237, 93, 43);
+  doc.setFontSize(20);
+  doc.text(company.name || 'Outrun Nutrition', 15, 20);
+  doc.setFontSize(12);
+  doc.setTextColor(224, 224, 224);
+  doc.text('QUOTATION', 15, 30);
+  doc.setFontSize(10);
+  doc.setTextColor(160, 160, 160);
+  doc.text('No: ' + q.id, 15, 38);
+  doc.text('Date: ' + q.date, w - 60, 30);
+  doc.text('Valid: ' + q.validUntil, w - 60, 38);
+
+  // 客戶資訊
+  let y = 55;
+  doc.setTextColor(100, 100, 100);
+  doc.setFontSize(9);
+  doc.text('BILL TO', 15, y);
+  y += 6;
+  doc.setTextColor(50, 50, 50);
+  doc.setFontSize(11);
+  doc.text(q.customer.name, 15, y);
+  y += 6;
+  doc.setFontSize(9);
+  if (q.customer.contact) { doc.text(q.customer.contact + (q.customer.phone ? ' / ' + q.customer.phone : ''), 15, y); y += 5; }
+  if (q.customer.email) { doc.text(q.customer.email, 15, y); y += 5; }
+  if (q.customer.address) { doc.text(q.customer.address, 15, y); y += 5; }
+
+  // 明細表格
+  y += 5;
+  const tableData = q.items.map((item, i) => [
+    i + 1,
+    item.productName,
+    item.spec,
+    item.qty,
+    item.unit,
+    'NTD ' + numberFormat(item.unitPrice),
+    'NTD ' + numberFormat(item.subtotal),
+  ]);
+
+  doc.autoTable({
+    startY: y,
+    head: [['#', 'Product', 'Spec', 'Qty', 'Unit', 'Unit Price', 'Subtotal']],
+    body: tableData,
+    theme: 'grid',
+    headStyles: { fillColor: [237, 93, 43], textColor: 255, fontSize: 9 },
+    bodyStyles: { fontSize: 9, textColor: [50, 50, 50] },
+    alternateRowStyles: { fillColor: [248, 248, 248] },
+    margin: { left: 15, right: 15 },
+  });
+
+  // 金額匯總
+  y = doc.lastAutoTable.finalY + 10;
+  const rightX = w - 15;
+  doc.setFontSize(10);
+  doc.setTextColor(100, 100, 100);
+  doc.text('Subtotal:', rightX - 60, y); doc.text('NTD ' + numberFormat(q.subtotal), rightX, y, { align: 'right' }); y += 6;
+  if (q.discountAmount) {
+    doc.text('Discount:', rightX - 60, y); doc.text('-NTD ' + numberFormat(q.discountAmount), rightX, y, { align: 'right' }); y += 6;
+  }
+  doc.text('Tax (5%):', rightX - 60, y); doc.text('NTD ' + numberFormat(q.taxAmount), rightX, y, { align: 'right' }); y += 2;
+  doc.setDrawColor(237, 93, 43);
+  doc.setLineWidth(0.5);
+  doc.line(rightX - 65, y, rightX, y); y += 6;
+  doc.setFontSize(13);
+  doc.setTextColor(237, 93, 43);
+  doc.text('Total:', rightX - 60, y);
+  doc.text('NTD ' + numberFormat(q.total), rightX, y, { align: 'right' });
+
+  // 備註
+  if (q.notes) {
+    y += 12;
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Notes:', 15, y); y += 5;
+    doc.setTextColor(50, 50, 50);
+    const lines = doc.splitTextToSize(q.notes, w - 30);
+    doc.text(lines, 15, y);
+  }
+
+  // 頁腳
+  const pageH = doc.internal.pageSize.getHeight();
+  doc.setFontSize(8);
+  doc.setTextColor(160, 160, 160);
+  const footer = [company.name, company.phone, company.email, company.address].filter(Boolean).join(' | ');
+  doc.text(footer, w / 2, pageH - 10, { align: 'center' });
+
+  doc.save(q.id + '.pdf');
+  showToast('PDF 已下載：' + q.id, 'success');
+}
+
+function generatePOPDF(po) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const company = state.settings.companyInfo;
+  const w = doc.internal.pageSize.getWidth();
+
+  // 標頭
+  doc.setFillColor(47, 47, 47);
+  doc.rect(0, 0, w, 45, 'F');
+  doc.setTextColor(237, 93, 43);
+  doc.setFontSize(20);
+  doc.text(company.name || 'Outrun Nutrition', 15, 20);
+  doc.setFontSize(12);
+  doc.setTextColor(224, 224, 224);
+  doc.text('PURCHASE ORDER', 15, 30);
+  doc.setFontSize(10);
+  doc.setTextColor(160, 160, 160);
+  doc.text('No: ' + po.id, 15, 38);
+  doc.text('Date: ' + po.date, w - 60, 30);
+  if (po.expectedDelivery) doc.text('Delivery: ' + po.expectedDelivery, w - 60, 38);
+
+  // 供應商資訊
+  let y = 55;
+  doc.setTextColor(100, 100, 100);
+  doc.setFontSize(9);
+  doc.text('VENDOR', 15, y);
+  y += 6;
+  doc.setTextColor(50, 50, 50);
+  doc.setFontSize(11);
+  doc.text(po.vendor.name, 15, y);
+  y += 6;
+  doc.setFontSize(9);
+  if (po.vendor.contact) { doc.text(po.vendor.contact + (po.vendor.phone ? ' / ' + po.vendor.phone : ''), 15, y); y += 5; }
+  if (po.vendor.email) { doc.text(po.vendor.email, 15, y); y += 5; }
+
+  doc.text('Payment Terms: ' + po.paymentTerms, w - 80, 55);
+
+  // 明細表格
+  y += 5;
+  const tableData = po.items.map((item, i) => [
+    i + 1, item.itemName, item.spec, item.qty, item.unit,
+    'NTD ' + numberFormat(item.unitPrice),
+    'NTD ' + numberFormat(item.subtotal),
+  ]);
+
+  doc.autoTable({
+    startY: y,
+    head: [['#', 'Item', 'Spec', 'Qty', 'Unit', 'Unit Price', 'Subtotal']],
+    body: tableData,
+    theme: 'grid',
+    headStyles: { fillColor: [20, 93, 221], textColor: 255, fontSize: 9 },
+    bodyStyles: { fontSize: 9, textColor: [50, 50, 50] },
+    alternateRowStyles: { fillColor: [248, 248, 248] },
+    margin: { left: 15, right: 15 },
+  });
+
+  // 金額匯總
+  y = doc.lastAutoTable.finalY + 10;
+  const rightX = w - 15;
+  doc.setFontSize(10);
+  doc.setTextColor(100, 100, 100);
+  doc.text('Subtotal:', rightX - 60, y); doc.text('NTD ' + numberFormat(po.subtotal), rightX, y, { align: 'right' }); y += 6;
+  doc.text('Tax (5%):', rightX - 60, y); doc.text('NTD ' + numberFormat(po.taxAmount), rightX, y, { align: 'right' }); y += 2;
+  doc.setDrawColor(20, 93, 221);
+  doc.setLineWidth(0.5);
+  doc.line(rightX - 65, y, rightX, y); y += 6;
+  doc.setFontSize(13);
+  doc.setTextColor(20, 93, 221);
+  doc.text('Total:', rightX - 60, y);
+  doc.text('NTD ' + numberFormat(po.total), rightX, y, { align: 'right' });
+
+  if (po.notes) {
+    y += 12;
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Notes:', 15, y); y += 5;
+    doc.setTextColor(50, 50, 50);
+    doc.text(doc.splitTextToSize(po.notes, w - 30), 15, y);
+  }
+
+  const pageH = doc.internal.pageSize.getHeight();
+  doc.setFontSize(8);
+  doc.setTextColor(160, 160, 160);
+  const footer = [company.name, company.phone, company.email, company.address].filter(Boolean).join(' | ');
+  doc.text(footer, w / 2, pageH - 10, { align: 'center' });
+
+  doc.save(po.id + '.pdf');
+  showToast('PDF 已下載：' + po.id, 'success');
+}
+
+// ==================== PWA ====================
+(function initPWA() {
+  const manifest = {
+    name: '堅心報價採購 — Outrun Nutrition',
+    short_name: '堅心報價採購',
+    description: 'Outrun Nutrition 報價單與採購單管理系統',
+    start_url: location.href.split('?')[0],
+    display: 'standalone',
+    background_color: '#2F2F2F',
+    theme_color: '#2F2F2F',
+    icons: [{
+      src: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="32" fill="#2F2F2F"/><text x="96" y="130" text-anchor="middle" font-size="110">📋</text></svg>'),
+      sizes: '192x192', type: 'image/svg+xml',
+    }],
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = URL.createObjectURL(blob);
+  document.head.appendChild(link);
+
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const banner = document.createElement('div');
+    banner.id = 'pwaInstallBanner';
+    banner.style.cssText = 'position:fixed;bottom:16px;left:12px;right:12px;background:var(--dark-gray);border:1px solid var(--orange);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.5)';
+    banner.innerHTML = `<div style="font-size:28px">📲</div><div style="flex:1"><div style="font-weight:600;font-size:14px">加到主畫面</div><div style="font-size:11px;color:var(--text-secondary)">安裝堅心報價採購 App</div></div>
+    <button onclick="deferredPrompt.prompt();deferredPrompt=null;this.parentElement.remove()" style="background:var(--orange);color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer">安裝</button>
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:18px">✕</button>`;
+    document.body.appendChild(banner);
+  });
+})();
+
+// ==================== 初始化 ====================
+function initDateFields() {
+  const today = todayStr();
+  document.getElementById('quoteDate').value = today;
+  document.getElementById('quoteValidUntil').value = addDays(today, 30);
+  document.getElementById('poDate').value = today;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  loadState();
+  initDateFields();
+  updateSyncStatus();
+
+  const now = new Date();
+  listYear = statsYear = now.getFullYear();
+  listMonth = statsMonth = now.getMonth() + 1;
+
+  // 首次使用名稱提示
+  if (!state.settings.recorder) {
+    setTimeout(() => {
+      const name = prompt('歡迎使用堅心報價/採購系統！\n請輸入你的名字（用於記錄建立人）：');
+      if (name && name.trim()) {
+        state.settings.recorder = name.trim();
+        saveState();
+        showToast('你好，' + name.trim() + '！', 'success');
+      }
+    }, 500);
+  }
+
+  addQuoteLineItem();
+});
+</script>
+</body>
+</html>
