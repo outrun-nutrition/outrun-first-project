@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 /* ==================== 基礎設定 ==================== */
 :root {
@@ -819,13 +820,23 @@ body {
       <span class="card-title">公司資訊（用於 PDF）</span>
     </div>
     <div class="form-group">
-      <label class="form-label">公司名稱</label>
+      <label class="form-label">公司名稱（中文品牌）</label>
       <input type="text" id="settingCompanyName" class="form-input" value="堅心 Outrun Nutrition">
     </div>
     <div class="form-row">
       <div class="form-group">
+        <label class="form-label">法人名稱</label>
+        <input type="text" id="settingLegalName" class="form-input" placeholder="焠爾瑯股份有限公司">
+      </div>
+      <div class="form-group">
+        <label class="form-label">英文名稱</label>
+        <input type="text" id="settingNameEn" class="form-input" placeholder="Outrun Nutrition Co., Ltd.">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
         <label class="form-label">統一編號</label>
-        <input type="text" id="settingTaxId" class="form-input" placeholder="12345678">
+        <input type="text" id="settingTaxId" class="form-input" placeholder="91114185">
       </div>
       <div class="form-group">
         <label class="form-label">電話</label>
@@ -839,6 +850,94 @@ body {
     <div class="form-group">
       <label class="form-label">地址</label>
       <input type="text" id="settingCompanyAddr" class="form-input" placeholder="公司地址">
+    </div>
+  </div>
+
+  <!-- 業務代表 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">業務代表（PDF 顯示）</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">業務名稱</label>
+      <input type="text" id="settingSalesName" class="form-input" placeholder="業務代表姓名">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">電話</label>
+        <input type="tel" id="settingSalesPhone" class="form-input" placeholder="0912-345-678">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" id="settingSalesEmail" class="form-input" placeholder="sales@outrun.com">
+      </div>
+    </div>
+  </div>
+
+  <!-- 匯款資訊 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">匯款資訊（PDF 顯示）</span>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">銀行名稱</label>
+        <input type="text" id="settingBankName" class="form-input" placeholder="玉山銀行">
+      </div>
+      <div class="form-group">
+        <label class="form-label">銀行代碼</label>
+        <input type="text" id="settingBankCode" class="form-input" placeholder="808">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">分行名稱（代碼）</label>
+        <input type="text" id="settingBankBranch" class="form-input" placeholder="北新分行 (0901)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">戶名</label>
+        <input type="text" id="settingBankHolder" class="form-input" placeholder="焠爾瑯股份有限公司">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">帳號</label>
+      <input type="text" id="settingBankAccount" class="form-input" placeholder="0901-9400-22708">
+    </div>
+  </div>
+
+  <!-- PDF 圖片上傳 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">PDF 圖片設定</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">公司 Logo（左上角顯示）</label>
+      <div id="logoPreview" style="margin-bottom:8px"></div>
+      <input type="file" id="logoUpload" accept="image/*" onchange="handleImageUpload('logo', this)" style="display:none">
+      <div class="btn-group">
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('logoUpload').click()" style="flex:1">📷 上傳 Logo</button>
+        <button class="btn btn-outline btn-sm" onclick="clearImage('logo')" style="flex:0.5;color:var(--danger)">清除</button>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:12px">
+      <label class="form-label">公司發票章（右下角簽署區顯示）</label>
+      <div id="stampPreview" style="margin-bottom:8px"></div>
+      <input type="file" id="stampUpload" accept="image/*" onchange="handleImageUpload('stamp', this)" style="display:none">
+      <div class="btn-group">
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('stampUpload').click()" style="flex:1">📷 上傳發票章</button>
+        <button class="btn btn-outline btn-sm" onclick="clearImage('stamp')" style="flex:0.5;color:var(--danger)">清除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF 備註條款 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">PDF 預設備註條款</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">備註條款（每行一條）</label>
+      <textarea id="settingPdfTerms" class="form-input" rows="4" placeholder="1. 本報價單有效期限為開立日起 30 天。&#10;2. 付款方式：匯款。"></textarea>
     </div>
   </div>
 
@@ -917,8 +1016,15 @@ let state = {
     recorder: '',
     companyInfo: {
       name: '堅心 Outrun Nutrition',
-      phone: '', email: '', address: '', taxId: ''
-    }
+      nameEn: 'Outrun Nutrition Co., Ltd.',
+      legalName: '焠爾瑯股份有限公司',
+      phone: '', email: '', address: '新北市新店區華興街46號1樓', taxId: '91114185'
+    },
+    salesRep: { name: '', phone: '', email: '' },
+    bankInfo: { bankName: '玉山銀行', bankCode: '808', branch: '北新分行 (0901)', holder: '焠爾瑯股份有限公司', account: '0901-9400-22708' },
+    logoBase64: '',
+    stampBase64: '',
+    pdfTerms: '1. 本報價單有效期限為開立日起 30 天。\n2. 付款方式：匯款。\n3. 商品交期依實際庫存狀況為準。'
   }
 };
 
@@ -1700,10 +1806,24 @@ function renderSettings() {
   document.getElementById('settingApiUrl').value = state.settings.apiUrl || '';
   document.getElementById('settingRecorder').value = state.settings.recorder || '';
   document.getElementById('settingCompanyName').value = state.settings.companyInfo?.name || '堅心 Outrun Nutrition';
+  document.getElementById('settingLegalName').value = state.settings.companyInfo?.legalName || '';
+  document.getElementById('settingNameEn').value = state.settings.companyInfo?.nameEn || '';
   document.getElementById('settingTaxId').value = state.settings.companyInfo?.taxId || '';
   document.getElementById('settingCompanyPhone').value = state.settings.companyInfo?.phone || '';
   document.getElementById('settingCompanyEmail').value = state.settings.companyInfo?.email || '';
   document.getElementById('settingCompanyAddr').value = state.settings.companyInfo?.address || '';
+  document.getElementById('settingSalesName').value = state.settings.salesRep?.name || '';
+  document.getElementById('settingSalesPhone').value = state.settings.salesRep?.phone || '';
+  document.getElementById('settingSalesEmail').value = state.settings.salesRep?.email || '';
+  document.getElementById('settingBankName').value = state.settings.bankInfo?.bankName || '';
+  document.getElementById('settingBankCode').value = state.settings.bankInfo?.bankCode || '';
+  document.getElementById('settingBankBranch').value = state.settings.bankInfo?.branch || '';
+  document.getElementById('settingBankHolder').value = state.settings.bankInfo?.holder || '';
+  document.getElementById('settingBankAccount').value = state.settings.bankInfo?.account || '';
+  document.getElementById('settingPdfTerms').value = state.settings.pdfTerms || '';
+  // 圖片預覽
+  renderImagePreview('logo', state.settings.logoBase64);
+  renderImagePreview('stamp', state.settings.stampBase64);
   renderProductList();
 }
 
@@ -1712,11 +1832,26 @@ function saveSettings() {
   state.settings.recorder = document.getElementById('settingRecorder').value.trim();
   state.settings.companyInfo = {
     name: document.getElementById('settingCompanyName').value.trim(),
+    legalName: document.getElementById('settingLegalName').value.trim(),
+    nameEn: document.getElementById('settingNameEn').value.trim(),
     taxId: document.getElementById('settingTaxId').value.trim(),
     phone: document.getElementById('settingCompanyPhone').value.trim(),
     email: document.getElementById('settingCompanyEmail').value.trim(),
     address: document.getElementById('settingCompanyAddr').value.trim(),
   };
+  state.settings.salesRep = {
+    name: document.getElementById('settingSalesName').value.trim(),
+    phone: document.getElementById('settingSalesPhone').value.trim(),
+    email: document.getElementById('settingSalesEmail').value.trim(),
+  };
+  state.settings.bankInfo = {
+    bankName: document.getElementById('settingBankName').value.trim(),
+    bankCode: document.getElementById('settingBankCode').value.trim(),
+    branch: document.getElementById('settingBankBranch').value.trim(),
+    holder: document.getElementById('settingBankHolder').value.trim(),
+    account: document.getElementById('settingBankAccount').value.trim(),
+  };
+  state.settings.pdfTerms = document.getElementById('settingPdfTerms').value.trim();
   saveState();
   updateSyncStatus();
   showToast('設定已儲存', 'success');
@@ -1841,196 +1976,371 @@ function clearLocalData() {
   showToast('本地資料已清除', 'info');
 }
 
-// ==================== PDF 產生 ====================
-function generateQuotePDF(q) {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const company = state.settings.companyInfo;
-  const w = doc.internal.pageSize.getWidth();
-
-  // 標頭
-  doc.setFillColor(47, 47, 47);
-  doc.rect(0, 0, w, 45, 'F');
-  doc.setTextColor(237, 93, 43);
-  doc.setFontSize(20);
-  doc.text(company.name || 'Outrun Nutrition', 15, 20);
-  doc.setFontSize(12);
-  doc.setTextColor(224, 224, 224);
-  doc.text('QUOTATION', 15, 30);
-  doc.setFontSize(10);
-  doc.setTextColor(160, 160, 160);
-  doc.text('No: ' + q.id, 15, 38);
-  doc.text('Date: ' + q.date, w - 60, 30);
-  doc.text('Valid: ' + q.validUntil, w - 60, 38);
-
-  // 客戶資訊
-  let y = 55;
-  doc.setTextColor(100, 100, 100);
-  doc.setFontSize(9);
-  doc.text('BILL TO', 15, y);
-  y += 6;
-  doc.setTextColor(50, 50, 50);
-  doc.setFontSize(11);
-  doc.text(q.customer.name, 15, y);
-  y += 6;
-  doc.setFontSize(9);
-  if (q.customer.contact) { doc.text(q.customer.contact + (q.customer.phone ? ' / ' + q.customer.phone : ''), 15, y); y += 5; }
-  if (q.customer.email) { doc.text(q.customer.email, 15, y); y += 5; }
-  if (q.customer.address) { doc.text(q.customer.address, 15, y); y += 5; }
-
-  // 明細表格
-  y += 5;
-  const tableData = q.items.map((item, i) => [
-    i + 1,
-    item.productName,
-    item.spec,
-    item.qty,
-    item.unit,
-    'NTD ' + numberFormat(item.unitPrice),
-    'NTD ' + numberFormat(item.subtotal),
-  ]);
-
-  doc.autoTable({
-    startY: y,
-    head: [['#', 'Product', 'Spec', 'Qty', 'Unit', 'Unit Price', 'Subtotal']],
-    body: tableData,
-    theme: 'grid',
-    headStyles: { fillColor: [237, 93, 43], textColor: 255, fontSize: 9 },
-    bodyStyles: { fontSize: 9, textColor: [50, 50, 50] },
-    alternateRowStyles: { fillColor: [248, 248, 248] },
-    margin: { left: 15, right: 15 },
-  });
-
-  // 金額匯總
-  y = doc.lastAutoTable.finalY + 10;
-  const rightX = w - 15;
-  doc.setFontSize(10);
-  doc.setTextColor(100, 100, 100);
-  doc.text('Subtotal:', rightX - 60, y); doc.text('NTD ' + numberFormat(q.subtotal), rightX, y, { align: 'right' }); y += 6;
-  if (q.discountAmount) {
-    doc.text('Discount:', rightX - 60, y); doc.text('-NTD ' + numberFormat(q.discountAmount), rightX, y, { align: 'right' }); y += 6;
+// ==================== 圖片上傳處理 ====================
+function handleImageUpload(type, input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('圖片大小不得超過 2MB', 'error');
+    input.value = '';
+    return;
   }
-  const qTaxLabel = q.taxType === 'excluded' ? 'Tax (5% excl.)' : q.taxType === 'included' ? 'Tax (5% incl.)' : 'Tax (exempt)';
-  doc.text(qTaxLabel + ':', rightX - 60, y); doc.text('NTD ' + numberFormat(q.taxAmount), rightX, y, { align: 'right' }); y += 2;
-  doc.setDrawColor(237, 93, 43);
-  doc.setLineWidth(0.5);
-  doc.line(rightX - 65, y, rightX, y); y += 6;
-  doc.setFontSize(13);
-  doc.setTextColor(237, 93, 43);
-  doc.text('Total:', rightX - 60, y);
-  doc.text('NTD ' + numberFormat(q.total), rightX, y, { align: 'right' });
-
-  // 備註
-  if (q.notes) {
-    y += 12;
-    doc.setFontSize(9);
-    doc.setTextColor(100, 100, 100);
-    doc.text('Notes:', 15, y); y += 5;
-    doc.setTextColor(50, 50, 50);
-    const lines = doc.splitTextToSize(q.notes, w - 30);
-    doc.text(lines, 15, y);
-  }
-
-  // 頁腳
-  const pageH = doc.internal.pageSize.getHeight();
-  doc.setFontSize(8);
-  doc.setTextColor(160, 160, 160);
-  const footer = [company.name, company.phone, company.email, company.address].filter(Boolean).join(' | ');
-  doc.text(footer, w / 2, pageH - 10, { align: 'center' });
-
-  doc.save(q.id + '.pdf');
-  showToast('PDF 已下載：' + q.id, 'success');
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result;
+    if (type === 'logo') {
+      state.settings.logoBase64 = base64;
+    } else if (type === 'stamp') {
+      state.settings.stampBase64 = base64;
+    }
+    saveState();
+    renderImagePreview(type, base64);
+    showToast((type === 'logo' ? 'Logo' : '發票章') + ' 已上傳', 'success');
+  };
+  reader.readAsDataURL(file);
 }
 
-function generatePOPDF(po) {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const company = state.settings.companyInfo;
-  const w = doc.internal.pageSize.getWidth();
-
-  // 標頭
-  doc.setFillColor(47, 47, 47);
-  doc.rect(0, 0, w, 45, 'F');
-  doc.setTextColor(237, 93, 43);
-  doc.setFontSize(20);
-  doc.text(company.name || 'Outrun Nutrition', 15, 20);
-  doc.setFontSize(12);
-  doc.setTextColor(224, 224, 224);
-  doc.text('PURCHASE ORDER', 15, 30);
-  doc.setFontSize(10);
-  doc.setTextColor(160, 160, 160);
-  doc.text('No: ' + po.id, 15, 38);
-  doc.text('Date: ' + po.date, w - 60, 30);
-  if (po.expectedDelivery) doc.text('Delivery: ' + po.expectedDelivery, w - 60, 38);
-
-  // 供應商資訊
-  let y = 55;
-  doc.setTextColor(100, 100, 100);
-  doc.setFontSize(9);
-  doc.text('VENDOR', 15, y);
-  y += 6;
-  doc.setTextColor(50, 50, 50);
-  doc.setFontSize(11);
-  doc.text(po.vendor.name, 15, y);
-  y += 6;
-  doc.setFontSize(9);
-  if (po.vendor.contact) { doc.text(po.vendor.contact + (po.vendor.phone ? ' / ' + po.vendor.phone : ''), 15, y); y += 5; }
-  if (po.vendor.email) { doc.text(po.vendor.email, 15, y); y += 5; }
-
-  doc.text('Payment Terms: ' + po.paymentTerms, w - 80, 55);
-
-  // 明細表格
-  y += 5;
-  const tableData = po.items.map((item, i) => [
-    i + 1, item.itemName, item.spec, item.qty, item.unit,
-    'NTD ' + numberFormat(item.unitPrice),
-    'NTD ' + numberFormat(item.subtotal),
-  ]);
-
-  doc.autoTable({
-    startY: y,
-    head: [['#', 'Item', 'Spec', 'Qty', 'Unit', 'Unit Price', 'Subtotal']],
-    body: tableData,
-    theme: 'grid',
-    headStyles: { fillColor: [20, 93, 221], textColor: 255, fontSize: 9 },
-    bodyStyles: { fontSize: 9, textColor: [50, 50, 50] },
-    alternateRowStyles: { fillColor: [248, 248, 248] },
-    margin: { left: 15, right: 15 },
-  });
-
-  // 金額匯總
-  y = doc.lastAutoTable.finalY + 10;
-  const rightX = w - 15;
-  doc.setFontSize(10);
-  doc.setTextColor(100, 100, 100);
-  doc.text('Subtotal:', rightX - 60, y); doc.text('NTD ' + numberFormat(po.subtotal), rightX, y, { align: 'right' }); y += 6;
-  const poTaxLabel = po.taxType === 'excluded' ? 'Tax (5% excl.)' : po.taxType === 'included' ? 'Tax (5% incl.)' : 'Tax (exempt)';
-  doc.text(poTaxLabel + ':', rightX - 60, y); doc.text('NTD ' + numberFormat(po.taxAmount), rightX, y, { align: 'right' }); y += 2;
-  doc.setDrawColor(20, 93, 221);
-  doc.setLineWidth(0.5);
-  doc.line(rightX - 65, y, rightX, y); y += 6;
-  doc.setFontSize(13);
-  doc.setTextColor(20, 93, 221);
-  doc.text('Total:', rightX - 60, y);
-  doc.text('NTD ' + numberFormat(po.total), rightX, y, { align: 'right' });
-
-  if (po.notes) {
-    y += 12;
-    doc.setFontSize(9);
-    doc.setTextColor(100, 100, 100);
-    doc.text('Notes:', 15, y); y += 5;
-    doc.setTextColor(50, 50, 50);
-    doc.text(doc.splitTextToSize(po.notes, w - 30), 15, y);
+function clearImage(type) {
+  if (type === 'logo') {
+    state.settings.logoBase64 = '';
+  } else if (type === 'stamp') {
+    state.settings.stampBase64 = '';
   }
+  saveState();
+  renderImagePreview(type, '');
+  showToast((type === 'logo' ? 'Logo' : '發票章') + ' 已清除', 'info');
+}
 
-  const pageH = doc.internal.pageSize.getHeight();
-  doc.setFontSize(8);
-  doc.setTextColor(160, 160, 160);
-  const footer = [company.name, company.phone, company.email, company.address].filter(Boolean).join(' | ');
-  doc.text(footer, w / 2, pageH - 10, { align: 'center' });
+function renderImagePreview(type, base64) {
+  const container = document.getElementById(type + 'Preview');
+  if (!container) return;
+  if (base64) {
+    container.innerHTML = '<img src="' + base64 + '" style="max-height:60px;max-width:200px;border-radius:4px;border:1px solid rgba(255,255,255,0.1)">';
+  } else {
+    container.innerHTML = '<div style="color:var(--text-dim);font-size:12px">尚未上傳</div>';
+  }
+}
 
-  doc.save(po.id + '.pdf');
-  showToast('PDF 已下載：' + po.id, 'success');
+// ==================== PDF 產生（html2canvas 方案）====================
+function escHtml(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function buildQuoteHTML(q) {
+  const co = state.settings.companyInfo;
+  const sr = state.settings.salesRep || {};
+  const bank = state.settings.bankInfo || {};
+  const terms = state.settings.pdfTerms || '';
+  const logoSrc = state.settings.logoBase64 || '';
+  const stampSrc = state.settings.stampBase64 || '';
+  const accent = '#145DDD';
+  const afterDiscount = q.subtotal - (q.discountAmount || 0);
+  const taxLabelMap = { excluded: '營業稅（5%）', included: '營業稅（內含 5%）', exempt: '營業稅（免稅）' };
+  const untaxed = q.taxType === 'included' ? Math.round(afterDiscount / 1.05) : afterDiscount;
+
+  let itemsHTML = q.items.map((item, i) => `
+    <tr style="border-bottom:1px solid #e5e5e5">
+      <td style="text-align:center;padding:8px 4px">${i + 1}</td>
+      <td style="padding:8px 6px">${escHtml(item.productName)}${item.spec ? '<br><span style="color:#888;font-size:11px">' + escHtml(item.spec) + '</span>' : ''}</td>
+      <td style="text-align:center;padding:8px 4px">${item.qty}</td>
+      <td style="text-align:center;padding:8px 4px">${escHtml(item.unit || '個')}</td>
+      <td style="text-align:right;padding:8px 6px">NT$ ${numberFormat(item.unitPrice)}</td>
+      <td style="text-align:right;padding:8px 6px">NT$ ${numberFormat(item.subtotal)}</td>
+    </tr>
+  `).join('');
+
+  const allNotes = [q.notes, terms].filter(Boolean).join('\n');
+
+  return `
+  <div style="font-family:'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif;color:#333;width:720px;padding:40px 45px;background:#fff;line-height:1.5">
+    <!-- 標頭 -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div>
+        ${logoSrc ? '<img src="' + logoSrc + '" style="height:48px;margin-bottom:8px" crossorigin="anonymous">' : '<div style="font-size:22px;font-weight:700;color:' + accent + ';margin-bottom:4px">' + escHtml(co.name || '堅心 Outrun Nutrition') + '</div>'}
+        ${co.legalName ? '<div style="font-size:11px;color:#666">' + escHtml(co.legalName) + (co.nameEn ? ' / ' + escHtml(co.nameEn) : '') + '</div>' : ''}
+        ${co.taxId ? '<div style="font-size:11px;color:#666">統編：' + escHtml(co.taxId) + '</div>' : ''}
+        ${co.address ? '<div style="font-size:11px;color:#666">地址：' + escHtml(co.address) + '</div>' : ''}
+        ${co.phone ? '<div style="font-size:11px;color:#666">電話：' + escHtml(co.phone) + '</div>' : ''}
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:28px;font-weight:700;color:${accent};letter-spacing:2px">QUOTATION</div>
+        <div style="font-size:16px;color:#666;margin-bottom:6px">報價單</div>
+        <div style="font-size:11px;color:#555">報價單號：${escHtml(q.id)}</div>
+        <div style="font-size:11px;color:#555">開立日期：${escHtml(q.date)}</div>
+        <div style="font-size:11px;color:#555">有效期限：${escHtml(q.validUntil)}</div>
+      </div>
+    </div>
+    <div style="border-top:3px solid ${accent};margin-bottom:16px"></div>
+
+    <!-- 客戶 + 業務 -->
+    <div style="display:flex;gap:16px;margin-bottom:16px">
+      <div style="flex:1;border:1px solid #ddd;border-radius:4px;padding:12px">
+        <div style="font-size:11px;font-weight:600;color:${accent};margin-bottom:6px">客戶資訊 BILL TO</div>
+        <div style="font-size:14px;font-weight:600;color:#333;margin-bottom:4px">${escHtml(q.customer.name)}</div>
+        ${q.customer.contact ? '<div style="font-size:11px;color:#666">聯繫人：' + escHtml(q.customer.contact) + '</div>' : ''}
+        ${q.customer.address ? '<div style="font-size:11px;color:#666">地址：' + escHtml(q.customer.address) + '</div>' : ''}
+        ${q.customer.phone ? '<div style="font-size:11px;color:#666">電話：' + escHtml(q.customer.phone) + '</div>' : ''}
+        ${q.customer.email ? '<div style="font-size:11px;color:#666">Email：' + escHtml(q.customer.email) + '</div>' : ''}
+      </div>
+      <div style="flex:1;border:1px solid #ddd;border-radius:4px;padding:12px">
+        <div style="font-size:11px;font-weight:600;color:${accent};margin-bottom:6px">業務代表 SALES REP</div>
+        <div style="font-size:14px;font-weight:600;color:#333;margin-bottom:4px">${escHtml(sr.name || state.settings.recorder || '')}</div>
+        ${sr.phone ? '<div style="font-size:11px;color:#666">電話：' + escHtml(sr.phone) + '</div>' : ''}
+        ${sr.email ? '<div style="font-size:11px;color:#666">Email：' + escHtml(sr.email) + '</div>' : ''}
+      </div>
+    </div>
+
+    <!-- 明細表格 -->
+    <table style="width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12px">
+      <thead>
+        <tr style="background:${accent};color:#fff">
+          <th style="padding:8px 6px;text-align:center;width:36px">#</th>
+          <th style="padding:8px 6px;text-align:left">品項 Description</th>
+          <th style="padding:8px 6px;text-align:center;width:55px">數量</th>
+          <th style="padding:8px 6px;text-align:center;width:50px">單位</th>
+          <th style="padding:8px 6px;text-align:right;width:90px">單價</th>
+          <th style="padding:8px 6px;text-align:right;width:100px">小計</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${itemsHTML}
+      </tbody>
+    </table>
+
+    <!-- 金額匯總 -->
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+      <div style="width:280px">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:#666">
+          <span>銷售合計（未稅）</span><span>NT$ ${numberFormat(untaxed)}</span>
+        </div>
+        ${q.discountAmount ? '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:#666"><span>折扣</span><span>-NT$ ' + numberFormat(q.discountAmount) + '</span></div>' : ''}
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:#666">
+          <span>${taxLabelMap[q.taxType] || '營業稅（5%）'}</span><span>NT$ ${numberFormat(q.taxAmount)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:#555">
+          <span>商品總額（含稅）</span><span>NT$ ${numberFormat(q.total)}</span>
+        </div>
+        <div style="border-top:2px solid ${accent};margin:4px 0"></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:16px;font-weight:700;color:${accent}">
+          <span>總計 Total</span><span>NT$ ${numberFormat(q.total)}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 匯款資訊 -->
+    ${(bank.bankName || bank.account) ? `
+    <div style="border:1px solid #ddd;border-radius:4px;padding:10px 12px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:600;color:${accent};margin-bottom:4px">匯款資訊 PAYMENT</div>
+      ${bank.bankCode && bank.bankName ? '<div style="font-size:11px;color:#555">銀行代碼：' + escHtml(bank.bankCode) + '（' + escHtml(bank.bankName) + '）</div>' : ''}
+      ${bank.branch ? '<div style="font-size:11px;color:#555">分行：' + escHtml(bank.branch) + '</div>' : ''}
+      ${bank.account ? '<div style="font-size:11px;color:#555">帳號：' + escHtml(bank.account) + '</div>' : ''}
+      ${bank.holder ? '<div style="font-size:11px;color:#555">戶名：' + escHtml(bank.holder) + '</div>' : ''}
+    </div>` : ''}
+
+    <!-- 備註條款 -->
+    ${allNotes ? `
+    <div style="border:1px solid #ddd;border-radius:4px;padding:10px 12px;margin-bottom:20px">
+      <div style="font-size:11px;font-weight:600;color:${accent};margin-bottom:4px">備註條款 TERMS</div>
+      <div style="font-size:10px;color:#666;white-space:pre-line">${escHtml(allNotes)}</div>
+    </div>` : ''}
+
+    <!-- 簽署區 -->
+    <div style="display:flex;gap:40px;margin-top:30px">
+      <div style="flex:1">
+        <div style="font-size:10px;color:#888;margin-bottom:30px">客戶簽署 Accepted By</div>
+        <div style="border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa">公司名稱 / 日期</div>
+      </div>
+      <div style="flex:1;text-align:center">
+        <div style="font-size:10px;color:#888;margin-bottom:6px">${escHtml(co.legalName || co.name || '')} Authorized By</div>
+        ${stampSrc ? '<img src="' + stampSrc + '" style="height:80px;margin-bottom:4px" crossorigin="anonymous">' : '<div style="height:80px"></div>'}
+        <div style="border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa">授權簽章 / 日期</div>
+      </div>
+    </div>
+
+    <!-- 頁腳 -->
+    <div style="text-align:center;margin-top:20px;font-size:9px;color:#bbb">
+      ${escHtml([co.name, co.phone, co.email].filter(Boolean).join(' | '))}
+    </div>
+  </div>`;
+}
+
+function buildPOHTML(po) {
+  const co = state.settings.companyInfo;
+  const logoSrc = state.settings.logoBase64 || '';
+  const stampSrc = state.settings.stampBase64 || '';
+  const accent = '#145DDD';
+  const poAfterTax = po.taxType === 'included' ? Math.round(po.subtotal / 1.05) : po.subtotal;
+  const taxLabelMap = { excluded: '營業稅（5%）', included: '營業稅（內含 5%）', exempt: '營業稅（免稅）' };
+
+  let itemsHTML = po.items.map((item, i) => `
+    <tr style="border-bottom:1px solid #e5e5e5">
+      <td style="text-align:center;padding:8px 4px">${i + 1}</td>
+      <td style="padding:8px 6px">${escHtml(item.itemName)}${item.spec ? '<br><span style="color:#888;font-size:11px">' + escHtml(item.spec) + '</span>' : ''}</td>
+      <td style="text-align:center;padding:8px 4px">${item.qty}</td>
+      <td style="text-align:center;padding:8px 4px">${escHtml(item.unit || '個')}</td>
+      <td style="text-align:right;padding:8px 6px">NT$ ${numberFormat(item.unitPrice)}</td>
+      <td style="text-align:right;padding:8px 6px">NT$ ${numberFormat(item.subtotal)}</td>
+    </tr>
+  `).join('');
+
+  return `
+  <div style="font-family:'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif;color:#333;width:720px;padding:40px 45px;background:#fff;line-height:1.5">
+    <!-- 標頭 -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div>
+        ${logoSrc ? '<img src="' + logoSrc + '" style="height:48px;margin-bottom:8px" crossorigin="anonymous">' : '<div style="font-size:22px;font-weight:700;color:' + accent + ';margin-bottom:4px">' + escHtml(co.name || '堅心 Outrun Nutrition') + '</div>'}
+        ${co.legalName ? '<div style="font-size:11px;color:#666">' + escHtml(co.legalName) + (co.nameEn ? ' / ' + escHtml(co.nameEn) : '') + '</div>' : ''}
+        ${co.taxId ? '<div style="font-size:11px;color:#666">統編：' + escHtml(co.taxId) + '</div>' : ''}
+        ${co.address ? '<div style="font-size:11px;color:#666">地址：' + escHtml(co.address) + '</div>' : ''}
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:26px;font-weight:700;color:${accent};letter-spacing:1px">PURCHASE ORDER</div>
+        <div style="font-size:16px;color:#666;margin-bottom:6px">採購單</div>
+        <div style="font-size:11px;color:#555">採購單號：${escHtml(po.id)}</div>
+        <div style="font-size:11px;color:#555">開立日期：${escHtml(po.date)}</div>
+        ${po.expectedDelivery ? '<div style="font-size:11px;color:#555">預期交貨：' + escHtml(po.expectedDelivery) + '</div>' : ''}
+      </div>
+    </div>
+    <div style="border-top:3px solid ${accent};margin-bottom:16px"></div>
+
+    <!-- 供應商 + 付款條件 -->
+    <div style="display:flex;gap:16px;margin-bottom:16px">
+      <div style="flex:1;border:1px solid #ddd;border-radius:4px;padding:12px">
+        <div style="font-size:11px;font-weight:600;color:${accent};margin-bottom:6px">供應商 VENDOR</div>
+        <div style="font-size:14px;font-weight:600;color:#333;margin-bottom:4px">${escHtml(po.vendor.name)}</div>
+        ${po.vendor.contact ? '<div style="font-size:11px;color:#666">聯繫人：' + escHtml(po.vendor.contact) + '</div>' : ''}
+        ${po.vendor.phone ? '<div style="font-size:11px;color:#666">電話：' + escHtml(po.vendor.phone) + '</div>' : ''}
+        ${po.vendor.email ? '<div style="font-size:11px;color:#666">Email：' + escHtml(po.vendor.email) + '</div>' : ''}
+      </div>
+      <div style="flex:1;border:1px solid #ddd;border-radius:4px;padding:12px">
+        <div style="font-size:11px;font-weight:600;color:${accent};margin-bottom:6px">付款條件 TERMS</div>
+        <div style="font-size:13px;font-weight:500;color:#333">${escHtml(po.paymentTerms || '月結30天')}</div>
+        ${po.relatedQuotationId ? '<div style="font-size:11px;color:#666;margin-top:6px">關聯報價單：' + escHtml(po.relatedQuotationId) + '</div>' : ''}
+      </div>
+    </div>
+
+    <!-- 明細表格 -->
+    <table style="width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12px">
+      <thead>
+        <tr style="background:${accent};color:#fff">
+          <th style="padding:8px 6px;text-align:center;width:36px">#</th>
+          <th style="padding:8px 6px;text-align:left">品項 Description</th>
+          <th style="padding:8px 6px;text-align:center;width:55px">數量</th>
+          <th style="padding:8px 6px;text-align:center;width:50px">單位</th>
+          <th style="padding:8px 6px;text-align:right;width:90px">單價</th>
+          <th style="padding:8px 6px;text-align:right;width:100px">小計</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${itemsHTML}
+      </tbody>
+    </table>
+
+    <!-- 金額匯總 -->
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+      <div style="width:280px">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:#666">
+          <span>小計（未稅）</span><span>NT$ ${numberFormat(poAfterTax)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:#666">
+          <span>${taxLabelMap[po.taxType] || '營業稅（5%）'}</span><span>NT$ ${numberFormat(po.taxAmount)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:#555">
+          <span>合計金額（含稅）</span><span>NT$ ${numberFormat(po.total)}</span>
+        </div>
+        <div style="border-top:2px solid ${accent};margin:4px 0"></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:16px;font-weight:700;color:${accent}">
+          <span>總計 Total</span><span>NT$ ${numberFormat(po.total)}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 備註 -->
+    ${po.notes ? `
+    <div style="border:1px solid #ddd;border-radius:4px;padding:10px 12px;margin-bottom:20px">
+      <div style="font-size:11px;font-weight:600;color:${accent};margin-bottom:4px">備註 NOTES</div>
+      <div style="font-size:10px;color:#666;white-space:pre-line">${escHtml(po.notes)}</div>
+    </div>` : ''}
+
+    <!-- 簽署區 -->
+    <div style="display:flex;gap:40px;margin-top:30px">
+      <div style="flex:1">
+        <div style="font-size:10px;color:#888;margin-bottom:30px">供應商確認 Vendor Confirmation</div>
+        <div style="border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa">公司名稱 / 日期</div>
+      </div>
+      <div style="flex:1;text-align:center">
+        <div style="font-size:10px;color:#888;margin-bottom:6px">${escHtml(co.legalName || co.name || '')} 核准</div>
+        ${stampSrc ? '<img src="' + stampSrc + '" style="height:80px;margin-bottom:4px" crossorigin="anonymous">' : '<div style="height:80px"></div>'}
+        <div style="border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa">授權簽章 / 日期</div>
+      </div>
+    </div>
+
+    <!-- 頁腳 -->
+    <div style="text-align:center;margin-top:20px;font-size:9px;color:#bbb">
+      ${escHtml([co.name, co.phone, co.email].filter(Boolean).join(' | '))}
+    </div>
+  </div>`;
+}
+
+async function htmlToPDF(htmlContent, filename) {
+  showToast('正在產生 PDF...', 'info');
+  // 建立隱藏的渲染容器
+  const container = document.createElement('div');
+  container.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-1;';
+  container.innerHTML = htmlContent;
+  document.body.appendChild(container);
+
+  try {
+    // 等待字體載入
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    // 短暫延遲確保渲染完成
+    await new Promise(r => setTimeout(r, 300));
+
+    const el = container.firstElementChild;
+    const canvas = await html2canvas(el, {
+      scale: 2.5,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+    });
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+    const { jsPDF } = window.jspdf;
+
+    // A4 比例：210 x 297 mm
+    const pdfW = 210;
+    const pdfH = 297;
+    const imgW = canvas.width;
+    const imgH = canvas.height;
+    const ratio = pdfW / imgW;
+    const scaledH = imgH * ratio;
+
+    // 如果內容超過一頁，按頁分割
+    if (scaledH <= pdfH) {
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+      doc.addImage(imgData, 'JPEG', 0, 0, pdfW, scaledH);
+      doc.save(filename);
+    } else {
+      const doc = new jsPDF({ unit: 'mm', format: [pdfW, scaledH] });
+      doc.addImage(imgData, 'JPEG', 0, 0, pdfW, scaledH);
+      doc.save(filename);
+    }
+
+    showToast('PDF 已下載：' + filename, 'success');
+  } catch (e) {
+    console.error('PDF 產生失敗:', e);
+    showToast('PDF 產生失敗：' + e.message, 'error');
+  } finally {
+    document.body.removeChild(container);
+  }
+}
+
+async function generateQuotePDF(q) {
+  const html = buildQuoteHTML(q);
+  await htmlToPDF(html, q.id + '.pdf');
+}
+
+async function generatePOPDF(po) {
+  const html = buildPOHTML(po);
+  await htmlToPDF(html, po.id + '.pdf');
 }
 
 // ==================== PWA ====================
