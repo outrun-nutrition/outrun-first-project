@@ -394,8 +394,8 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
     <div class="nc-field">
       <label>生理性別</label>
       <div class="nc-toggle-group">
-        <input type="radio" name="gender" id="genderM" value="male" checked><label class="nc-toggle" for="genderM"><span class="nc-icon">🙋‍♂️</span>男性</label>
-        <input type="radio" name="gender" id="genderF" value="female"><label class="nc-toggle" for="genderF"><span class="nc-icon">🙋‍♀️</span>女性</label>
+        <input type="radio" name="gender" id="genderM" value="male" checked><label class="nc-toggle" for="genderM"><span class="nc-icon">👨</span>男性</label>
+        <input type="radio" name="gender" id="genderF" value="female"><label class="nc-toggle" for="genderF"><span class="nc-icon">👩</span>女性</label>
       </div>
     </div>
     <div class="nc-row">
@@ -418,11 +418,11 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
     <div class="nc-field">
       <label>你從事哪些運動？（可複選）</label>
       <div class="nc-toggle-group cols-3">
-        <input type="checkbox" id="sport_marathon" value="marathon"><label class="nc-toggle" for="sport_marathon"><span class="nc-icon">🏃‍♂️</span>路跑/馬拉松</label>
+        <input type="checkbox" id="sport_marathon" value="marathon"><label class="nc-toggle" for="sport_marathon"><span class="nc-icon">🏃</span>路跑/馬拉松</label>
         <input type="checkbox" id="sport_strength" value="strength"><label class="nc-toggle" for="sport_strength"><span class="nc-icon">🏋️</span>重量訓練</label>
         <input type="checkbox" id="sport_ball" value="ball"><label class="nc-toggle" for="sport_ball"><span class="nc-icon">⚽</span>球類運動</label>
         <input type="checkbox" id="sport_cycling" value="cycling"><label class="nc-toggle" for="sport_cycling"><span class="nc-icon">🚴</span>自行車</label>
-        <input type="checkbox" id="sport_triathlon" value="triathlon"><label class="nc-toggle" for="sport_triathlon"><span class="nc-icon">🏊‍♂️</span>鐵人三項</label>
+        <input type="checkbox" id="sport_triathlon" value="triathlon"><label class="nc-toggle" for="sport_triathlon"><span class="nc-icon">🏊</span>鐵人三項</label>
         <input type="checkbox" id="sport_crossfit" value="crossfit"><label class="nc-toggle" for="sport_crossfit"><span class="nc-icon">🔥</span>CrossFit/功能性</label>
         <input type="checkbox" id="sport_hyrox" value="hyrox"><label class="nc-toggle" for="sport_hyrox"><span class="nc-icon">⚡</span>HYROX</label>
         <input type="checkbox" id="sport_combat" value="combat"><label class="nc-toggle" for="sport_combat"><span class="nc-icon">🥊</span>格鬥/武術</label>
@@ -520,7 +520,7 @@ body{font-family:'Noto Sans TC','Montserrat',-apple-system,BlinkMacSystemFont,"S
         <input type="checkbox" id="issue2" value="post_training_insomnia"><label class="nc-toggle" for="issue2"><span class="nc-icon">🌙</span>高強度訓練後反而睡不著</label>
         <input type="checkbox" id="issue3" value="brain_fog"><label class="nc-toggle" for="issue3"><span class="nc-icon">🧠</span>訓練隔天工作腦霧</label>
         <input type="checkbox" id="issue4" value="motivation_drop"><label class="nc-toggle" for="issue4"><span class="nc-icon">📉</span>近期對訓練失去動力</label>
-        <input type="checkbox" id="issue5" value="elevated_rhr"><label class="nc-toggle" for="issue5"><span class="nc-icon">❤️‍🔥</span>晨起靜息心率偏高</label>
+        <input type="checkbox" id="issue5" value="elevated_rhr"><label class="nc-toggle" for="issue5"><span class="nc-icon">💓</span>晨起靜息心率偏高</label>
         <input type="checkbox" id="issue6" value="frequent_illness"><label class="nc-toggle" for="issue6"><span class="nc-icon">🤧</span>容易感冒或免疫力下降</label>
         <input type="checkbox" id="issue7" value="joint_pain"><label class="nc-toggle" for="issue7"><span class="nc-icon">🦴</span>關節或肌腱不適</label>
         <input type="checkbox" id="issue8" value="mood_swings"><label class="nc-toggle" for="issue8"><span class="nc-icon">😤</span>情緒波動或易怒</label>
@@ -897,7 +897,7 @@ function buildRecs(gender,wt,goal,freq,sports,dur,phase,issues,race,gi,supps,sc,
 
   /* ===== 通用文獻佐證推薦（2026 updated evidence） ===== */
   if(supps.indexOf("magnesium")===-1&&(sc.sleep<=60||issues.indexOf("post_training_insomnia")!==-1))
-    its.push({name:"鎂（甘胺酸鎂/蘇糖酸鎂）",icon:"💊",bg:"rgba(160,160,160,.08)",dose:"睡前 200-400mg 元素鎂",reason:"鎂參與 300+ 酶反應，包含肌肉放鬆與神經傳導。甘胺酸鎂生物利用率優於氧化鎂，蘇糖酸鎂具穿越血腦屏障特性，對睡眠與認知恢復更具針對性。耐力運動員因流汗流失鎂風險更高。",ref:"Zhang Y et al. Association of magnesium intake with sleep. Nutrients. 2022;14(5):1116. / Maier JA et al. Magnesium and inflammation. Adv Nutr. 2024;15:100352.",pri:"recommended",pl:"建議",sc:58,k:false});
+    its.push({name:"鎂（甘胺酸鎂/蘇糖酸鎂）",icon:"✨",bg:"rgba(160,160,160,.08)",dose:"睡前 200-400mg 元素鎂",reason:"鎂參與 300+ 酶反應，包含肌肉放鬆與神經傳導。甘胺酸鎂生物利用率優於氧化鎂，蘇糖酸鎂具穿越血腦屏障特性，對睡眠與認知恢復更具針對性。耐力運動員因流汗流失鎂風險更高。",ref:"Zhang Y et al. Association of magnesium intake with sleep. Nutrients. 2022;14(5):1116. / Maier JA et al. Magnesium and inflammation. Adv Nutr. 2024;15:100352.",pri:"recommended",pl:"建議",sc:58,k:false});
 
   if(supps.indexOf("iron")===-1&&(gender==="female"||(isEnd&&intense)))
     its.push({name:"鐵劑",icon:"🩸",bg:"rgba(160,160,160,.08)",dose:"隔日 40-80mg 元素鐵（搭配維生素 C，避免與鈣/茶/咖啡同服）",reason:"女性運動者與高訓練量耐力運動者為缺鐵高風險族群。2024 研究證實隔日補充比每日補充的分段吸收率更高（鐵調素反彈效應）。建議先檢測血清鐵蛋白，運動員目標 >30 ng/mL。",ref:"Moretti D et al. Iron supplementation timing and absorption. Blood. 2024. / Peeling P et al. Athletic induced iron deficiency. Int J Sport Nutr Exerc Metab. 2008;18(5):501-514.",pri:"recommended",pl:"建議",sc:56,k:false});
