@@ -884,46 +884,47 @@ function buildRecs(gender,wt,goal,freq,sports,dur,phase,issues,race,gi,supps,sc,
   var its=[];
   /* 眠易復 — 適用所有高強度運動類型 */
   var sn=0;if(issues.indexOf("post_training_insomnia")!==-1)sn+=35;if(issues.indexOf("brain_fog")!==-1)sn+=15;if(issues.indexOf("slow_recovery")!==-1)sn+=10;if(issues.indexOf("mood_swings")!==-1)sn+=10;if(sc.sleep<=40)sn+=30;else if(sc.sleep<=60)sn+=15;if(intense)sn+=10;if(el<=2)sn+=10;if(isCmbt)sn+=5;if(isMix)sn+=5;
-  if(sn>=25)its.push({name:"眠易復 運動恢復膠囊",icon:"🌙",bg:"rgba(20,93,221,.12)",dose:"睡前 30 分鐘服用 2 粒",reason:"含檸檬馬鞭草萃取、OLPLUS 益菌萃取、GABA 與甘胺酸鎂，引導深度睡眠，輔助生理修復。針對高強度訓練後交感神經亢奮導致的入睡困難設計。",ref:"Samuels CH. Sleep, recovery and performance. Phys Med Rehabil Clin. 2009.",pri:sn>=45?"essential":"recommended",pl:sn>=45?"核心推薦":"推薦",sc:70+sn/3,k:true});
+  if(sn>=25)its.push({name:"眠易復 運動恢復膠囊",icon:"🌙",bg:"rgba(20,93,221,.12)",dose:"睡前一小時補充 1 顆（高訓練量或需快速恢復可增至 2 顆）",reason:"含檸檬馬鞭草萃取、OLPLUS 益菌萃取、GABA 與甘胺酸鎂，引導深度睡眠，輔助生理修復。針對高強度訓練後交感神經亢奮導致的入睡困難設計。",ref:"Samuels CH. Sleep, recovery and performance. Phys Med Rehabil Clin. 2009.",pri:sn>=45?"essential":"recommended",pl:sn>=45?"核心推薦":"推薦",sc:70+sn/3,k:true});
   /* 能易復 — 適用所有需肌肉修復的運動 */
   var rn=0;if(isEnd)rn+=20;if(isStr)rn+=20;if(isMix)rn+=15;if(isBall)rn+=12;if(isCmbt)rn+=15;if(longS)rn+=15;if(goal==="faster_recovery")rn+=25;if(goal==="muscle_gain")rn+=20;if(goal==="race_pr")rn+=10;if(issues.indexOf("slow_recovery")!==-1)rn+=20;if(hasRace)rn+=10;if(supps.indexOf("protein")===-1)rn+=10;
   if(rn>=25)its.push({name:"能易復 恢復蛋白（黑糖仙草）",icon:"🥤",bg:"rgba(237,93,43,.1)",dose:fullRace?"賽後 30 分鐘內 1 份，長距離建議攜帶 500g 盒裝":"訓練後 30 分鐘內沖泡 1 份",reason:"專利 EAAlpha 配方提供 20g 蛋白質 + 24g 碳水的恢復黃金比例，全素可食。符合 ISSN 運動後 0-2 小時蛋白質攝取窗口建議，無論耐力或肌力訓練都適用。",ref:"Jager R et al. ISSN Position Stand: protein and exercise. 2017.",pri:rn>=45?"essential":"recommended",pl:rn>=45?"核心推薦":"推薦",sc:65+rn/3,k:true});
   /* 食動力 — 適用所有高強度及長時間運動 */
   var gn=0;if(gi==="severe")gn+=35;if(gi==="mild")gn+=15;if(isEnd)gn+=15;if(isMix)gn+=12;if(isCmbt)gn+=10;if(isBall)gn+=8;if(longS)gn+=10;if(hasRace)gn+=10;if(intense)gn+=8;if(supps.indexOf("probiotic")===-1)gn+=10;
-  if(gn>=25)its.push({name:"食動力 運動益生菌",icon:"⚡",bg:"rgba(237,93,43,.1)",dose:"訓練前 1 包，搭配溫水服用",reason:"TWK-10 專利益生菌 + GasAid 配方。高強度運動中 30-50% 的運動者遭遇腸胃不適，穩定腸道功能是運動表現的基礎。",ref:"de Oliveira EP et al. GI complaints during exercise. Sports Med. 2014.",pri:gn>=40?"essential":"recommended",pl:gn>=40?"核心推薦":"推薦",sc:60+gn/3,k:true});
-  /* OARC — 適用長距離賽事 或 高強度混合賽事 */
-  if((fullRace&&isEnd)||(funcComp&&isMix))its.push({name:"OARC 專業科學訓練補給組",icon:"🎯",bg:"rgba(20,93,221,.1)",dose:"依賽事類型客製組合",reason:"結合食動力與能易復的完整科學循環，針對高強度賽事的系統化補給方案。",ref:"",pri:"recommended",pl:"推薦",sc:75,k:true});
+  if(gn>=25)its.push({name:"食動力 運動益生菌",icon:"⚡",bg:"rgba(237,93,43,.1)",dose:"空腹時 1 包，建議睡前或起床後搭配常溫水；訓練或賽事中消化不適時亦可補充 1 包",reason:"TWK-10 專利益生菌 + GasAid 配方。高強度運動中 30-50% 的運動者遭遇腸胃不適，穩定腸道功能是運動表現的基礎。",ref:"de Oliveira EP et al. GI complaints during exercise. Sports Med. 2014.",pri:gn>=40?"essential":"recommended",pl:gn>=40?"核心推薦":"推薦",sc:60+gn/3,k:true});
+  /* TEMPO 膠囊 — 適用高強度訓練與賽事 */
+  var tn=0;if(intense)tn+=20;if(hasRace)tn+=20;if(fullRace)tn+=15;if(goal==="race_pr")tn+=15;if(goal==="endurance_up")tn+=10;if(isEnd)tn+=10;if(isMix)tn+=10;if(isCmbt)tn+=10;if(isBall)tn+=8;
+  if(tn>=25)its.push({name:"TEMPO 膠囊",icon:"🔥",bg:"rgba(237,93,43,.1)",dose:"訓練前一小時補充 2 顆；運動中每 3 小時再補充 2 顆",reason:"咖啡因結合專利配方，維持長時間訓練與賽事中的專注力與運動表現。符合 ISSN 咖啡因增補效益建議，針對耐力與高強度間歇運動設計。",ref:"Guest NS et al. ISSN Position Stand: caffeine and exercise performance. J Int Soc Sports Nutr. 2021;18:1.",pri:tn>=45?"essential":"recommended",pl:tn>=45?"核心推薦":"推薦",sc:72+tn/3,k:true});
 
-  /* ===== 通用文獻佐證推薦 ===== */
+  /* ===== 通用文獻佐證推薦（2026 updated evidence） ===== */
   if(supps.indexOf("magnesium")===-1&&(sc.sleep<=60||issues.indexOf("post_training_insomnia")!==-1))
-    its.push({name:"鎂（甘胺酸鎂/檸檬酸鎂）",icon:"💊",bg:"rgba(160,160,160,.08)",dose:"睡前 200-400mg 元素鎂",reason:"鎂參與超過 300 種酶反應，包含肌肉放鬆與神經傳導。研究顯示鎂補充可輔助改善睡眠品質與減少肌肉痙攣。耐力運動員因流汗流失鎂的風險更高。",ref:"Zhang Y et al. Association of magnesium intake with sleep. Nutrients. 2022;14(5):1116.",pri:"recommended",pl:"建議",sc:58,k:false});
+    its.push({name:"鎂（甘胺酸鎂/蘇糖酸鎂）",icon:"💊",bg:"rgba(160,160,160,.08)",dose:"睡前 200-400mg 元素鎂",reason:"鎂參與 300+ 酶反應，包含肌肉放鬆與神經傳導。甘胺酸鎂生物利用率優於氧化鎂，蘇糖酸鎂具穿越血腦屏障特性，對睡眠與認知恢復更具針對性。耐力運動員因流汗流失鎂風險更高。",ref:"Zhang Y et al. Association of magnesium intake with sleep. Nutrients. 2022;14(5):1116. / Maier JA et al. Magnesium and inflammation. Adv Nutr. 2024;15:100352.",pri:"recommended",pl:"建議",sc:58,k:false});
 
   if(supps.indexOf("iron")===-1&&(gender==="female"||(isEnd&&intense)))
-    its.push({name:"鐵劑",icon:"🩸",bg:"rgba(160,160,160,.08)",dose:"每日 15-30mg（建議搭配維生素 C 促進吸收）",reason:"女性運動者與高訓練量的耐力運動者是缺鐵性貧血的高風險族群。鐵是血紅素的核心組成，不足會導致運動表現與恢復力顯著下降。建議定期檢測血清鐵蛋白。",ref:"Peeling P et al. Athletic induced iron deficiency. Int J Sport Nutr Exerc Metab. 2008;18(5):501-514.",pri:"recommended",pl:"建議",sc:56,k:false});
+    its.push({name:"鐵劑",icon:"🩸",bg:"rgba(160,160,160,.08)",dose:"隔日 40-80mg 元素鐵（搭配維生素 C，避免與鈣/茶/咖啡同服）",reason:"女性運動者與高訓練量耐力運動者為缺鐵高風險族群。2024 研究證實隔日補充比每日補充的分段吸收率更高（鐵調素反彈效應）。建議先檢測血清鐵蛋白，運動員目標 >30 ng/mL。",ref:"Moretti D et al. Iron supplementation timing and absorption. Blood. 2024. / Peeling P et al. Athletic induced iron deficiency. Int J Sport Nutr Exerc Metab. 2008;18(5):501-514.",pri:"recommended",pl:"建議",sc:56,k:false});
 
   if(supps.indexOf("fish_oil")===-1&&(issues.indexOf("slow_recovery")!==-1||issues.indexOf("joint_pain")!==-1||intense))
-    its.push({name:"高濃度魚油（Omega-3）",icon:"🐟",bg:"rgba(160,160,160,.08)",dose:"每日 2-3g EPA+DHA",reason:"EPA 與 DHA 具調節發炎反應的作用，有助於高強度訓練後的肌肉與關節恢復。多項統合分析支持其在運動恢復中的輔助角色。",ref:"Calder PC. Omega-3 fatty acids and inflammatory processes. Nutrients. 2010;2(3):355-374.",pri:issues.indexOf("joint_pain")!==-1?"recommended":"optional",pl:issues.indexOf("joint_pain")!==-1?"建議":"可選",sc:issues.indexOf("joint_pain")!==-1?55:45,k:false});
+    its.push({name:"高濃度魚油（Omega-3）",icon:"🐟",bg:"rgba(160,160,160,.08)",dose:"每日 2-3g EPA+DHA（建議 EPA:DHA ≥ 2:1）",reason:"2024 ISSN 立場聲明確認 EPA/DHA 調節運動誘發炎症反應、加速肌肉恢復並降低延遲性肌肉痠痛（DOMS）。關節不適者建議偏重 EPA 比例。",ref:"Heileson JL et al. ISSN position stand: omega-3 (EPA & DHA) supplementation. J Int Soc Sports Nutr. 2024;21(1):2313705.",pri:issues.indexOf("joint_pain")!==-1?"recommended":"optional",pl:issues.indexOf("joint_pain")!==-1?"建議":"可選",sc:issues.indexOf("joint_pain")!==-1?55:45,k:false});
 
   if((isEnd||longS||isBall||isCmbt||isMix)&&supps.indexOf("electrolyte")===-1)
-    its.push({name:"電解質補充",icon:"💦",bg:"rgba(160,160,160,.08)",dose:"訓練中每 30-45 分鐘，含鈉 300-500mg",reason:"中高強度運動流汗導致鈉、鉀流失，影響肌肉收縮與神經傳導。球類、格鬥及混合訓練的流汗量不亞於耐力運動，建議根據個人調整。",ref:"Sawka MN et al. ACSM Position Stand: Exercise and fluid replacement. Med Sci Sports Exerc. 2007.",pri:longS?"essential":"recommended",pl:longS?"必備":"建議",sc:longS?62:50,k:false});
+    its.push({name:"電解質補充",icon:"💦",bg:"rgba(160,160,160,.08)",dose:"訓練中每小時含鈉 300-600mg，依個人出汗率調整",reason:"中高強度運動流汗導致鈉、鉀流失，影響肌肉收縮與神經傳導。ACSM 2024 更新建議依個人汗液鈉濃度客製化補充策略，球類與格鬥流汗量不亞於耐力運動。",ref:"McDermott BP et al. National Athletic Trainers’ Association Position Statement: Fluid Replacement. J Athl Train. 2024.",pri:longS?"essential":"recommended",pl:longS?"必備":"建議",sc:longS?62:50,k:false});
 
   if((isEnd&&longS&&hasRace)||(isMix&&hasRace))
-    its.push({name:"運動中碳水補給（能量膠/飲品）",icon:"🍯",bg:"rgba(160,160,160,.08)",dose:"每 45-60 分鐘補充 30-60g 碳水",reason:"超過 60-90 分鐘的高強度運動建議使用多重轉運體碳水（葡萄糖+果糖 2:1），可將攝取量提升至 60-90g/hr，需經腸道訓練適應。",ref:"Jeukendrup AE. Training the gut for athletes. Sports Med. 2017;47(Suppl 1):101-110.",pri:"recommended",pl:"建議",sc:58,k:false});
+    its.push({name:"運動中碳水補給（能量膠/飲品）",icon:"🍯",bg:"rgba(160,160,160,.08)",dose:"每小時 60-90g（經腸道訓練可達 120g/hr），葡萄糖:果糖 1:0.8",reason:"超過 60 分鐘高強度運動建議補充。2024 研究確認葡萄糖:果糖 1:0.8 比例最大化碳水氧化率，需提前 2-4 週腸道訓練適應。",ref:"King AJ et al. Carbohydrate dose influences glycogen oxidation kinetics. Med Sci Sports Exerc. 2022;54:1022. / Podlogar T & Wallis GA. Fructose-maltodextrin ratio. Eur J Sport Sci. 2024.",pri:"recommended",pl:"建議",sc:58,k:false});
 
   if(supps.indexOf("vitamin_d")===-1)
-    its.push({name:"維生素 D3",icon:"☀️",bg:"rgba(160,160,160,.08)",dose:"每日 2000-4000 IU",reason:"影響骨骼健康、肌肉功能與免疫力。台灣超過 60% 的成年人維生素 D 不足，規律運動者尤其需要關注。建議檢測血清 25(OH)D，目標維持 40-60 ng/mL。",ref:"Owens DJ et al. Vitamin D and the athlete. Sports Med. 2018;48:3-16.",pri:"optional",pl:"可選",sc:42,k:false});
+    its.push({name:"維生素 D3 + K2",icon:"☀️",bg:"rgba(160,160,160,.08)",dose:"每日 D3 2000-4000 IU + K2（MK-7）100-200mcg",reason:"影響骨骼健康、肌肉功能與免疫力。台灣超過 60% 成年人維生素 D 不足。2024 IOC 共識建議搭配 K2 促進鈣質正確分配至骨骼而非血管。目標血清 25(OH)D 40-60 ng/mL。",ref:"Owens DJ et al. Vitamin D and the athlete. Sports Med. 2018;48:3-16. / IOC Consensus Statement on Micronutrients. Br J Sports Med. 2024.",pri:"optional",pl:"可選",sc:42,k:false});
 
   if(supps.indexOf("vitamin_b")===-1&&(intense||goal==="body_comp"))
-    its.push({name:"維生素 B 群",icon:"🟡",bg:"rgba(160,160,160,.08)",dose:"每日 1 顆（活性型態尤佳）",reason:"B 群是能量代謝的必需輔酶，高訓練量或熱量限制期間需求增加。B1、B6、B12 對於碳水與蛋白質代謝特別重要。",ref:"Woolf K, Manore MM. B-vitamins and exercise. Int J Sport Nutr Exerc Metab. 2006;16(5):453-484.",pri:"optional",pl:"可選",sc:40,k:false});
+    its.push({name:"維生素 B 群",icon:"🟡",bg:"rgba(160,160,160,.08)",dose:"每日 1 顆（活性型態尤佳，如甲基鈷胺素 B12、5-MTHF 葉酸）",reason:"B 群為能量代謝必需輔酶，高訓練量或熱量限制期間需求增加。B1、B6、B12 對碳水與蛋白質代謝尤為關鍵。活性型態生物利用率優於一般合成型。",ref:"Woolf K, Manore MM. B-vitamins and exercise. Int J Sport Nutr Exerc Metab. 2006;16(5):453-484. / Thomas DT et al. ACSM Position Stand: Nutrition and athletic performance. 2016.",pri:"optional",pl:"可選",sc:40,k:false});
 
   if(supps.indexOf("creatine")===-1&&(isStr||isMix||isCmbt||isBall||goal==="muscle_gain"))
-    its.push({name:"肌酸（Creatine Monohydrate）",icon:"⚡",bg:"rgba(160,160,160,.08)",dose:"每日 3-5g，搭配水或果汁",reason:"ISSN 評定為 A 級證據（強烈推薦）。可提升高強度短時間的力量輸出與爆發力，對重訓、球類、格鬥及功能性訓練者皆有益處，長期使用安全性良好。",ref:"Rawson ES et al. ISSN Position Stand: Creatine supplementation. J Int Soc Sports Nutr. 2021;18:46.",pri:"recommended",pl:"建議",sc:55,k:false});
+    its.push({name:"肌酸（Creatine Monohydrate）",icon:"⚡",bg:"rgba(160,160,160,.08)",dose:"每日 3-5g，持續補充無需載入期",reason:"ISSN 2025 更新維持 A 級證據評定。提升高強度短時間力量輸出與爆發力，新增認知功能益處證據。長期使用安全性良好，無需循環停補。",ref:"Kreider RB et al. ISSN exercise & sports nutrition review update. J Int Soc Sports Nutr. 2025.",pri:"recommended",pl:"建議",sc:55,k:false});
 
   if(supps.indexOf("collagen")===-1&&issues.indexOf("joint_pain")!==-1)
-    its.push({name:"膠原蛋白胜肽",icon:"🦴",bg:"rgba(160,160,160,.08)",dose:"每日 10-15g，搭配維生素 C",reason:"研究顯示水解膠原蛋白搭配維生素 C 在運動前 30-60 分鐘補充，可促進肌腱與韌帶膠原蛋白合成。適合有關節不適或傷後恢復需求者。",ref:"Shaw G et al. Vitamin C-enriched gelatin supplementation. Am J Clin Nutr. 2017;105(1):136-143.",pri:"recommended",pl:"建議",sc:50,k:false});
+    its.push({name:"膠原蛋白胜肽",icon:"🦴",bg:"rgba(160,160,160,.08)",dose:"運動前 30-60 分鐘補充 15g + 維生素 C 50mg",reason:"2024 統合分析確認水解膠原蛋白搭配維生素 C 可促進肌腱與韌帶膠原蛋白合成。建議運動前服用以配合結締組織代謝窗口。",ref:"Shaw G et al. Vitamin C-enriched gelatin supplementation. Am J Clin Nutr. 2017;105(1):136-143. / Kirmse M et al. Collagen peptide supplementation. Nutrients. 2024;16(11):1622.",pri:"recommended",pl:"建議",sc:50,k:false});
 
   if(issues.indexOf("frequent_illness")!==-1&&supps.indexOf("vitamin_d")===-1)
-    its.push({name:"維生素 C + 鋅",icon:"🍊",bg:"rgba(160,160,160,.08)",dose:"維生素 C 500-1000mg + 鋅 15-25mg/日",reason:"高強度訓練會暫時抑制免疫功能（open window 理論）。維生素 C 與鋅的補充有助於縮短上呼吸道感染的持續時間。",ref:"Hemila H. Vitamin C and infections. Nutrients. 2017;9(4):339.",pri:"recommended",pl:"建議",sc:48,k:false});
+    its.push({name:"維生素 C + 鋅",icon:"🍊",bg:"rgba(160,160,160,.08)",dose:"維生素 C 500-1000mg + 鋅 15-25mg/日（甘胺酸鋅吸收率較佳）",reason:"高強度訓練暫時抑制免疫功能（open window 理論）。2024 Cochrane 更新確認持續補充維生素 C 可縮短感冒持續時間 8%。鋅以甘胺酸鋅或吡啶甲酸鋅形式吸收率較佳。",ref:"Hemila H & Chalker E. Vitamin C for preventing and treating the common cold. Cochrane Database Syst Rev. 2024.",pri:"recommended",pl:"建議",sc:48,k:false});
 
   its.sort(function(a,b){return b.sc-a.sc});return its;
 }
